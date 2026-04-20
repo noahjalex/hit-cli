@@ -16,6 +16,8 @@ pub struct AppConfig {
     ephenvs: HashMap<String, HashMap<String, String>>,
     #[serde(default)]
     prev_request: HashMap<String, Response>,
+    #[serde(default)]
+    last_seen_version: Option<String>,
 }
 
 impl AppConfig {
@@ -24,10 +26,11 @@ impl AppConfig {
             envs: HashMap::new(),
             ephenvs: HashMap::new(),
             prev_request: HashMap::new(),
+            last_seen_version: None,
         }
     }
 
-    pub fn save(&self) -> () {
+    pub fn save(&self) {
         let app_config_dir = get_app_config_dir();
         let app_config_file_path = get_app_config_file_path();
 
@@ -76,6 +79,15 @@ impl AppConfig {
 
     pub fn get_prev_request(&self) -> Option<&Response> {
         self.prev_request.get(&get_config_key())
+    }
+
+    pub fn get_last_seen_version(&self) -> Option<&String> {
+        self.last_seen_version.as_ref()
+    }
+
+    pub fn set_last_seen_version(&mut self, version: String) {
+        self.last_seen_version = Some(version);
+        self.save();
     }
 }
 
