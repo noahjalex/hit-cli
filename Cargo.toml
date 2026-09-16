@@ -12,6 +12,7 @@ license-file = "LICENSE"
 [dependencies]
 arboard = "3.3.2"
 array_tool = "1.0.3"
+base64 = "0.22.1"
 clap = {version="4.5.4", features=["derive", "string"]}
 clap_complete = {version="4.5.23", features=["unstable-dynamic"]}
 colored = "2.1.0"
@@ -36,6 +37,7 @@ serde_yaml = "0.9"
 strum = {version="0.26.2", features=["derive"]}
 tempfile = "3.12.0"
 tokio = {version = "1.37.0", features = ["full"]}
+urlencoding = "2.1.3"
 
 [dev-dependencies]
 assert_cmd = "2.0.17"

@@ -5,9 +5,9 @@ use crate::core::env::get_env;
 use crate::core::ephenv::get_ephenvs;
 use crate::utils::error::CliError;
 use crate::utils::http::handle_request;
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use edit::edit;
 use handlebars::Handlebars;
-use regex::Regex;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::error::Error;
@@ -16,6 +16,21 @@ use std::io::Write;
 use std::path::PathBuf;
 
 const BREAKING_CHANGE_VERSION: &str = "0.6.0";
+
+handlebars::handlebars_helper!(base64_helper: |value: str| STANDARD.encode(value));
+handlebars::handlebars_helper!(basic_auth_helper: |username: str, password: str| {
+    format!("Basic {}", STANDARD.encode(format!("{}:{}", username, password)))
+});
+handlebars::handlebars_helper!(url_encode_helper: |value: str| urlencoding::encode(value).into_owned());
+
+fn template_engine() -> Handlebars<'static> {
+    let mut handlebars = Handlebars::new();
+    handlebars.register_escape_fn(handlebars::no_escape);
+    handlebars.register_helper("base64", Box::new(base64_helper));
+    handlebars.register_helper("basicAuth", Box::new(basic_auth_helper));
+    handlebars.register_helper("urlEncode", Box::new(url_encode_helper));
+    handlebars
+}
 
 fn check_upgrade_notice() -> bool {
     let mut app_config = get_app_config();
@@ -147,9 +162,7 @@ pub async fn run(
     }
 
     let config = Config::new();
-    let env_var_regex = Regex::new(r"\{\{\w+}}").unwrap();
-
-    let hb_handle = Handlebars::new();
+    let hb_handle = template_engine();
 
     let url = api_call.url.as_str();
 
@@ -174,13 +187,10 @@ pub async fn run(
         .clone()
         .into_iter()
         .chain(ephenv_data.clone())
+        .chain(std::env::vars())
         .collect::<HashMap<String, String>>();
 
-    let url_with_env_vars = if env_var_regex.is_match(url) {
-        hb_handle.render_template(url, &merged_data).unwrap()
-    } else {
-        url.to_string()
-    };
+    let url_with_env_vars = hb_handle.render_template(url, &merged_data)?;
 
     let url_to_call = replace_params(url_with_env_vars, &param_values);
 
@@ -194,17 +204,11 @@ pub async fn run(
                 ),
             })
         })?;
-        let rendered = if env_var_regex.is_match(&file_content) {
-            hb_handle.render_template(&file_content, &merged_data)?
-        } else {
-            file_content
-        };
+        let rendered = hb_handle.render_template(&file_content, &merged_data)?;
         (Some(rendered), None)
     } else if api_call.body.is_some() {
         let serialized = serde_json::to_string_pretty(&api_call.body).unwrap();
-        let rendered = hb_handle
-            .render_template(&serialized, &merged_data)
-            .unwrap();
+        let rendered = hb_handle.render_template(&serialized, &merged_data)?;
 
         let param_types = api_call.body_param_types();
         let typed_result = replace_params_typed(rendered, &param_values, &param_types)?;
@@ -233,8 +237,8 @@ pub async fn run(
             .headers
             .clone()
             .into_iter()
-            .map(|(k, v)| (k, hb_handle.render_template(&v, &merged_data).unwrap()))
-            .collect::<HashMap<String, String>>(),
+            .map(|(k, v)| hb_handle.render_template(&v, &merged_data).map(|v| (k, v)))
+            .collect::<Result<HashMap<String, String>, _>>()?,
         input,
         file_fields,
     )

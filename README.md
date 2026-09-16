@@ -151,6 +151,11 @@ In the above example config, if the `prod` env is activated then all `run` comma
 
 As mentioned previously, the config file is meant to be committed to git and shared in a development team. The values for the environment variables would then also be automatically shared.
 
+Variables from the process environment are also available at runtime and override values from the active environment or `ephenv`. This keeps credentials out of hit's config and local settings:
+
+```bash
+API_TOKEN=secret hit run list-users
+```
 
 ### Ephemeral Environment Variables
 
@@ -214,6 +219,22 @@ the headers used when invoking command `list-users` would:
 1. expect a command-line option `--custom-request-id` for the value of the header `X-Request-Id`.
 2. use the value of `{{API_URL}}` from the active environment.
 3. use the value of `{{API_KEY}}` from what was set in the app settings using the `hit ephenv set` command.
+
+Runtime variables and built-in helpers cover common authorization styles without storing transformed credentials:
+
+```json
+{
+  "headers": {
+    "Authorization": "{{basicAuth API_USERNAME API_PASSWORD}}",
+    "X-Bearer-Authorization": "Bearer {{API_TOKEN}}",
+    "X-Api-Key": "{{API_KEY}}",
+    "X-Encoded-Credential": "{{base64 CREDENTIAL}}",
+    "X-Encoded-Value": "{{urlEncode VALUE}}"
+  }
+}
+```
+
+The built-in helpers are `basicAuth`, `base64`, and `urlEncode`. Template values are not HTML-escaped, so valid header and URL characters are preserved. Helpers only transform their arguments and cannot execute shell commands.
 
 ### Nested Sub-Commands
 

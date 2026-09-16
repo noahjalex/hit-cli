@@ -27,6 +27,51 @@ fn test_failure_when_env_not_recognized(hit_setup: SetupFixture) -> () {
     cmd.assert().failure().stderr("env not recognized\n");
 }
 
+#[rstest]
+fn test_runtime_auth_templates(temp_dir: TempDir) -> Result<(), Box<dyn std::error::Error>> {
+    let mut server = mockito::Server::new();
+    let mock = server
+        .mock("GET", "/auth")
+        .match_header("authorization", "Basic dXNlcjpwQHNz")
+        .match_header("x-api-key", "key&value")
+        .match_header("x-bearer", "Bearer token&value")
+        .match_header("x-base64", "dG9rZW46dmFsdWU=")
+        .match_header("x-encoded", "a%2Fb%20c%2Bd")
+        .with_status(200)
+        .with_body("ok")
+        .create();
+
+    let commands = serde_json::json!({
+        "auth": {
+            "method": "GET",
+            "url": "{{API_URL}}/auth",
+            "headers": {
+                "Authorization": "{{basicAuth API_USERNAME API_PASSWORD}}",
+                "X-Api-Key": "{{API_KEY}}",
+                "X-Bearer": "Bearer {{TOKEN}}",
+                "X-Base64": "{{base64 VALUE}}",
+                "X-Encoded": "{{urlEncode QUERY}}"
+            }
+        }
+    });
+
+    let setup = setup_with_mock(temp_dir, &server.url(), commands);
+    let mut cmd = get_hit_command_for_setup(&setup);
+    cmd.envs([
+        ("API_USERNAME", "user"),
+        ("API_PASSWORD", "p@ss"),
+        ("API_KEY", "key&value"),
+        ("TOKEN", "token&value"),
+        ("VALUE", "token:value"),
+        ("QUERY", "a/b c+d"),
+    ]);
+    cmd.args(["run", "auth"]);
+    cmd.assert().success();
+
+    mock.assert();
+    Ok(())
+}
+
 // --- Feature D: Typed Parameter Substitution ---
 
 #[rstest]
