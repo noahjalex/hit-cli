@@ -72,6 +72,68 @@ fn test_runtime_auth_templates(temp_dir: TempDir) -> Result<(), Box<dyn std::err
     Ok(())
 }
 
+#[rstest]
+fn test_nested_body_defaults_can_be_overridden(
+    temp_dir: TempDir,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut server = mockito::Server::new();
+    let default_mock = server
+        .mock("POST", "/defaults")
+        .match_body(mockito::Matcher::Json(serde_json::json!({
+            "amount": {"amount": "2.00", "currency": "USD"},
+            "consumer": {"email": "test@example.com", "name": "Joe Consumer"}
+        })))
+        .with_status(200)
+        .create();
+    let override_mock = server
+        .mock("POST", "/defaults")
+        .match_body(mockito::Matcher::Json(serde_json::json!({
+            "amount": {"amount": "5.00", "currency": "USD"},
+            "consumer": {"email": "other@example.com", "name": "Joe Consumer"}
+        })))
+        .with_status(200)
+        .create();
+
+    let commands = serde_json::json!({
+        "defaults": {
+            "method": "POST",
+            "url": "{{API_URL}}/defaults",
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+                "amount": {
+                    "amount": ":amount=2.00",
+                    "currency": ":currency=USD"
+                },
+                "consumer": {
+                    "email": ":email=test@example.com",
+                    "name": ":name=Joe Consumer"
+                }
+            }
+        }
+    });
+
+    let setup = setup_with_mock(temp_dir, &server.url(), commands);
+
+    let mut default_cmd = get_hit_command_for_setup(&setup);
+    default_cmd.args(["run", "defaults"]);
+    default_cmd.assert().success();
+    default_mock.assert();
+
+    let mut override_cmd = get_hit_command_for_setup(&setup);
+    override_cmd.args([
+        "run",
+        "defaults",
+        "--amount",
+        "5.00",
+        "--email",
+        "other@example.com",
+    ]);
+    override_cmd.assert().success();
+    override_mock.assert();
+
+    Ok(())
+}
+
 // --- Feature D: Typed Parameter Substitution ---
 
 #[rstest]

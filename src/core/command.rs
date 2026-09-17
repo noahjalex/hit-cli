@@ -49,6 +49,14 @@ pub fn get_param_types_from_string(input: &str) -> HashMap<String, Option<String
     result
 }
 
+fn get_param_defaults_from_string(input: &str) -> HashMap<String, String> {
+    let default_param_regex = Regex::new(r#":(\w+)(?:\|\w+)?=([^\"]*)"#).unwrap();
+    default_param_regex
+        .captures_iter(input)
+        .map(|caps| (caps[1].to_string(), caps[2].to_string()))
+        .collect()
+}
+
 impl Command {
     pub fn route_params(&self) -> Vec<String> {
         get_params_from_string(self.url.as_str())
@@ -68,6 +76,13 @@ impl Command {
     pub fn body_param_types(&self) -> HashMap<String, Option<String>> {
         match &self.body {
             Some(input) => get_param_types_from_string(&input.to_string()),
+            None => HashMap::new(),
+        }
+    }
+
+    pub fn body_param_defaults(&self) -> HashMap<String, String> {
+        match &self.body {
+            Some(input) => get_param_defaults_from_string(&input.to_string()),
             None => HashMap::new(),
         }
     }
@@ -171,16 +186,16 @@ mod tests {
     }
 
     #[test]
-    fn test_body_param_types() {
+    fn test_body_param_types_and_defaults() {
         let cmd = Command {
             method: http::HttpMethod::POST,
             url: String::from("https://example.com/api"),
             headers: HashMap::new(),
             body: Some(json!({
-                "dryRun": ":dryRun|boolean",
-                "limit": ":limit|number",
+                "dryRun": ":dryRun|boolean=false",
+                "limit": ":limit|number=10",
                 "file": ":filePath|file",
-                "name": ":name",
+                "nested": {"name": ":name=Joe Consumer"},
             })),
             postscript: None,
         };
@@ -189,5 +204,10 @@ mod tests {
         assert_eq!(types.get("limit"), Some(&Some("number".to_string())));
         assert_eq!(types.get("filePath"), Some(&Some("file".to_string())));
         assert_eq!(types.get("name"), Some(&None));
+
+        let defaults = cmd.body_param_defaults();
+        assert_eq!(defaults.get("dryRun"), Some(&"false".to_string()));
+        assert_eq!(defaults.get("limit"), Some(&"10".to_string()));
+        assert_eq!(defaults.get("name"), Some(&"Joe Consumer".to_string()));
     }
 }

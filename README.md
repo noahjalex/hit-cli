@@ -320,6 +320,34 @@ hit run create-user --body-file payload.json
 
 The file contents support environment variable substitution (double curly brace syntax) just like the config body.
 
+### Default Parameter Values
+
+Add `=default` to a body parameter to make its command-line option optional:
+
+```json
+{
+  "body": {
+    "amount": {
+      "amount": ":amount=2.00",
+      "currency": ":currency=USD"
+    },
+    "consumer": {
+      "email": ":email=test@example.com",
+      "name": ":name=Joe Consumer"
+    }
+  }
+}
+```
+
+Use the defaults or override any nested field independently:
+
+```bash
+hit run checkout
+hit run checkout --amount 25.00 --email other@example.com
+```
+
+Nested objects stay as objects; defaults apply to their leaf parameters. For typed values, put the default after the type, such as `:limit|number=10` or `:dryRun|boolean=false`.
+
 ### Typed Parameters
 
 By default, all parameter values are substituted as strings. For JSON request bodies, you may need values to be a specific JSON type. `hit` supports type annotations on parameters using the `|type` suffix.

@@ -8,6 +8,7 @@ use crate::utils::http::handle_request;
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use edit::edit;
 use handlebars::Handlebars;
+use regex::{NoExpand, Regex};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::error::Error;
@@ -92,8 +93,13 @@ fn replace_params_typed(
                         ),
                     }));
                 }
-                let quoted_placeholder = format!("\":{}|boolean\"", param_name);
-                result = result.replace(&quoted_placeholder, param_value);
+                let placeholder = Regex::new(&format!(
+                    r#"":{}\|boolean(?:=[^"]*)?""#,
+                    regex::escape(param_name)
+                ))?;
+                result = placeholder
+                    .replace_all(&result, NoExpand(param_value))
+                    .into_owned();
             }
             Some("number") => {
                 if param_value.parse::<f64>().is_err() {
@@ -104,8 +110,13 @@ fn replace_params_typed(
                         ),
                     }));
                 }
-                let quoted_placeholder = format!("\":{}|number\"", param_name);
-                result = result.replace(&quoted_placeholder, param_value);
+                let placeholder = Regex::new(&format!(
+                    r#"":{}\|number(?:=[^"]*)?""#,
+                    regex::escape(param_name)
+                ))?;
+                result = placeholder
+                    .replace_all(&result, NoExpand(param_value))
+                    .into_owned();
             }
             Some("file") => {
                 let path = PathBuf::from(param_value);
@@ -124,7 +135,7 @@ fn replace_params_typed(
                         let mut file_key = None;
                         for (key, val) in obj.iter() {
                             if let Some(s) = val.as_str() {
-                                if s == placeholder {
+                                if s == placeholder || s.starts_with(&format!("{}=", placeholder)) {
                                     file_key = Some(key.clone());
                                     break;
                                 }
@@ -140,8 +151,13 @@ fn replace_params_typed(
                 }
             }
             _ => {
-                let placeholder = format!(":{}", param_name);
-                result = result.replace(&placeholder, param_value);
+                let placeholder = Regex::new(&format!(
+                    r#":{}\b(?:\|\w+)?(?:=[^"]*)?"#,
+                    regex::escape(param_name)
+                ))?;
+                result = placeholder
+                    .replace_all(&result, NoExpand(param_value))
+                    .into_owned();
             }
         }
     }

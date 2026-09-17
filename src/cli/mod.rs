@@ -39,15 +39,19 @@ fn formulate_command(
         let subcommand = match **value {
             ConfigCommandType::Command(ref config_command) => {
                 let params = config_command.params();
+                let defaults = config_command.body_param_defaults();
+                let has_required_params = params.iter().any(|param| !defaults.contains_key(param));
 
-                let mut subcommand = Command::new(key).arg_required_else_help(!params.is_empty());
+                let mut subcommand = Command::new(key).arg_required_else_help(has_required_params);
                 for param in params {
-                    subcommand = subcommand.arg(
-                        Arg::new(param.to_string())
-                            .long(param.to_string().to_case(Case::Kebab))
-                            .value_name(param.to_string())
-                            .help(format!("Provide value for the param :{}", param)),
-                    )
+                    let mut arg = Arg::new(param.to_string())
+                        .long(param.to_string().to_case(Case::Kebab))
+                        .value_name(param.to_string())
+                        .help(format!("Provide value for the param :{}", param));
+                    if let Some(default) = defaults.get(&param) {
+                        arg = arg.default_value(default.clone());
+                    }
+                    subcommand = subcommand.arg(arg);
                 }
 
                 subcommand
