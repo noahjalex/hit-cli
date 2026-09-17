@@ -26,6 +26,18 @@ Support coming soon!
 
 Support coming soon!
 
+## Shell Completions
+
+`hit` supports dynamic completion, including commands and options loaded from the current directory's `.hit/config.json`.
+
+```bash
+mkdir -p ~/.config/zsh/completions
+COMPLETE=zsh hit > ~/.config/zsh/completions/_hit
+exec zsh
+```
+
+Bash, Fish, Elvish, and PowerShell are also supported by replacing `zsh` with the shell name and sourcing the generated script from that shell's startup file.
+
 ## Getting Started
 
 `hit` works based on the config present in the current working directory. Specifically, the `.hit/config.json` file present in the current working directory. You can either build your config from scratch or generate one based on a swagger file.
