@@ -11,6 +11,11 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "123e4567-e89b-12d3-a456-426614174000",
+          "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+          "merchantReference": "merchant-order-123"
         }
       },
       "alias-billing-agreement": {
@@ -20,6 +25,10 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+          "duration": "PT15M"
         }
       },
       "start-billing-agreement-approval": {
@@ -29,6 +38,27 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "consumer": {
+            "email": "test@example.com",
+            "givenNames": "Joe",
+            "surname": "Consumer",
+            "phoneNumber": "0400 000 000"
+          },
+          "merchant": {
+            "redirectConfirmUrl": "https://example.com/approval/confirm",
+            "redirectCancelUrl": "https://example.com/approval/cancel",
+            "popupOriginUrl": "https://merchant.com/cart",
+            "name": "<name>"
+          },
+          "merchantReference": "ba-ref-20240304-001",
+          "agreements": [
+            {
+              "type": "BILLING",
+              "merchantReference": "merchant-order-12345"
+            }
+          ]
         }
       },
       "cancel-billing-agreement-alt": {
@@ -38,6 +68,9 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "token": "ba_def456ghi789"
         }
       },
       "retrieve-billing-agreement-offers": {
@@ -47,6 +80,14 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "123e4567-e89b-12d3-a456-426614174000",
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
         }
       },
       "retrieve-billing-agreement": {
@@ -56,6 +97,9 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "token": "ba_jkl012mno345"
         }
       },
       "start-billing-agreement-link": {
@@ -65,6 +109,10 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "alias": "my-afterpay-email@gmail.com",
+          "requestId": "123e4567-e89b-12d3-a456-426614174000"
         }
       },
       "get-billing-agreement": {
@@ -90,6 +138,103 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "123e4567-e89b-12d3-a456-426614174000",
+          "paymentMethod": {
+            "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+            "type": "BILLING_AGREEMENT"
+          },
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "consumer": {
+            "email": "test@example.com",
+            "givenNames": "Joe",
+            "surname": "Consumer",
+            "phoneNumber": "0400 000 000"
+          },
+          "billing": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "shipping": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "courier": {
+            "shippedAt": "2023-08-24T14:15:22Z",
+            "name": "Australia Post",
+            "tracking": "AA0000000000000",
+            "priority": "STANDARD"
+          },
+          "items": [
+            {
+              "name": "Blue Carabiner",
+              "sku": "<sku>",
+              "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+              "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+              "quantity": 1,
+              "price": {
+                "amount": "100.00",
+                "currency": "AUD"
+              },
+              "categories": [
+                [
+                  "<categories>"
+                ]
+              ],
+              "estimatedShipmentDate": "2023-08-01",
+              "preorder": false
+            }
+          ],
+          "discounts": [
+            {
+              "displayName": "New Customer Coupon",
+              "amount": {
+                "amount": "100.00",
+                "currency": "AUD"
+              }
+            }
+          ],
+          "description": "Monthly Premium Subscription Payment",
+          "merchant": {
+            "name": "Merchant Display Name"
+          },
+          "merchantReference": "SUB-2024-03-001",
+          "shippingAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "taxAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "custom": {
+            "customerId": "cust_456",
+            "plan": "premium"
+          },
+          "paymentScheduleChecksum": "abc123def456",
+          "enrichments": {
+            "initiation": {
+              "actor": "CUSTOMER"
+            }
+          }
         }
       },
       "auth": {
@@ -99,6 +244,103 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "123e4567-e89b-12d3-a456-426614174000",
+          "paymentMethod": {
+            "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+            "type": "BILLING_AGREEMENT"
+          },
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "consumer": {
+            "email": "test@example.com",
+            "givenNames": "Joe",
+            "surname": "Consumer",
+            "phoneNumber": "0400 000 000"
+          },
+          "billing": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "shipping": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "courier": {
+            "shippedAt": "2023-08-24T14:15:22Z",
+            "name": "Australia Post",
+            "tracking": "AA0000000000000",
+            "priority": "STANDARD"
+          },
+          "items": [
+            {
+              "name": "Blue Carabiner",
+              "sku": "<sku>",
+              "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+              "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+              "quantity": 1,
+              "price": {
+                "amount": "100.00",
+                "currency": "AUD"
+              },
+              "categories": [
+                [
+                  "<categories>"
+                ]
+              ],
+              "estimatedShipmentDate": "2023-08-01",
+              "preorder": false
+            }
+          ],
+          "discounts": [
+            {
+              "displayName": "New Customer Coupon",
+              "amount": {
+                "amount": "100.00",
+                "currency": "AUD"
+              }
+            }
+          ],
+          "description": "Monthly Premium Subscription Payment",
+          "merchant": {
+            "name": "Merchant Display Name"
+          },
+          "merchantReference": "SUB-2024-03-001",
+          "shippingAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "taxAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "custom": {
+            "customerId": "cust_456",
+            "plan": "premium"
+          },
+          "paymentScheduleChecksum": "abc123def456",
+          "enrichments": {
+            "initiation": {
+              "actor": "CUSTOMER"
+            }
+          }
         }
       }
     },
@@ -110,6 +352,99 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "consumer": {
+            "email": "test@example.com",
+            "givenNames": "Joe",
+            "surname": "Consumer",
+            "phoneNumber": "0400 000 000"
+          },
+          "merchantReference": "<merchantReference>",
+          "billing": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "shipping": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "merchant": {
+            "redirectConfirmUrl": "https://example.com/checkout/confirm",
+            "redirectCancelUrl": "https://example.com/checkout/cancel",
+            "popupOriginUrl": "https://merchant.com/cart",
+            "name": "<name>"
+          },
+          "items": [
+            {
+              "name": "Blue Carabiner",
+              "sku": "<sku>",
+              "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+              "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+              "quantity": 1,
+              "price": {
+                "amount": "100.00",
+                "currency": "AUD"
+              },
+              "categories": [
+                [
+                  "<categories>"
+                ]
+              ],
+              "estimatedShipmentDate": "2023-08-01",
+              "preorder": false
+            }
+          ],
+          "courier": {
+            "shippedAt": "2023-08-24T14:15:22Z",
+            "name": "Australia Post",
+            "tracking": "AA0000000000000",
+            "priority": "STANDARD"
+          },
+          "taxAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "shippingAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "discounts": [
+            {
+              "displayName": "New Customer Coupon",
+              "amount": {
+                "amount": "100.00",
+                "currency": "AUD"
+              }
+            }
+          ],
+          "agreements": [
+            {
+              "type": "BILLING",
+              "merchantReference": "merchant-order-12345"
+            }
+          ],
+          "custom": {},
+          "mode": "standard",
+          "description": "<description>"
         }
       },
       "get-checkout": {
@@ -163,6 +498,20 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "<id>",
+          "productDescription": "<productDescription>",
+          "refundPolicy": "<refundPolicy>",
+          "refundPolicyDisclosure": "<refundPolicyDisclosure>",
+          "refundRefusalExplanation": "<refundRefusalExplanation>",
+          "shippingDocumentation": "<shippingDocumentation>",
+          "shippingAddress": "<shippingAddress>",
+          "shippingDate": "<shippingDate>",
+          "shippingCarrier": "<shippingCarrier>",
+          "shippingTrackingNumber": "<shippingTrackingNumber>",
+          "uncategorizedFile": "<uncategorizedFile>",
+          "uncategorizedText": "<uncategorizedText>"
         }
       },
       "accept-dispute": {
@@ -180,6 +529,10 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "file": "<file>",
+          "fileType": "<fileType>"
         }
       },
       "retrieve-file": {
@@ -199,6 +552,27 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "grants": [
+            {
+              "type": "ON_FILE",
+              "merchantReference": "merchant-order-12345"
+            }
+          ],
+          "merchant": {
+            "redirectConfirmUrl": "https://example.com/approval/confirm",
+            "redirectCancelUrl": "https://example.com/approval/cancel",
+            "popupOriginUrl": "https://merchant.com/cart",
+            "name": "<name>"
+          },
+          "merchantReference": "ba-ref-20240304-001",
+          "consumer": {
+            "email": "test@example.com",
+            "givenNames": "Joe",
+            "surname": "Consumer",
+            "phoneNumber": "0400 000 000"
+          }
         }
       },
       "create-grant": {
@@ -208,6 +582,11 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "123e4567-e89b-12d3-a456-426614174000",
+          "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+          "merchantReference": "merchant-order-123"
         }
       },
       "get-grant": {
@@ -233,6 +612,10 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+          "duration": "PT15M"
         }
       },
       "start-billing-agreement-link": {
@@ -242,6 +625,10 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "alias": "my-afterpay-email@gmail.com",
+          "requestId": "123e4567-e89b-12d3-a456-426614174000"
         }
       }
     },
@@ -253,6 +640,90 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "123e4567-e89b-12d3-a456-426614174000",
+          "grantId": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "enrichments": {
+            "initiation": {
+              "actor": "CUSTOMER"
+            },
+            "subscription": {
+              "type": "FIXED",
+              "interval": "YEAR",
+              "intervalCount": 1
+            }
+          },
+          "consumer": {
+            "email": "test@example.com",
+            "givenNames": "Joe",
+            "surname": "Consumer",
+            "phoneNumber": "0400 000 000"
+          },
+          "billing": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "shipping": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "items": [
+            {
+              "name": "Blue Carabiner",
+              "sku": "<sku>",
+              "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+              "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+              "quantity": 1,
+              "price": {
+                "amount": "100.00",
+                "currency": "AUD"
+              },
+              "categories": [
+                [
+                  "<categories>"
+                ]
+              ],
+              "estimatedShipmentDate": "2023-08-01",
+              "preorder": false
+            }
+          ],
+          "discounts": [
+            {
+              "displayName": "New Customer Coupon",
+              "amount": {
+                "amount": "100.00",
+                "currency": "AUD"
+              }
+            }
+          ],
+          "merchantReference": "SUB-2024-03-001",
+          "shippingAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "taxAmount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          }
         }
       }
     },
@@ -272,6 +743,36 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestid": "<requestid>",
+          "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+          "merchantReference": "merchant-order-123",
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "isCheckoutAdjusted": false,
+          "paymentScheduleChecksum": "<paymentScheduleChecksum>",
+          "items": [
+            "<items>"
+          ],
+          "shipping": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "enrichments": {
+            "initiation": {
+              "actor": "MERCHANT"
+            }
+          }
         }
       },
       "capture-full-payment": {
@@ -281,6 +782,50 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "token": "<token>",
+          "merchantReference": "<merchantReference>",
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "isCheckoutAdjusted": false,
+          "paymentScheduleChecksum": "<paymentScheduleChecksum>",
+          "items": {
+            "name": "Blue Carabiner",
+            "sku": "<sku>",
+            "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+            "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+            "quantity": 1,
+            "price": {
+              "amount": "100.00",
+              "currency": "AUD"
+            },
+            "categories": [
+              [
+                "<categories>"
+              ]
+            ],
+            "estimatedShipmentDate": "2023-08-01",
+            "preorder": false
+          },
+          "shipping": {
+            "name": "Joe Consumer",
+            "line1": "Level 8",
+            "line2": "390 Collins Street",
+            "area1": "Melbourne",
+            "area2": "<area2>",
+            "region": "VIC",
+            "postcode": "3000",
+            "countryCode": "AU",
+            "phoneNumber": "0400 000 000"
+          },
+          "enrichments": {
+            "initiation": {
+              "actor": "MERCHANT"
+            }
+          }
         }
       },
       "get-payment-by-order-id": {
@@ -298,6 +843,9 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "merchantReference": "new_merchant_order_id_1234"
         }
       },
       "capture-payment": {
@@ -307,6 +855,15 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "<requestId>",
+          "merchantReference": "merchant-order-123",
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "paymentEventMerchantReference": "payment-ref-123"
         }
       },
       "update-shipping-courier": {
@@ -316,6 +873,12 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "shippedAt": "2023-08-24T14:15:22Z",
+          "name": "Australia Post",
+          "tracking": "AA0000000000000",
+          "priority": "STANDARD"
         }
       },
       "create-refund": {
@@ -325,6 +888,15 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "requestId": "<requestId>",
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "merchantReference": "<merchantReference>",
+          "refundMerchantReference": "<refundMerchantReference>"
         }
       },
       "void-payment": {
@@ -334,6 +906,14 @@
           "Accept": "application/json",
           "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
           "Content-Type": "application/json"
+        },
+        "body": {
+          "amount": {
+            "amount": "100.00",
+            "currency": "AUD"
+          },
+          "requestId": "<requestId>",
+          "reason": "<reason>"
         }
       },
       "get-payment-by-token": {

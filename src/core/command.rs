@@ -45,7 +45,7 @@ pub struct Command {
 }
 
 fn get_params_from_string(input: &str) -> Vec<String> {
-    let route_param_regex = Regex::new(r":(\w+)").unwrap();
+    let route_param_regex = Regex::new(r":([A-Za-z_]\w*)").unwrap();
     route_param_regex
         .captures_iter(input)
         .filter_map(|caps| caps.get(1))
@@ -56,7 +56,7 @@ fn get_params_from_string(input: &str) -> Vec<String> {
 }
 
 pub fn get_param_types_from_string(input: &str) -> HashMap<String, Option<String>> {
-    let typed_param_regex = Regex::new(r":(\w+)(?:\|(\w+))?").unwrap();
+    let typed_param_regex = Regex::new(r":([A-Za-z_]\w*)(?:\|(\w+))?").unwrap();
     let mut result = HashMap::new();
     for caps in typed_param_regex.captures_iter(input) {
         let name = caps.get(1).unwrap().as_str().to_string();
@@ -67,7 +67,7 @@ pub fn get_param_types_from_string(input: &str) -> HashMap<String, Option<String
 }
 
 fn get_param_defaults_from_string(input: &str) -> HashMap<String, String> {
-    let default_param_regex = Regex::new(r#":(\w+)(?:\|\w+)?=([^\"]*)"#).unwrap();
+    let default_param_regex = Regex::new(r#":([A-Za-z_]\w*)(?:\|\w+)?=([^\"]*)"#).unwrap();
     default_param_regex
         .captures_iter(input)
         .map(|caps| (caps[1].to_string(), caps[2].to_string()))
@@ -215,6 +215,7 @@ mod tests {
                 "limit": ":limit|number=10",
                 "file": ":filePath|file",
                 "nested": {"name": ":name=Joe Consumer"},
+                "createdAt": "2023-08-24T14:15:22Z",
             })),
             postscript: None,
         };
@@ -228,5 +229,6 @@ mod tests {
         assert_eq!(defaults.get("dryRun"), Some(&"false".to_string()));
         assert_eq!(defaults.get("limit"), Some(&"10".to_string()));
         assert_eq!(defaults.get("name"), Some(&"Joe Consumer".to_string()));
+        assert!(!cmd.body_params().contains(&"15".to_string()));
     }
 }

@@ -15,8 +15,8 @@ Sources:
 
 Each platform contains:
 
-- `.hit/config.json`: every supported HTTP operation from its OpenAPI specs.
-- `bodies/`: editable JSON templates for operations with JSON request bodies.
+- `.hit/config.json`: every supported HTTP operation, including its generated sample body.
+- `bodies/`: standalone copies of the generated JSON request templates.
 - `catalog.json`: operation metadata plus request and response schemas/statuses.
 - `openapi/`: the source contracts, including component schemas.
 
@@ -38,8 +38,8 @@ hit env use runtime
 swenv afterpay-cafe-us sbox
 
 hit run configuration get-configuration
-hit run checkouts create-checkout-1 \
-  --body-file bodies/checkouts/create-checkout-1.json
+hit run checkouts create-checkout-1
+hit run checkouts create-checkout-1 --edit-body
 ```
 
 Direct API reads `AFTERPAY_API_URL`, `AFTERPAY_MERCHANT_ID`, and `AFTERPAY_MERCHANT_SECRET`.
@@ -51,8 +51,7 @@ cd ~/Development/hit-cli/platforms/agency-api
 hit env use runtime
 swenv <agency-credential-context> sbox
 
-hit run partner create-onboarding \
-  --body-file bodies/partner/create-onboarding.json
+hit run partner create-onboarding --edit-body
 ```
 
 Agency API reads `AGENCY_BASE_URL`, `AGENCY_API_KEY`, and `AGENCY_SHARED_SECRET`. Hit generates the current request timestamp and HMAC signature from the final URL and body.
@@ -65,8 +64,7 @@ hit env use runtime
 swenv <cash-app-pay-credential-context> sbox
 
 hit run network-api list-payments --query limit=50
-hit run network-api create-payment \
-  --body-file bodies/network-api/create-payment.json
+hit run network-api create-payment --edit-body
 ```
 
 Cash App Pay reads `CASH_API_URL`, `CASH_CLIENT_ID`, `CASH_API_KEY`, `CASH_CLIENT_SECRET`, and `CASH_REGION`. Hit signs the final method, path/query, canonical headers, and body digest.
@@ -80,4 +78,4 @@ hit run network-api list-payments \
   --header 'Idempotency-Key:example-id'
 ```
 
-Request templates intentionally contain visible placeholders such as `<merchant_id>`. Edit a template copy before sending it. Responses remain unmodified; use `--json` for structured status, headers, and body output.
+Commands use their generated sample body by default. Use `--edit-body` for an interactive one-off change, or `--body-file path.json` to replace it entirely. Templates can contain visible placeholders such as `<merchant_id>`, so review write requests before using them outside sandbox. Responses remain unmodified; use `--json` for structured status, headers, and body output.

@@ -193,6 +193,7 @@ def generate_platform(name, settings)
           FileUtils.mkdir_p(body_path.dirname)
           File.write(body_path, JSON.pretty_generate(template) + "\n")
           body_template = body_path.relative_path_from(platform_dir).to_s
+          commands[group][command_name]["body"] = template
         end
 
         responses = operation.fetch("responses", {}).to_h do |status, raw_response|

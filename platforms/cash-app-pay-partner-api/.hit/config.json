@@ -17,6 +17,10 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "customer_request_id": "<customer_request_id>"
         }
       },
       "retrieve-order": {
@@ -46,6 +50,10 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "selected_loan_id": "<selected_loan_id>"
         }
       },
       "create-payment-plans": {
@@ -61,7 +69,8 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
-        }
+        },
+        "body": null
       },
       "denied-reason": {
         "method": "GET",
@@ -90,6 +99,9 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "<idempotency_key>"
         }
       },
       "cancel-checkout": {
@@ -135,6 +147,28 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "request": {
+            "actions": [
+              {
+                "amount": 2500,
+                "currency": "USD",
+                "scope_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+                "type": "ONE_TIME_PAYMENT"
+              }
+            ],
+            "channel": "ONLINE",
+            "redirect_url": "https://example.com",
+            "reference_id": "<reference_id>",
+            "metadata": {
+              "my-meta": "meta-value"
+            },
+            "customer_metadata": {
+              "reference_id": "<reference_id>"
+            }
+          }
         }
       },
       "retrieve-request": {
@@ -164,6 +198,22 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "request": {
+            "actions": [
+              {
+                "amount": 2500,
+                "currency": "USD",
+                "scope_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+                "type": "ONE_TIME_PAYMENT"
+              }
+            ],
+            "reference_id": "<reference_id>",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       }
     },
@@ -195,6 +245,52 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "offer": {
+            "reference_id": "reference-id",
+            "brand_id": "<brand_id>",
+            "customer_details": {
+              "customer_scope": "ALL_CUSTOMERS"
+            },
+            "title": "<title>",
+            "offer_details": {
+              "type": "<type>",
+              "amount": {
+                "type": "FIXED",
+                "amount": 500,
+                "currency": "USD"
+              },
+              "scope": {
+                "type": "CATEGORY",
+                "categories": [
+                  {
+                    "name": "<name>"
+                  }
+                ]
+              }
+            },
+            "redemption_methods": [
+              {
+                "type": "AUTOMATIC"
+              }
+            ],
+            "starts_at": "<starts_at>",
+            "ends_at": "<ends_at>",
+            "additional_terms": "<additional_terms>",
+            "redemption_count": {
+              "type": "<type>",
+              "max_redemptions": 0,
+              "count": 0
+            },
+            "redirect": {
+              "qr_code_png_url": "<qr_code_png_url>",
+              "qr_code_svg_url": "<qr_code_svg_url>"
+            },
+            "historical_sync": false,
+            "external_created_at": "<external_created_at>"
+          }
         }
       },
       "retrieve-offer": {
@@ -238,6 +334,40 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "offer": {
+            "reference_id": "reference-id",
+            "brand_id": "<brand_id>",
+            "customer_details": {
+              "customer_scope": "ALL_CUSTOMERS"
+            },
+            "title": "<title>",
+            "offer_details": {
+              "type": "<type>",
+              "amount": {
+                "type": "FIXED",
+                "amount": 500,
+                "currency": "USD"
+              },
+              "scope": {
+                "type": "CATEGORY",
+                "categories": [
+                  {
+                    "name": "<name>"
+                  }
+                ]
+              }
+            },
+            "redemption_methods": [
+              {
+                "type": "AUTOMATIC"
+              }
+            ],
+            "starts_at": "<starts_at>",
+            "ends_at": "<ends_at>",
+            "additional_terms": "<additional_terms>"
+          }
         }
       },
       "create-offer-redemption": {
@@ -253,6 +383,12 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "redemption": {
+            "redeemed_at": "<redeemed_at>"
+          }
         }
       }
     },
@@ -284,6 +420,15 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "api_key": {
+            "scopes": [
+              "PAYMENTS_READ"
+            ],
+            "reference_id": "<reference_id>"
+          }
         }
       },
       "retrieve-api-key": {
@@ -341,6 +486,22 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "webhook_endpoint": {
+            "api_key_id": "<api_key_id>",
+            "event_configurations": [
+              {
+                "event_type": "customer.created",
+                "api_version": "v1"
+              }
+            ],
+            "url": "<url>",
+            "reference_id": "<reference_id>",
+            "delivery_timeout": 5000,
+            "max_delivery_frequency": 0
+          }
         }
       },
       "retrieve-webhook-endpoint": {
@@ -384,6 +545,21 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "webhook_endpoint": {
+            "url": "<url>",
+            "reference_id": "<reference_id>",
+            "api_key_id": "<api_key_id>",
+            "event_configurations": [
+              {
+                "event_type": "customer.created",
+                "api_version": "v1"
+              }
+            ],
+            "delivery_timeout": 5000,
+            "max_delivery_frequency": null
+          }
         }
       },
       "list-webhook-events": {
@@ -413,6 +589,28 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "requests": [
+            {
+              "uid": "request_1",
+              "method": "GET",
+              "path": "/network/v1/brands/{brand_id}",
+              "path_params": {},
+              "query_params": {},
+              "body": {}
+            }
+          ],
+          "chains": [
+            {
+              "requests": [
+                {
+                  "uid": "request_1"
+                }
+              ],
+              "execution_mode": "SEQUENTIAL"
+            }
+          ]
         }
       }
     },
@@ -444,6 +642,18 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "brand": {
+            "name": "<name>",
+            "reference_id": "<reference_id>",
+            "profile_image_url": "<profile_image_url>",
+            "color": "#ffffff",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "upsert-brand": {
@@ -459,6 +669,17 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "brand": {
+            "name": "<name>",
+            "reference_id": "<reference_id>",
+            "profile_image_url": "<profile_image_url>",
+            "color": "#ffffff",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "retrieve-brand": {
@@ -488,6 +709,17 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "brand": {
+            "name": "My Brand",
+            "reference_id": "example-id",
+            "profile_image_url": "<profile_image_url>",
+            "color": "#ffffff",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "list-merchants": {
@@ -517,6 +749,34 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "merchant": {
+            "name": "<name>",
+            "brand_id": "<brand_id>",
+            "country": "US",
+            "currency": "USD",
+            "category": "5432",
+            "reference_id": "external-id",
+            "address": {
+              "address_line_1": "1215 4th Ave",
+              "address_line_2": "Suite 2300",
+              "locality": "Seattle",
+              "country": "US",
+              "postal_code": "98161-1001",
+              "administrative_district_level_1": "Washington"
+            },
+            "site_url": "https://example.com",
+            "metadata": {
+              "my-meta": "meta-value"
+            },
+            "default_fee_plans": {
+              "in_app_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+              "in_person_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+              "online_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me"
+            }
+          }
         }
       },
       "upsert-merchant": {
@@ -532,6 +792,33 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "merchant": {
+            "name": "<name>",
+            "brand_id": "<brand_id>",
+            "country": "US",
+            "currency": "USD",
+            "category": "5432",
+            "reference_id": "<reference_id>",
+            "address": {
+              "address_line_1": "1215 4th Ave",
+              "address_line_2": "Suite 2300",
+              "locality": "Seattle",
+              "country": "US",
+              "postal_code": "98161-1001",
+              "administrative_district_level_1": "Washington"
+            },
+            "site_url": "<site_url>",
+            "metadata": {
+              "my-meta": "meta-value"
+            },
+            "default_fee_plans": {
+              "in_app_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+              "in_person_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+              "online_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me"
+            }
+          }
         }
       },
       "retrieve-merchant": {
@@ -561,6 +848,34 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "merchant": {
+            "brand_id": "<brand_id>",
+            "category": "5432",
+            "country": "US",
+            "currency": "USD",
+            "name": "<name>",
+            "reference_id": "external-id",
+            "address": {
+              "address_line_1": "1215 4th Ave",
+              "address_line_2": "Suite 2300",
+              "locality": "Seattle",
+              "country": "US",
+              "postal_code": "98161-1001",
+              "administrative_district_level_1": "Washington"
+            },
+            "site_url": "https://example.com",
+            "status": "ACTIVE",
+            "metadata": {
+              "my-meta": "meta-value"
+            },
+            "default_fee_plans": {
+              "in_app_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+              "in_person_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+              "online_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me"
+            }
+          }
         }
       },
       "list-orders": {
@@ -590,6 +905,92 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "order": {
+            "merchant_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+            "reference_id": "external-id",
+            "grant_id": "GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50",
+            "payments": [
+              {
+                "id": "PWC_4nn21zy6t0v2yhqg5bvhk7xkq",
+                "amount": 2500,
+                "currency": "USD",
+                "type": "<type>",
+                "state": "<state>"
+              }
+            ],
+            "refunds": [
+              {
+                "id": "PWCR_da1v3j4p3z15y47adpzzq0whj",
+                "amount": 2500,
+                "currency": "USD",
+                "type": "<type>",
+                "state": "<state>"
+              }
+            ],
+            "line_items": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "reference_id": "external-id",
+                "quantity": "<quantity>",
+                "amount": 0,
+                "image_url": "<image_url>",
+                "discounts": [
+                  {
+                    "discount_uid": "<discount_uid>",
+                    "amount": 0
+                  }
+                ],
+                "taxes": [
+                  {
+                    "tax_uid": "<tax_uid>",
+                    "amount": 0
+                  }
+                ]
+              }
+            ],
+            "discounts": [
+              {
+                "uid": "external-uid",
+                "name": "<name>",
+                "amount": 0,
+                "bps": 0,
+                "scope": "ORDER"
+              }
+            ],
+            "taxes": [
+              {
+                "uid": "external-uid",
+                "name": "<name>",
+                "amount": 0,
+                "scope": "ORDER"
+              }
+            ],
+            "service_charges": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "amount": 0
+              }
+            ],
+            "shipping_charges": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "amount": 0
+              }
+            ],
+            "subtotal_amount": 0,
+            "total_amount": 0,
+            "currency": "USD",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          },
+          "validate_amounts": false
         }
       },
       "upsert-order": {
@@ -605,6 +1006,91 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "order": {
+            "merchant_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+            "reference_id": "external-id",
+            "grant_id": "GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50",
+            "payments": [
+              {
+                "id": "PWC_4nn21zy6t0v2yhqg5bvhk7xkq",
+                "amount": 2500,
+                "currency": "USD",
+                "type": "<type>",
+                "state": "<state>"
+              }
+            ],
+            "refunds": [
+              {
+                "id": "PWCR_da1v3j4p3z15y47adpzzq0whj",
+                "amount": 2500,
+                "currency": "USD",
+                "type": "<type>",
+                "state": "<state>"
+              }
+            ],
+            "line_items": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "reference_id": "external-id",
+                "quantity": "<quantity>",
+                "amount": 0,
+                "image_url": "<image_url>",
+                "discounts": [
+                  {
+                    "discount_uid": "<discount_uid>",
+                    "amount": 0
+                  }
+                ],
+                "taxes": [
+                  {
+                    "tax_uid": "<tax_uid>",
+                    "amount": 0
+                  }
+                ]
+              }
+            ],
+            "discounts": [
+              {
+                "uid": "external-uid",
+                "name": "<name>",
+                "amount": 0,
+                "bps": 0,
+                "scope": "ORDER"
+              }
+            ],
+            "taxes": [
+              {
+                "uid": "external-uid",
+                "name": "<name>",
+                "amount": 0,
+                "scope": "ORDER"
+              }
+            ],
+            "service_charges": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "amount": 0
+              }
+            ],
+            "shipping_charges": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "amount": 0
+              }
+            ],
+            "subtotal_amount": 0,
+            "total_amount": 0,
+            "currency": "USD",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          },
+          "validate_amounts": false
         }
       },
       "retrieve-order": {
@@ -634,6 +1120,91 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "order": {
+            "reference_id": "external-id",
+            "merchant_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+            "grant_id": "GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50",
+            "payments": [
+              {
+                "id": "PWC_4nn21zy6t0v2yhqg5bvhk7xkq",
+                "amount": 2500,
+                "currency": "USD",
+                "type": "<type>",
+                "state": "<state>"
+              }
+            ],
+            "refunds": [
+              {
+                "id": "PWCR_da1v3j4p3z15y47adpzzq0whj",
+                "amount": 2500,
+                "currency": "USD",
+                "type": "<type>",
+                "state": "<state>"
+              }
+            ],
+            "line_items": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "reference_id": "external-id",
+                "quantity": "<quantity>",
+                "amount": 0,
+                "image_url": "<image_url>",
+                "discounts": [
+                  {
+                    "discount_uid": "<discount_uid>",
+                    "amount": 0
+                  }
+                ],
+                "taxes": [
+                  {
+                    "tax_uid": "<tax_uid>",
+                    "amount": 0
+                  }
+                ]
+              }
+            ],
+            "discounts": [
+              {
+                "uid": "external-uid",
+                "name": "<name>",
+                "amount": 0,
+                "bps": 0,
+                "scope": "ORDER"
+              }
+            ],
+            "taxes": [
+              {
+                "uid": "external-uid",
+                "name": "<name>",
+                "amount": 0,
+                "scope": "ORDER"
+              }
+            ],
+            "service_charges": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "amount": 0
+              }
+            ],
+            "shipping_charges": [
+              {
+                "name": "<name>",
+                "description": "<description>",
+                "amount": 0
+              }
+            ],
+            "subtotal_amount": 0,
+            "total_amount": 0,
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          },
+          "version": 0,
+          "validate_amounts": false
         }
       },
       "submit-order": {
@@ -649,6 +1220,9 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19"
         }
       },
       "list-payments": {
@@ -678,6 +1252,30 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "payment": {
+            "amount": 100,
+            "currency": "USD",
+            "merchant_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+            "grant_id": "GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50",
+            "reference_id": "external-id",
+            "capture": true,
+            "metadata": {
+              "my-meta": "meta-value"
+            },
+            "enrichments": {
+              "initiation": {
+                "actor": "CUSTOMER"
+              },
+              "recurring_series_id": "<recurring_series_id>",
+              "statement_descriptor": "<statement_descriptor>",
+              "restricted_categories": [
+                "ALCOHOL"
+              ]
+            }
+          }
         }
       },
       "retrieve-payment": {
@@ -707,6 +1305,17 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "authorization": {
+            "amount": 100,
+            "currency": "USD",
+            "reference_id": "abcde",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "capture-payment": {
@@ -722,6 +1331,10 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "amount": 100
         }
       },
       "void-payment": {
@@ -751,6 +1364,9 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "<idempotency_key>"
         }
       },
       "list-refunds": {
@@ -780,6 +1396,20 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "refund": {
+            "amount": 1500,
+            "currency": "USD",
+            "merchant_id": "<merchant_id>",
+            "payment_id": "PWC_4nn21zy6t0v2yhqg5bvhk7xkq",
+            "capture": true,
+            "reference_id": "external-id",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "retrieve-refund": {
@@ -809,6 +1439,9 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19"
         }
       },
       "void-refund": {
@@ -838,6 +1471,9 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19"
         }
       },
       "list-customers": {
@@ -993,6 +1629,16 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "evidence": {
+            "category": "GENERIC_EVIDENCE",
+            "text": "<text>",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "create-dispute-evidence-file": {
@@ -1092,6 +1738,22 @@
           "api_key_env": "CASH_API_KEY",
           "api_secret_env": "CASH_CLIENT_SECRET",
           "region_env": "CASH_REGION"
+        },
+        "body": {
+          "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+          "bank_account": {
+            "reference_id": "example-id",
+            "account_type": "BUSINESS_CHECKING",
+            "country": "US",
+            "currency": "USD",
+            "account_number": "4444",
+            "primary_bank_identification_number": "22304030",
+            "secondary_bank_identification_number": "100",
+            "description": "Wells Fargo Business Checking",
+            "metadata": {
+              "my-meta": "meta-value"
+            }
+          }
         }
       },
       "retrieve-bank-account": {

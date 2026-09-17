@@ -27,6 +27,71 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "merchantCountry": "US",
+          "merchantReference": "merchantId1234",
+          "parentMerchantReference": "merchantPlatform",
+          "parameters": {
+            "settlementContractId": "0xt5txyloqru4vx5XuQ88W",
+            "instoreCardsettlementContractId": "0xt5txyloqru4vx5XuQ88W",
+            "channels": {
+              "online": true,
+              "instoreCard": false
+            },
+            "owners": [
+              {
+                "firstName": "Sam",
+                "lastName": "Merchant",
+                "dob": "2023-02-21",
+                "taxId": "TaxId123",
+                "jobTitle": "CEO",
+                "owns25": true,
+                "significantResponsibility": false,
+                "address": {
+                  "address1": "123 Main St",
+                  "address2": "Apt 1403",
+                  "city": "New York",
+                  "state": "NY",
+                  "postCode": "10011",
+                  "countryCode": "US"
+                }
+              }
+            ],
+            "business": {
+              "email": "merchant123@email.com",
+              "legalBusinessName": "Merchant Business LLC",
+              "tradingName": "Merchant Trading",
+              "businessIdentificationNumber": "1234567891",
+              "businessType": "limited_liability_company",
+              "websiteUrl": "https://www.merchant.com",
+              "websiteUrls": [
+                "https://www.merchant.com",
+                "https://www.merchant2.com",
+                "https://www.merchant3.com"
+              ],
+              "monthlyOnlineSalesAmount": "100000",
+              "customerSupportUrl": "https://help.merchant.com",
+              "customerSupportPhoneNumber": "+1999999999",
+              "tradingCountry": "US",
+              "merchantCategoryCode": "5826",
+              "ecommercePlatform": "BLOCK",
+              "avgTimeToShip": "Less than 1 Week",
+              "selfFulfillment": true,
+              "tier": 1,
+              "gmv": "150000000",
+              "gmvCurrencyCode": "USD",
+              "brandReference": "brand_xyz",
+              "address": {
+                "address1": "123 Main St",
+                "address2": "Apt 1403",
+                "city": "New York",
+                "state": "NY",
+                "postCode": "10011",
+                "countryCode": "US"
+              }
+            }
+          }
         }
       },
       "get-onboarding-by-id": {
@@ -52,6 +117,71 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "merchantCountry": "US",
+          "merchantReference": "merchantId1234",
+          "parentMerchantReference": "merchantPlatform",
+          "parameters": {
+            "settlementContractId": "0xt5txyloqru4vx5XuQ88W",
+            "instoreCardsettlementContractId": "0xt5txyloqru4vx5XuQ88W",
+            "channels": {
+              "online": true,
+              "instoreCard": false
+            },
+            "owners": [
+              {
+                "firstName": "Sam",
+                "lastName": "Merchant",
+                "dob": "2023-02-21",
+                "taxId": "TaxId123",
+                "jobTitle": "CEO",
+                "owns25": true,
+                "significantResponsibility": false,
+                "address": {
+                  "address1": "123 Main St",
+                  "address2": "Apt 1403",
+                  "city": "New York",
+                  "state": "NY",
+                  "postCode": "10011",
+                  "countryCode": "US"
+                }
+              }
+            ],
+            "business": {
+              "email": "merchant123@email.com",
+              "legalBusinessName": "Merchant Business LLC",
+              "tradingName": "Merchant Trading",
+              "businessIdentificationNumber": "1234567891",
+              "businessType": "limited_liability_company",
+              "websiteUrl": "https://www.merchant.com",
+              "websiteUrls": [
+                "https://www.merchant.com",
+                "https://www.merchant2.com",
+                "https://www.merchant3.com"
+              ],
+              "monthlyOnlineSalesAmount": "100000",
+              "customerSupportUrl": "https://help.merchant.com",
+              "customerSupportPhoneNumber": "+1999999999",
+              "tradingCountry": "US",
+              "merchantCategoryCode": "5826",
+              "ecommercePlatform": "BLOCK",
+              "avgTimeToShip": "Less than 1 Week",
+              "selfFulfillment": true,
+              "tier": 1,
+              "gmv": "150000000",
+              "gmvCurrencyCode": "USD",
+              "brandReference": "brand_xyz",
+              "address": {
+                "address1": "123 Main St",
+                "address2": "Apt 1403",
+                "city": "New York",
+                "state": "NY",
+                "postCode": "10011",
+                "countryCode": "US"
+              }
+            }
+          }
         }
       },
       "get-onboarding-status": {
@@ -89,6 +219,14 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "lending": [
+            {
+              "channel": "ONLINE",
+              "enabled": true
+            }
+          ]
         }
       },
       "configure-cbt": {
@@ -102,6 +240,15 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "channels": [
+            {
+              "channel": "ONLINE",
+              "enabled": true,
+              "currlocEnabled": true
+            }
+          ]
         }
       },
       "get-settlement-batches": {
@@ -151,6 +298,43 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "contractId": "785389121238",
+          "userDetails": {
+            "firstName": "John",
+            "lastName": "PSP",
+            "email": "john.psp@psp.com",
+            "adminIdentifier": "1234Admin"
+          },
+          "comment": "Approved by X on date Y for reason Z.",
+          "status": "APPROVED",
+          "countryCode": "US",
+          "buyRates": {
+            "defaultRates": {
+              "variableRatePercentage": "5.00",
+              "fixedRate": "0.30",
+              "fixedRateCurrencyCode": "USD",
+              "rateType": "ONGOING",
+              "durationInMonths": 3
+            },
+            "tierDetails": [
+              {
+                "tier": 1,
+                "minimumGmv": "0",
+                "maximumGmv": "1000000",
+                "GmvCurrencyCode": "USD",
+                "tieredRates": [
+                  {
+                    "variableRatePercentage": "3.5",
+                    "fixedRate": "0.3",
+                    "fixedRateCurrencyCode": "USD",
+                    "rateType": "ONGOING"
+                  }
+                ]
+              }
+            ]
+          }
         }
       },
       "review-custom-rate": {
@@ -164,6 +348,32 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "customRateId": "712123123556455",
+          "userDetails": {
+            "firstName": "John",
+            "lastName": "PSP",
+            "email": "john.psp@psp.com",
+            "adminIdentifier": "1234Admin"
+          },
+          "comment": "Approved by X on date Y for reason Z.",
+          "status": "APPROVED",
+          "customRateType": "MERCHANT",
+          "merchantId": "100405604504",
+          "reference": "ac_advkasdvasfbaadf:US",
+          "rateDetails": {
+            "countryCode": "US",
+            "rates": [
+              {
+                "variableRatePercentage": 5,
+                "fixedRate": 0.3,
+                "fixedRateCurrencyCode": "USD",
+                "rateType": "ONGOING",
+                "durationInMonths": 3
+              }
+            ]
+          }
         }
       },
       "update-rate": {
@@ -177,6 +387,15 @@
           "type": "agency",
           "api_key_env": "AGENCY_API_KEY",
           "secret_env": "AGENCY_SHARED_SECRET"
+        },
+        "body": {
+          "tier": 3,
+          "gmv": 150000000,
+          "gmvCurrencyCode": "USD",
+          "agencyMerchantContractDetails": {
+            "contractId": "785389121238",
+            "contractDate": "2023-09-17T00:00:00.000Z"
+          }
         }
       },
       "get-contract": {
