@@ -1,0 +1,134 @@
+{
+  "envs": {
+    "sbox": {}
+  },
+  "commands": {
+    "ping": {
+      "method": "GET",
+      "url": "{{AFTERPAY_API_URL}}/ping",
+      "headers": {
+        "Accept": "text/plain"
+      }
+    },
+    "configuration": {
+      "method": "GET",
+      "url": "{{AFTERPAY_API_URL}}/v2/configuration",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+      }
+    },
+    "checkout": {
+      "method": "POST",
+      "url": "{{AFTERPAY_API_URL}}/v2/checkouts",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "amount": {
+          "amount": ":amount=2.00",
+          "currency": ":currency=USD"
+        },
+        "consumer": {
+          "email": ":email=test@example.com"
+        },
+        "isCashAppPay": ":isCashAppPay|boolean=false",
+        "merchant": {
+          "redirectConfirmUrl": "https://example.com/afterpay/confirm",
+          "redirectCancelUrl": "https://example.com/afterpay/cancel"
+        }
+      }
+    },
+    "get-checkout": {
+      "method": "GET",
+      "url": "{{AFTERPAY_API_URL}}/v2/checkouts/:token",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+      }
+    },
+    "authorize": {
+      "method": "POST",
+      "url": "{{AFTERPAY_API_URL}}/v2/payments/auth",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "requestid": ":requestId",
+        "token": ":token",
+        "merchantReference": ":merchantReference"
+      }
+    },
+    "capture-full": {
+      "method": "POST",
+      "url": "{{AFTERPAY_API_URL}}/v2/payments/capture",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "token": ":token",
+        "merchantReference": ":merchantReference"
+      }
+    },
+    "payment": {
+      "method": "GET",
+      "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+      }
+    },
+    "capture": {
+      "method": "POST",
+      "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/capture",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "requestId": ":requestId",
+        "amount": {
+          "amount": ":amount",
+          "currency": ":currency"
+        }
+      }
+    },
+    "refund": {
+      "method": "POST",
+      "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/refund",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "requestId": ":requestId",
+        "merchantReference": ":merchantReference",
+        "refundMerchantReference": ":merchantReference",
+        "amount": {
+          "amount": ":amount",
+          "currency": ":currency"
+        }
+      }
+    },
+    "void": {
+      "method": "POST",
+      "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/void",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "requestId": ":requestId"
+      }
+    }
+  }
+}
