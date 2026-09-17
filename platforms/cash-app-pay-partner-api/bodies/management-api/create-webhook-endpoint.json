@@ -1,0 +1,16 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "webhook_endpoint": {
+    "api_key_id": "<api_key_id>",
+    "event_configurations": [
+      {
+        "event_type": "customer.created",
+        "api_version": "v1"
+      }
+    ],
+    "url": "<url>",
+    "reference_id": "<reference_id>",
+    "delivery_timeout": 5000,
+    "max_delivery_frequency": 0
+  }
+}

@@ -1,0 +1,643 @@
+openapi: 3.1.0
+x-stoplight:
+  id: 13b11ac94e2be
+info:
+  title: Online API
+  version: v2
+servers:
+  - url: 'https://global-api-sandbox.afterpay.com'
+    description: Sandbox
+  - url: 'https://global-api.afterpay.com'
+    description: Production
+components:
+  securitySchemes:
+    sec0:
+      type: http
+      scheme: basic
+security:
+  - sec0: []
+paths:
+  /v2/billing-agreements:
+    post:
+      summary: Create Billing Agreement
+      description: |
+        Creates a new billing agreement from an order token.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: create-billing-agreement
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/CreateAgreementRequest.yaml
+        description: The request containing the details needed to create a billing agreement
+      responses:
+        '200':
+          description: Billing agreement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+            | headless_billing_agreement_not_authorised | Headless flow is not enabled for this merchant. |
+        '412':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | consumer_ineligible | Consumer not eligible |
+        '415':
+          description: Unsupported Media Type - Content-Type header is missing or invalid
+      x-stoplight:
+        id: etjimapf51ulr
+  /v2/billing-agreements/alias:
+    post:
+      summary: Create Billing Agreement Alias
+      description: |-
+        Creates an alias for an existing billing agreement to help load payment schedule widget.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: alias-billing-agreement
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/BillingAgreementAliasRequest.yaml
+        description: The request containing the billing agreement token and optional duration
+      responses:
+        '200':
+          description: Alias created successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementAliasResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '415':
+          description: Unsupported Media Type - Content-Type header is missing or invalid
+      x-stoplight:
+        id: 88pkdp1ckyjw3
+  /v2/billing-agreements/approvals:
+    post:
+      summary: Start Billing Agreement Approval Process
+      description: |-
+        Initiates the approval process for a new billing agreement.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: start-billing-agreement-approval
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/BillingAgreementApprovalRequest.yaml
+        description: The billing agreement approval request details
+      responses:
+        '200':
+          description: The consumer approved the billing agreement
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementApprovalResponse.yaml
+        '401':
+          description: |
+            Authentication failed or insufficient permissions.
+
+            | errorCode | Description |
+            | --- | --- |
+            | unauthorized | The API credentials are invalid or missing. |
+            | insufficient_permissions | The merchant lacks the required 'merchant_api_v2/initiate' permission. |
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '415':
+          description: Unsupported Media Type - Content-Type header is missing or invalid
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object | One or more required fields in the request body were missing or invalid. |
+        default:
+          description: Unexpected error
+      x-stoplight:
+        id: sumagl8wd8ois
+  /v2/billing-agreements/cancel:
+    put:
+      summary: Cancel Billing Agreement (Alternative)
+      description: |-
+        Alternative endpoint to cancel a billing agreement using a request body instead of path parameter.
+        Functionally equivalent to DELETE /v2/billing-agreements/{token}.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: cancel-billing-agreement-alt
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/CancelBillingAgreementRequest.yaml
+        description: The request containing the billing agreement token to cancel
+      responses:
+        '200':
+          description: Billing agreement cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_found | The specified billing agreement token was not found. |
+      x-stoplight:
+        id: q5fbys10sc03l
+  /v2/billing-agreements/offers:
+    post:
+      summary: Retrieve Billing Agreement Offers
+      description: |-
+        Retrieves available offers for billing agreements based on amount and frequency.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: retrieve-billing-agreement-offers
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/OffersRequest.yaml
+        description: The request containing the amount and billing agreement token to check offers for
+      responses:
+        '200':
+          description: Offers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/OffersResponse.yaml
+        '401':
+          description: |
+            Authentication failed or insufficient permissions.
+
+            | errorCode | Description |
+            | --- | --- |
+            | unauthorized | The API credentials are invalid or missing. |
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object | One or more required fields in the request body were missing or invalid. |
+      x-stoplight:
+        id: xad26rd4hslmg
+  /v2/billing-agreements/retrieve:
+    post:
+      summary: Retrieve Billing Agreement
+      description: |-
+        Alternative endpoint to retrieve billing agreement details using a request body instead of path parameter.
+        Functionally equivalent to GET /v2/billing-agreements/{token}.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: retrieve-billing-agreement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/GetBillingAgreementRequest.yaml
+        description: The request containing the billing agreement token to retrieve
+      responses:
+        '200':
+          description: Billing agreement details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_found | The specified billing agreement token was not found. |
+      x-stoplight:
+        id: 5ljjqzzl0i7m9
+  /v2/billing-agreements/start:
+    post:
+      summary: Start Billing Agreement Link Flow
+      description: |-
+        Initiates the headless billing agreement link flow process.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: start-billing-agreement-link
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/LinkStartRequest.yaml
+        description: The request containing the details needed to start the billing agreement link flow
+      responses:
+        '201':
+          description: Link flow started successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/LinkStartResponse.yaml
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | not_found | Afterpay consumer account does not exist |
+        '412':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_state | Failed to send code |
+        '429':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | too_many_requests | Too many requests |
+      x-stoplight:
+        id: f1bowghhun4c4
+  '/v2/billing-agreements/{token}':
+    get:
+      summary: Get Billing Agreement Details
+      description: |-
+        Retrieves the details of a billing agreement using its token.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: get-billing-agreement
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier token of the billing agreement to retrieve
+      responses:
+        '200':
+          description: Billing agreement details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_found | The specified billing agreement token was not found. |
+      x-stoplight:
+        id: 2p9948t0j58q2
+    delete:
+      summary: Cancel Billing Agreement
+      description: |-
+        Cancels an existing billing agreement using its token.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: cancel-billing-agreement
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier token of the billing agreement to cancel
+      responses:
+        '200':
+          description: Billing agreement cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: ../models/BillingAgreementResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_authorised | Recurring payments are not enabled for this merchant. |
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | billing_agreement_not_found | The specified billing agreement token was not found. |
+      x-stoplight:
+        id: hguubtx68kud0
+  /v2/recurring-payments:
+    post:
+      summary: Capture Full Recurring Payment
+      description: |-
+        Creates and immediately captures a recurring payment using a billing agreement token.
+        This endpoint combines authorization and capture into a single step.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: capture-full-recurring-payment
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/RecurringPaymentRequest.yaml
+        description: The request containing the payment details to process
+      responses:
+        '201':
+          description: |
+            | Status | Description |
+            | ----- | ----- |
+            | `APPROVED` | If payment is approved by Afterpay, returns a Payment object in response, with a status of "APPROVED". |
+            | `DECLINED` | If payment is declined by Afterpay, for example, if expired payment method, returns a Payment object in response, with a status of "DECLINED". Please advise the consumer to contact the Afterpay Customer Service team for more information. |
+          content:
+            application/json:
+              schema:
+                $ref: ../models/Payment.yaml
+        '402':
+          description: |
+            If payment is declined by Afterpay, for example, if invalid card details were entered, returns a Payment object in response, with a `status` of "DECLINED" and a `paymentState` of "AUTH_DECLINED". Please advise the consumer to contact the Afterpay Customer Service team for more information.
+
+            As well, the following errorCodes are possible:
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_token | The checkout token is invalid, expired, or does not exist.
+        '415':
+          description: Unsupported Media Type
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object             | One or more required fields were missing or invalid.                     |
+            | unsupported_payment_type   | The amount is outside of the merchant's payment limits, as returned by Get Configuration. |
+            | unsupported_currency       | The amount is outside of the merchant's payment limits, as returned by Get Configuration. |
+        default:
+          description: See additional PUT/POST Errors applicable to all POST endpoints.
+      x-stoplight:
+        id: ikf59hjhtr2id
+  /v2/recurring-payments/auth:
+    post:
+      summary: Authorize Recurring Payment
+      description: |-
+        Authorizes a recurring payment using a billing agreement token.
+        This endpoint performs authorization only, requiring a separate capture step.
+
+        *Deprecated. For new integrations, see [Grants](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/api-reference/reference/grants/start-grant-approval).*
+      operationId: auth
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/RecurringPaymentRequest.yaml
+        description: The request containing the payment details to authorize
+      responses:
+        '201':
+          description: 'If the payment is approved by Afterpay, a Payment object is returned with a `status` of **APPROVED** and a `paymentState` of **AUTH_APPROVED**.'
+          content:
+            application/json:
+              schema:
+                $ref: ../models/PaymentAuth.yaml
+              examples: {}
+        '402':
+          description: |
+            If payment is declined by Afterpay, for example, if invalid card details were entered, returns a Payment object in response, with a `status` of "DECLINED" and a `paymentState` of "AUTH_DECLINED". Please advise the consumer to contact the Afterpay Customer Service team for more information.
+
+            As well, the following errorCodes are possible:
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_token | The checkout token is invalid, expired, or does not exist.
+        '412':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            |npuf_eligibility_mismatch|Npuf eligibility mismatch|
+        '415':
+          description: Unsupported Media Type
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object             | One or more required fields were missing or invalid.                     |
+            | unsupported_payment_type   | The amount is outside of the merchant's payment limits, as returned by Get Configuration. |
+            | unsupported_currency       | The amount is outside of the merchant's payment limits, as returned by Get Configuration. |
+        default:
+          description: see additional PUT/POST errors applicable to all POST endpoints.
+      x-stoplight:
+        id: 1dioxsqdozyrn
+webhooks:
+  AgreementStatusUpdated:
+    post:
+      summary: Billing agreement status updated
+      description: Webhook notification sent when a billing agreement's status changes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - agreementToken
+                - status
+                - reasons
+                - dateTime
+              properties:
+                agreementToken:
+                  type: string
+                  description: Token identifying the billing agreement
+                status:
+                  type: string
+                  enum:
+                    - ACTIVE
+                    - INACTIVE
+                    - TERMINATED
+                  description: Current status of the agreement
+                reasons:
+                  type: array
+                  description: 'List of reasons for the status update such as {PAYMENT_METHOD_EXPIRED, PENDING_RENEWAL, ACCOUNT_DEACTIVATED, USER_CANCELLED}'
+                  items:
+                    type: string
+                message:
+                  type: string
+                  description: Optional message providing additional context
+                  nullable: true
+                dateTime:
+                  type: string
+                  description: Timestamp of the status update
+                  format: date-time
+      responses:
+        '200':
+          description: Acknowledgment that the webhook was received

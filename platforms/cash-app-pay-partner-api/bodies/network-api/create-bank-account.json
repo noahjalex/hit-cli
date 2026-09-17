@@ -1,0 +1,16 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "bank_account": {
+    "reference_id": "example-id",
+    "account_type": "BUSINESS_CHECKING",
+    "country": "US",
+    "currency": "USD",
+    "account_number": "4444",
+    "primary_bank_identification_number": "22304030",
+    "secondary_bank_identification_number": "100",
+    "description": "Wells Fargo Business Checking",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  }
+}

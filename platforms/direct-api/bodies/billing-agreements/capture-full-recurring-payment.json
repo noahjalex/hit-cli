@@ -1,0 +1,97 @@
+{
+  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "paymentMethod": {
+    "token": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+    "type": "BILLING_AGREEMENT"
+  },
+  "amount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "consumer": {
+    "email": "test@example.com",
+    "givenNames": "Joe",
+    "surname": "Consumer",
+    "phoneNumber": "0400 000 000"
+  },
+  "billing": {
+    "name": "Joe Consumer",
+    "line1": "Level 8",
+    "line2": "390 Collins Street",
+    "area1": "Melbourne",
+    "area2": "<area2>",
+    "region": "VIC",
+    "postcode": "3000",
+    "countryCode": "AU",
+    "phoneNumber": "0400 000 000"
+  },
+  "shipping": {
+    "name": "Joe Consumer",
+    "line1": "Level 8",
+    "line2": "390 Collins Street",
+    "area1": "Melbourne",
+    "area2": "<area2>",
+    "region": "VIC",
+    "postcode": "3000",
+    "countryCode": "AU",
+    "phoneNumber": "0400 000 000"
+  },
+  "courier": {
+    "shippedAt": "2023-08-24T14:15:22Z",
+    "name": "Australia Post",
+    "tracking": "AA0000000000000",
+    "priority": "STANDARD"
+  },
+  "items": [
+    {
+      "name": "Blue Carabiner",
+      "sku": "<sku>",
+      "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+      "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+      "quantity": 1,
+      "price": {
+        "amount": "100.00",
+        "currency": "AUD"
+      },
+      "categories": [
+        [
+          "<categories>"
+        ]
+      ],
+      "estimatedShipmentDate": "2023-08-01",
+      "preorder": false
+    }
+  ],
+  "discounts": [
+    {
+      "displayName": "New Customer Coupon",
+      "amount": {
+        "amount": "100.00",
+        "currency": "AUD"
+      }
+    }
+  ],
+  "description": "Monthly Premium Subscription Payment",
+  "merchant": {
+    "name": "Merchant Display Name"
+  },
+  "merchantReference": "SUB-2024-03-001",
+  "shippingAmount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "taxAmount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "custom": {
+    "customerId": "cust_456",
+    "plan": "premium"
+  },
+  "paymentScheduleChecksum": "abc123def456",
+  "enrichments": {
+    "initiation": {
+      "actor": "CUSTOMER"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 use crate::core::app_config::get_app_config;
-use crate::core::command::Command;
+use crate::core::command::{AuthConfig, Command};
 use crate::core::config::Config;
 use crate::core::env::get_env;
 use crate::core::ephenv::get_ephenvs;
@@ -8,13 +8,16 @@ use crate::utils::http::handle_request;
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use edit::edit;
 use handlebars::Handlebars;
+use hmac::{Hmac, Mac};
 use regex::{NoExpand, Regex};
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::error::Error;
 use std::io::stdout;
 use std::io::Write;
 use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const BREAKING_CHANGE_VERSION: &str = "0.6.0";
 
@@ -31,6 +34,176 @@ fn template_engine() -> Handlebars<'static> {
     handlebars.register_helper("basicAuth", Box::new(basic_auth_helper));
     handlebars.register_helper("urlEncode", Box::new(url_encode_helper));
     handlebars
+}
+
+fn required_env<'a>(
+    data: &'a HashMap<String, String>,
+    name: &str,
+) -> Result<&'a str, Box<dyn Error>> {
+    data.get(name).map(String::as_str).ok_or_else(|| {
+        Box::new(CliError {
+            message: format!("required environment variable '{}' is not set", name),
+        }) as Box<dyn Error>
+    })
+}
+
+fn hmac_sha256(secret: &str, value: &str) -> Vec<u8> {
+    let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap();
+    mac.update(value.as_bytes());
+    mac.finalize().into_bytes().to_vec()
+}
+
+fn request_path(url: &reqwest::Url) -> String {
+    match url.query() {
+        Some(query) => format!("{}?{}", url.path(), query),
+        None => url.path().to_string(),
+    }
+}
+
+fn agency_signature(secret: &str, url: &str, timestamp: u64, body: Option<&str>) -> String {
+    let mut payload = format!("{}\n{}", url, timestamp);
+    if let Some(body) = body {
+        payload.push('\n');
+        payload.push_str(body);
+    }
+    STANDARD.encode(hmac_sha256(secret, &payload))
+}
+
+fn cash_app_signature(
+    secret: &str,
+    method: &str,
+    path: &str,
+    host: &str,
+    authorization: &str,
+    body: Option<&str>,
+) -> String {
+    let body_digest = Sha256::digest(body.unwrap_or_default().as_bytes())
+        .iter()
+        .map(|byte| format!("{:02x}", byte))
+        .collect::<String>();
+    let signed_headers = format!(
+        "accept:application/json\nauthorization:{}\ncontent-type:application/json\nhost:{}",
+        authorization, host
+    );
+    let payload = format!("{}\n{}\n{}\n{}", method, path, signed_headers, body_digest);
+    hmac_sha256(secret, &payload)
+        .iter()
+        .map(|byte| format!("{:02x}", byte))
+        .collect()
+}
+
+fn apply_auth(
+    auth: &AuthConfig,
+    method: &str,
+    url: &reqwest::Url,
+    body: Option<&str>,
+    headers: &mut HashMap<String, String>,
+    env: &HashMap<String, String>,
+) -> Result<(), Box<dyn Error>> {
+    match auth {
+        AuthConfig::Agency {
+            api_key_env,
+            secret_env,
+        } => {
+            let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
+            let signature = agency_signature(
+                required_env(env, secret_env)?,
+                url.as_str(),
+                timestamp,
+                body,
+            );
+            headers.insert(
+                "X-Afterpay-Request-ApiKey".to_string(),
+                required_env(env, api_key_env)?.to_string(),
+            );
+            headers.insert("X-Afterpay-Request-Date".to_string(), timestamp.to_string());
+            headers.insert("X-Afterpay-Request-Signature".to_string(), signature);
+        }
+        AuthConfig::CashApp {
+            client_id_env,
+            api_key_env,
+            api_secret_env,
+            region_env,
+        } => {
+            let client_id = required_env(env, client_id_env)?;
+            let api_key = required_env(env, api_key_env)?;
+            let authorization = format!("Client {} {}", client_id, api_key);
+            let host = match url.port() {
+                Some(port) => format!("{}:{}", url.host_str().unwrap_or_default(), port),
+                None => url.host_str().unwrap_or_default().to_string(),
+            };
+            let signature = match env.get(api_secret_env) {
+                Some(secret) => format!(
+                    "V1 {}",
+                    cash_app_signature(
+                        secret,
+                        method,
+                        &request_path(url),
+                        &host,
+                        &authorization,
+                        body,
+                    )
+                ),
+                None if host.starts_with("sandbox.") => env
+                    .get("CASH_X_SIGNATURE")
+                    .cloned()
+                    .unwrap_or_else(|| "sandbox:skip-signature-check".to_string()),
+                None => {
+                    return Err(Box::new(CliError {
+                        message: format!(
+                            "required environment variable '{}' is not set",
+                            api_secret_env
+                        ),
+                    }))
+                }
+            };
+
+            headers.insert("Accept".to_string(), "application/json".to_string());
+            headers.insert("Authorization".to_string(), authorization);
+            headers.insert("Content-Type".to_string(), "application/json".to_string());
+            headers.insert(
+                "X-Region".to_string(),
+                env.get(region_env)
+                    .cloned()
+                    .unwrap_or_else(|| "SEA".to_string()),
+            );
+            headers.insert("X-Signature".to_string(), signature);
+        }
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod auth_tests {
+    use super::*;
+
+    #[test]
+    fn signs_agency_requests() {
+        assert_eq!(
+            agency_signature(
+                "secret",
+                "https://agencyapi.sandbox.afterpay.com/v1/test?x=1",
+                1_706_263_066,
+                Some(r#"{"a":1}"#)
+            ),
+            "557jEBlpa1abEP9GAzg0tRRjITBEWcJJnj72Y97/JVk="
+        );
+    }
+
+    #[test]
+    fn signs_cash_app_requests() {
+        assert_eq!(
+            cash_app_signature(
+                "secret",
+                "GET",
+                "/network/v1/payments?limit=50",
+                "sandbox.api.cash.app",
+                "Client client key",
+                None,
+            ),
+            "fd317ed78e87829961fde4f0dea180b8ddb6e850341ca9b0adc2643cbf74d633"
+        );
+    }
 }
 
 fn check_upgrade_notice() -> bool {
@@ -59,10 +232,24 @@ fn replace_params(input: String, params: &HashMap<String, String>) -> String {
     })
 }
 
+fn split_option<'a>(
+    value: &'a str,
+    separator: char,
+    format: &str,
+) -> Result<(&'a str, &'a str), Box<dyn Error>> {
+    value.split_once(separator).ok_or_else(|| {
+        Box::new(CliError {
+            message: format!("invalid '{}'; expected {}", value, format),
+        }) as Box<dyn Error>
+    })
+}
+
 pub struct RunOptions {
     pub edit_body: bool,
     pub body_file: Option<PathBuf>,
     pub json_output: bool,
+    pub query: Vec<String>,
+    pub headers: Vec<String>,
 }
 
 struct TypedSubstitutionResult {
@@ -246,15 +433,37 @@ pub async fn run(
         (None, None)
     };
 
+    let mut url_to_call = reqwest::Url::parse(&url_to_call)?;
+    for query in &options.query {
+        let (name, value) = split_option(query, '=', "NAME=VALUE")?;
+        url_to_call.query_pairs_mut().append_pair(name, value);
+    }
+
+    let mut headers = api_call
+        .headers
+        .clone()
+        .into_iter()
+        .map(|(k, v)| hb_handle.render_template(&v, &merged_data).map(|v| (k, v)))
+        .collect::<Result<HashMap<String, String>, _>>()?;
+    for header in &options.headers {
+        let (name, value) = split_option(header, ':', "NAME:VALUE")?;
+        headers.insert(name.trim().to_string(), value.trim().to_string());
+    }
+    if let Some(auth) = &api_call.auth {
+        apply_auth(
+            auth,
+            &api_call.method.to_string(),
+            &url_to_call,
+            input.as_deref(),
+            &mut headers,
+            &merged_data,
+        )?;
+    }
+
     let response = handle_request(
-        url_to_call,
+        url_to_call.to_string(),
         &api_call.method,
-        &api_call
-            .headers
-            .clone()
-            .into_iter()
-            .map(|(k, v)| hb_handle.render_template(&v, &merged_data).map(|v| (k, v)))
-            .collect::<Result<HashMap<String, String>, _>>()?,
+        &headers,
         input,
         file_fields,
     )

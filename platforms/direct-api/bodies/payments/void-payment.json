@@ -1,0 +1,8 @@
+{
+  "amount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "requestId": "<requestId>",
+  "reason": "<reason>"
+}

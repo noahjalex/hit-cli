@@ -18,6 +18,8 @@ use std::process::ExitCode;
 const GLOBAL_ARG_EDIT_BODY: &str = "edit-body";
 const GLOBAL_ARG_BODY_FILE: &str = "body-file";
 const GLOBAL_ARG_JSON: &str = "json";
+const GLOBAL_ARG_QUERY: &str = "query";
+const GLOBAL_ARG_HEADER: &str = "header";
 
 #[derive(Debug, Parser)]
 #[command(version)]
@@ -71,9 +73,15 @@ fn obtain_run_command_from_matches<'a>(
     config_commands: &HashMap<String, Box<ConfigCommandType>>,
     args_map: &mut HashMap<String, String>,
 ) -> (ConfigCommand, &'a ArgMatches) {
-    let global_args: HashSet<&str> = [GLOBAL_ARG_EDIT_BODY, GLOBAL_ARG_BODY_FILE, GLOBAL_ARG_JSON]
-        .into_iter()
-        .collect();
+    let global_args: HashSet<&str> = [
+        GLOBAL_ARG_EDIT_BODY,
+        GLOBAL_ARG_BODY_FILE,
+        GLOBAL_ARG_JSON,
+        GLOBAL_ARG_QUERY,
+        GLOBAL_ARG_HEADER,
+    ]
+    .into_iter()
+    .collect();
 
     let subcommand_name = matches.subcommand_name().unwrap();
     let config_command_value = config_commands.get(subcommand_name).unwrap();
@@ -125,6 +133,22 @@ fn get_run_command(config: &Config) -> Command {
                 .action(ArgAction::SetTrue)
                 .global(true)
                 .help("Output response as structured JSON (url, status, headers, body)"),
+        )
+        .arg(
+            Arg::new(GLOBAL_ARG_QUERY)
+                .long("query")
+                .action(ArgAction::Append)
+                .global(true)
+                .value_name("NAME=VALUE")
+                .help("Append a query parameter; repeat for multiple values"),
+        )
+        .arg(
+            Arg::new(GLOBAL_ARG_HEADER)
+                .long("header")
+                .action(ArgAction::Append)
+                .global(true)
+                .value_name("NAME:VALUE")
+                .help("Add or replace a request header"),
         );
 
     command = formulate_command(command, &config.commands);
@@ -162,6 +186,18 @@ pub async fn init() -> ExitCode {
                     .get_one::<String>(GLOBAL_ARG_BODY_FILE)
                     .map(PathBuf::from),
                 json_output: leaf_matches.get_flag(GLOBAL_ARG_JSON),
+                query: leaf_matches
+                    .get_many::<String>(GLOBAL_ARG_QUERY)
+                    .into_iter()
+                    .flatten()
+                    .cloned()
+                    .collect(),
+                headers: leaf_matches
+                    .get_many::<String>(GLOBAL_ARG_HEADER)
+                    .into_iter()
+                    .flatten()
+                    .cloned()
+                    .collect(),
             };
 
             run::run(&config_command, args_map, options).await

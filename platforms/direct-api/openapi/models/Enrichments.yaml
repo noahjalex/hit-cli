@@ -1,0 +1,11 @@
+title: Enrichments
+type: object
+required:
+  - initiation
+properties:
+  initiation:
+    $ref: ./Initiation.yaml
+    description: Who initiated the order
+  subscription:
+    $ref: ./Subscription.yaml
+    description: Metadata on the subscription details

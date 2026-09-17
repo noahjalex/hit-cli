@@ -1,0 +1,14 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "refund": {
+    "amount": 1500,
+    "currency": "USD",
+    "merchant_id": "<merchant_id>",
+    "payment_id": "PWC_4nn21zy6t0v2yhqg5bvhk7xkq",
+    "capture": true,
+    "reference_id": "external-id",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  }
+}

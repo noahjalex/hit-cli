@@ -1,0 +1,21 @@
+type: object
+description: Request to retrieve available billing agreement offers
+required:
+  - requestId
+  - amount
+  - token
+properties:
+  requestId:
+    type: string
+    description: A unique identifier for this request
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  amount:
+    $ref: Money.yaml
+    description: The amount to check offers for
+    example:
+      amount: "200.00"
+      currency: "USD"
+  token:
+    type: string
+    description: The billing agreement token
+    example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"

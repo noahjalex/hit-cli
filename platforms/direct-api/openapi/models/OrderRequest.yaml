@@ -1,0 +1,49 @@
+title: Request
+type: object
+required:
+  - requestId
+  - grantId
+  - amount
+  - enrichments
+properties:
+  requestId:
+    type: string
+    maxLength: 64
+    description: A unique identifier for the request, used for idempotency
+    format: uuid
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  grantId:
+    type: string
+    description: ID of the grant used to create this order
+    example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
+  amount:
+    $ref: ../models/Money.yaml
+    description: The total amount of the order
+  enrichments:
+    $ref: ../models/Enrichments.yaml
+    description: Describes additional fields beyond core payment information.
+  consumer:
+    $ref: ../models/Consumer.yaml
+  billing:
+    $ref: ../models/Contact.yaml
+  shipping:
+    $ref: ../models/Contact.yaml
+  items:
+    type: array
+    items:
+      $ref: ../models/Item.yaml
+  discounts:
+    type: array
+    items:
+      $ref: ../models/Discount.yaml
+  merchantReference:
+    type: string
+    maxLength: 128
+    description: The reference/order ID in the merchant's system
+    example: "SUB-2024-03-001"
+  shippingAmount:
+    $ref: ../models/Money.yaml
+    description: The shipping cost amount
+  taxAmount:
+    $ref: ../models/Money.yaml
+    description: The tax amount

@@ -1,0 +1,17 @@
+type: object
+description: Details about the agreement to be created. 
+required:
+  - type
+properties:
+  type:
+    type: string
+    description: Agreement Type for approval.
+    enum:
+      - BILLING
+    example: "BILLING"
+  merchantReference:
+    type: string
+    nullable: true
+    maxLength: 255
+    description: A merchant-provided reference for the agreement.
+    example: "merchant-order-12345"

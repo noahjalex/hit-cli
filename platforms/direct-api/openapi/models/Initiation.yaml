@@ -1,0 +1,12 @@
+title: Initiation
+type: object
+properties:
+  actor:
+    type: string
+    description: The party who initiated the order
+    enum:
+      - CUSTOMER
+      - MERCHANT
+    example: "CUSTOMER"
+required:
+  - actor

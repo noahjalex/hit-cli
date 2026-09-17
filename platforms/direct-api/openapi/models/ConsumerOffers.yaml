@@ -1,0 +1,20 @@
+type: object
+description: Consumer offers
+properties:
+  noPaymentUpfront:
+    type: object
+    description: Information about the no payment upfront feature eligibility
+    required:
+      - eligible
+      - eligibilityLimit
+    properties:
+      eligible:
+        type: boolean
+        description: Indicates if the consumer is eligible for no payment upfront
+        example: true
+      eligibilityLimit:
+        $ref: Money.yaml
+        description: The maximum amount eligible for no payment upfront
+        example:
+          amount: "2000.00"
+          currency: "USD"

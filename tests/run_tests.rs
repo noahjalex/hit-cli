@@ -73,6 +73,43 @@ fn test_runtime_auth_templates(temp_dir: TempDir) -> Result<(), Box<dyn std::err
 }
 
 #[rstest]
+fn test_dynamic_query_and_header_options(
+    temp_dir: TempDir,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut server = mockito::Server::new();
+    let mock = server
+        .mock("GET", "/options")
+        .match_query(mockito::Matcher::UrlEncoded(
+            "filter".to_string(),
+            "a b".to_string(),
+        ))
+        .match_header("x-test", "value")
+        .with_status(200)
+        .create();
+    let commands = serde_json::json!({
+        "options": {
+            "method": "GET",
+            "url": "{{API_URL}}/options"
+        }
+    });
+
+    let setup = setup_with_mock(temp_dir, &server.url(), commands);
+    let mut cmd = get_hit_command_for_setup(&setup);
+    cmd.args([
+        "run",
+        "options",
+        "--query",
+        "filter=a b",
+        "--header",
+        "X-Test:value",
+    ]);
+    cmd.assert().success();
+
+    mock.assert();
+    Ok(())
+}
+
+#[rstest]
 fn test_nested_body_defaults_can_be_overridden(
     temp_dir: TempDir,
 ) -> Result<(), Box<dyn std::error::Error>> {

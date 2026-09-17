@@ -1,0 +1,33 @@
+type: object
+x-tags:
+  - request-object
+description: |-
+  Essential information for tracking a shipment. The `shippedAt` key represents the date and time when the item was shipped. This value follows the ISO 8601 standard format for date and time representations.
+
+  The `name` field indicates the courier service employed to handle the shipment (e.g. FEDEX, UPS). For orders that are picked up in-store (also known as Buy-Online-Pickup-Instore), please use "INSTORE_PICKUP" as the `name` field value.
+
+  The `tracking` key represents a unique tracking number provided by the courier service to monitor the shipment's progress. It's a valuable tool for customers and businesses to track and trace their packages.
+
+  The `priority` field tracks the shipping speed or service level associated with the delivery. 
+title: Shipping Courier
+properties:
+  shippedAt:
+    type: string
+    format: date-time
+    example: '2023-08-24T14:15:22Z'
+    description: 'The date and time when the order was shipped, in ISO 8601 format.'
+  name:
+    type: string
+    example: Australia Post
+    maxLength: 128
+    description: 'The name of the courier. '
+  tracking:
+    type: string
+    maxLength: 128
+    example: AA0000000000000
+    description: The tracking number provided by the courier.
+  priority:
+    enum:
+      - STANDARD
+      - EXPRESS
+    description: The shipping priority.

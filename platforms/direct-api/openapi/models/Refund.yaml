@@ -1,0 +1,38 @@
+title: Refund
+x-stoplight:
+  id: rw3n26qi0yrll
+examples:
+  - requestId: 49efce77-4bf2-4e41-86e8-c2b92f493c2a
+    amount:
+      amount: '10.00'
+      currency: AUD
+    merchantReference: merchantRefundId-1234
+    refundId: '67890123'
+    refundedAt: '2023-01-01T00:00:00.000Z'
+    refundMerchantReference: merchantRefundId-1234
+x-tags:
+  - response-object
+description: |
+  To guarantee safe retries, the merchant should offer their refund ID or reference, aligning with their internal records
+
+  Unique values for the `requestID`  and `merchantReference` are required to guarantee safe retries. It is recommended that the merchant generates a UUID for each unique refund request. 
+
+  The `refundMerchantReference` is a unique reference that when provided, will appear in the daily settlement file as "Payment Event Id". In most cases, this would hold the same value as the `merchantReference`.
+allOf:
+  - type: object
+    properties:
+      refundId:
+        type: string
+        x-stoplight:
+          id: otsyu4hw4q6pg
+        description: 'The unique, permanent, Afterpay-generated Refund ID.'
+        readOnly: true
+      refundedAt:
+        type: string
+        x-stoplight:
+          id: dnbe14xfu90lj
+        example: '2023-01-01T00:00:00.000'
+        readOnly: true
+  - $ref: ./CreateRefund.yaml
+    x-stoplight:
+      id: awaoy60iode8l

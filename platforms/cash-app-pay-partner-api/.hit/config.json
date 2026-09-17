@@ -1,0 +1,1169 @@
+{
+  "envs": {
+    "runtime": {}
+  },
+  "commands": {
+    "checkout-api": {
+      "create-checkout": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-order": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders/:order_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-checkout": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders/:order_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-payment-plans": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders/:order_id/payment-plan",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "denied-reason": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders/:order_id/denial-reason",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "confirm-checkout": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders/:order_id/confirm",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "cancel-checkout": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/checkout/v0/orders/:order_id/cancel",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      }
+    },
+    "customer-request-api": {
+      "list-requests": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/customer-request/v1/requests",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-request": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/customer-request/v1/requests",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-request": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/customer-request/v1/requests/:request_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-request": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/customer-request/v1/requests/:request_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      }
+    },
+    "engagement-api": {
+      "list-offers": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/engagement/v1/offers?brand_id=:brand_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-offer": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/engagement/v1/offers",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-offer": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/engagement/v1/offers/:offer_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "delete-offer": {
+        "method": "DELETE",
+        "url": "{{CASH_API_URL}}/engagement/v1/offers/:offer_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-offer": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/engagement/v1/offers/:offer_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-offer-redemption": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/engagement/v1/offers/:offer_id/redemption",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      }
+    },
+    "management-api": {
+      "list-api-keys": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/management/v1/api-keys",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-api-key": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/management/v1/api-keys",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-api-key": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/management/v1/api-keys/:api_key_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "delete-api-key": {
+        "method": "DELETE",
+        "url": "{{CASH_API_URL}}/management/v1/api-keys/:api_key_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-webhook-endpoints": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/management/v1/webhook-endpoints",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-webhook-endpoint": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/management/v1/webhook-endpoints",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-webhook-endpoint": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/management/v1/webhook-endpoints/:webhook_endpoint_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "delete-webhook-endpoint": {
+        "method": "DELETE",
+        "url": "{{CASH_API_URL}}/management/v1/webhook-endpoints/:webhook_endpoint_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-webhook-endpoint": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/management/v1/webhook-endpoints/:webhook_endpoint_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-webhook-events": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/management/v1/webhook-events",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-request-chain": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/management/v1/request-chains",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      }
+    },
+    "network-api": {
+      "list-brands": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/brands",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-brand": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/brands",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "upsert-brand": {
+        "method": "PUT",
+        "url": "{{CASH_API_URL}}/network/v1/brands",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-brand": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/brands/:brand_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-brand": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/network/v1/brands/:brand_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-merchants": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/merchants",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-merchant": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/merchants",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "upsert-merchant": {
+        "method": "PUT",
+        "url": "{{CASH_API_URL}}/network/v1/merchants",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-merchant": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/merchants/:merchant_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-merchant": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/network/v1/merchants/:merchant_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-orders": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/orders",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-order": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/orders",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "upsert-order": {
+        "method": "PUT",
+        "url": "{{CASH_API_URL}}/network/v1/orders",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-order": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/orders/:order_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "update-order": {
+        "method": "PATCH",
+        "url": "{{CASH_API_URL}}/network/v1/orders/:order_id",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "submit-order": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/orders/:order_id/submit",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-payments": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/payments",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-payment": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/payments",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-payment": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/payments/:payment_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-payment-authorization": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/payments/:payment_id/authorizations",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "capture-payment": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/payments/:payment_id/capture",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "void-payment": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/payments/:payment_id/void",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "void-payment-by-idempotency-key": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/payments/void-by-idempotency-key",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-refunds": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/refunds",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-refund": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/refunds",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-refund": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/refunds/:refund_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "capture-refund": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/refunds/:refund_id/capture",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "void-refund": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/refunds/:refund_id/void",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "void-refund-by-idempotency-key": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/refunds/void-by-idempotency-key",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-customers": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/customers",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-customer": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/customers/:customer_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-customer-grant": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/customers/:customer_id/grants/:grant_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-customer-grants": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/customers/:customer_id/grants",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "revoke-customer-grant": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/customers/:customer_id/grants/:grant_id/revoke",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-disputes": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/disputes",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-dispute": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "accept-dispute": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/accept",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "challenge-dispute": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/challenge",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-dispute-evidence": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/evidence",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-dispute-evidence-text": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/evidence-text",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-dispute-evidence-file": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/evidence-file",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-dispute-evidence": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/evidence/:evidence_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "delete-dispute-evidence": {
+        "method": "DELETE",
+        "url": "{{CASH_API_URL}}/network/v1/disputes/:dispute_id/evidence/:evidence_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-fee-plan": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/fee-plans/:fee_plan_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-fee-plans": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/fee-plans",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-bank-accounts": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/bank-accounts",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "create-bank-account": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/bank-accounts",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-bank-account": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/bank-accounts/:bank_account_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "list-settlement-configurations": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/settlement-configurations",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "post-settlement-configurations": {
+        "method": "POST",
+        "url": "{{CASH_API_URL}}/network/v1/settlement-configurations",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "retrieve-settlement-configuration": {
+        "method": "GET",
+        "url": "{{CASH_API_URL}}/network/v1/settlement-configurations/:settlement_configuration_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      },
+      "delete-settlement-configuration": {
+        "method": "DELETE",
+        "url": "{{CASH_API_URL}}/network/v1/settlement-configurations/:settlement_configuration_id",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "cash-app",
+          "client_id_env": "CASH_CLIENT_ID",
+          "api_key_env": "CASH_API_KEY",
+          "api_secret_env": "CASH_CLIENT_SECRET",
+          "region_env": "CASH_REGION"
+        }
+      }
+    }
+  }
+}

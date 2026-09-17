@@ -1,0 +1,39 @@
+type: object
+description: Request body for initiating a billing agreement approval process
+required:
+  - merchant
+properties:
+  consumer:
+    $ref: Consumer.yaml
+    description: Consumer details for the billing agreement
+  merchant:
+    type: object
+    properties:
+      redirectConfirmUrl:
+        type: string
+        example: 'https://example.com/approval/confirm'
+      redirectCancelUrl:
+        type: string
+        example: 'https://example.com/approval/cancel'
+      popupOriginUrl:
+        type: string
+        description: This property is optional when a `redirectConfirmURL` is provided.
+        example: 'https://merchant.com/cart'
+      name:
+        type: string
+        description: 'The merchant name displayed in the Afterpay approval flow.'
+    required:
+      - redirectConfirmUrl
+      - redirectCancelUrl
+  merchantReference:
+    type: string
+    description: Merchant's unique reference for this billing agreement
+    maxLength: 128
+    example: "ba-ref-20240304-001"
+  agreements:
+    type: array
+    description: Agreement type for approval (only single agreement is supported)
+    minItems: 1
+    maxItems: 1
+    items:
+      $ref: AgreementApproval.yaml

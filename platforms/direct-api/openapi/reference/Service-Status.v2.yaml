@@ -1,0 +1,59 @@
+openapi: 3.1.0
+info:
+  title: Online API
+  version: v2
+servers:
+  - url: 'https://global-api-sandbox.afterpay.com'
+    description: Sandbox
+  - url: 'https://global-api.afterpay.com'
+    description: Production
+components:
+  securitySchemes:
+    sec0:
+      type: http
+      scheme: basic
+security:
+  - sec0: []
+paths:
+  /ping:
+    get:
+      summary: Ping
+      description: |
+        This endpoint can be used to check that the service is available and reachable.
+
+        Unlike all other endpoints, this endpoint does not require authentication, and responds with `text/plain` instead of `application/json`.
+
+
+        **Connection Timeouts**
+        | Timeout | Time (Seconds) |
+        |---------|----------------|
+        | Open    | 10             |
+        | Read    | 20             |
+      operationId: ping
+      parameters:
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: text/plain
+      deprecated: false
+      security: []
+      responses:
+        '200':
+          description: Returns the string "pong"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+                readOnly: true
+        '405':
+          description: 'The request was made by a HTTP Method other than `GET`, `HEAD` or `OPTIONS`. For example, `POST`, `PUT` or `DELETE`.'
+        default:
+          description: see additional PUT/POST errors applicable to all POST endpoints.

@@ -1,0 +1,18 @@
+type: object
+title: Agreement
+description: List of agreements to create at checkout
+required:
+  - type
+properties:
+  type:
+    type: string
+    description: The type of agreement. Currently supports "BILLING".
+    enum:
+      - BILLING
+    example: "BILLING"
+  merchantReference:
+    type: string
+    description: A merchant-provided reference for the agreement.
+    nullable: true
+    maxLength: 255
+    example: "merchant-order-12345"

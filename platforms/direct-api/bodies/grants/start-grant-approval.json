@@ -1,0 +1,21 @@
+{
+  "grants": [
+    {
+      "type": "ON_FILE",
+      "merchantReference": "merchant-order-12345"
+    }
+  ],
+  "merchant": {
+    "redirectConfirmUrl": "https://example.com/approval/confirm",
+    "redirectCancelUrl": "https://example.com/approval/cancel",
+    "popupOriginUrl": "https://merchant.com/cart",
+    "name": "<name>"
+  },
+  "merchantReference": "ba-ref-20240304-001",
+  "consumer": {
+    "email": "test@example.com",
+    "givenNames": "Joe",
+    "surname": "Consumer",
+    "phoneNumber": "0400 000 000"
+  }
+}

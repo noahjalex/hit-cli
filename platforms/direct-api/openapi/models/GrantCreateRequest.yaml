@@ -1,0 +1,21 @@
+title: Create grant request
+type: object
+properties:
+  requestId:
+    type: string
+    description: 'A unique request ID, required for idempotent retries. It is recommended that the merchant generate a UUID for each unique request.'
+    maxLength: 64
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  token:
+    type: string
+    example: 005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2
+    description: The token returned from the create approval request.
+  merchantReference:
+    type: string
+    description: |-
+      The reference order id that this payment corresponds to in the merchant's system.
+      Note: Providing a new value will update any value previously set in the Create Checkout request.
+    example: merchant-order-123
+required:
+  - token
+  - requestId

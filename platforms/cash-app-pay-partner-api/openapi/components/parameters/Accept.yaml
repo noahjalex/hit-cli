@@ -1,0 +1,6 @@
+name: Accept
+in: header
+schema:
+  type: string
+  const: "application/json"
+description: "The Cash App API will only return responses of `Content-Type: application/json`."

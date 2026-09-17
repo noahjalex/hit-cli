@@ -1,0 +1,50 @@
+  type: object
+  title: error
+  description: Represents an error encountered during a request to the API.
+  additionalProperties: false
+  properties:
+    category:
+      type: string
+      description: The high-level reason the error occurred
+      enum:
+        - API_ERROR
+        - AUTHENTICATION_ERROR
+        - BRAND_ERROR
+        - DISPUTE_ERROR
+        - MERCHANT_ERROR
+        - INVALID_REQUEST_ERROR
+        - PAYMENT_PROCESSING_ERROR
+        - RATE_LIMIT_ERROR
+        - WEBHOOK_ERROR
+        - API_KEY_ERROR
+        - GRANT_ERROR
+      example: INVALID_REQUEST_ERROR
+    code:
+      type: string
+      description: |-
+        A unique identifier for the specific type of error that occurred. See the Error Code Reference for more information.
+
+        Min length: `1`
+      example: MISSING_REQUIRED_FIELD
+    detail:
+      type: string
+      description: |-
+        Human-readable description of why the error occurred and how to resolve it.
+
+        Min length: `1`
+      example: Missing required parameter.
+    field:
+      type: string
+      description: |-
+        The field in the request that caused the error, using array and object dot notation.
+
+        Min length: `1`
+      example: 'field_a[2].field_b'
+  required:
+    - category
+    - code
+  examples:
+    - category: INVALID_REQUEST_ERROR
+      code: MISSING_REQUIRED_FIELD
+      detail: Missing required parameter.
+      field: 'field_a[2].field_b'

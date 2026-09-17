@@ -1,0 +1,1013 @@
+openapi: 3.1.0
+info:
+  title: Engagement-API.v1
+  version: '1.0'
+  contact:
+    name: Cash App
+    url: 'https://developers.cash.app'
+    email: developers@cash.app
+  termsOfService: 'https://cash.app/legal/us/en-us/tos'
+  description: "The Cash App\_Engagement API connects clients to their customers on Cash App, enabling offers and discounts to seamlessly sync between systems."
+servers:
+  - url: 'https://api.cash.app/engagement/v1'
+    description: Production
+paths:
+  /offers:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    post:
+      summary: Create offer
+      operationId: create-offer
+      responses:
+        '201':
+          description: Created - The offer was created in `ACTIVE` state.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offer:
+                    $ref: '#/components/schemas/Offer'
+                required:
+                  - offer
+        '202':
+          description: Accepted - The offer is temporarily stored in `PENDING_CUSTOMER_REQUEST` state. A customer request (included in the response) must be approved for the offer to become `ACTIVE`.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offer:
+                    $ref: '#/components/schemas/Offer'
+                  customer_request:
+                    $ref: ./Customer-Request-API.v1.yaml#/components/schemas/Request
+                required:
+                  - offer
+                  - customer_request
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Offers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                offer:
+                  description: The offer to create.
+                  allOf:
+                    - $ref: '#/components/schemas/CreateOffer'
+              required:
+                - idempotency_key
+                - offer
+        description: ''
+      description: |-
+        Creates an offer from a brand to a single customer or all customers.
+
+        **This endpoint is not rate limited.**
+
+        Scopes: `OFFERS_WRITE`
+    get:
+      summary: List offers
+      tags:
+        - Offers
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+          in: query
+          name: cursor
+          description: A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of results for the original query.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          in: query
+          name: limit
+          description: Maximum number of offers to return.
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+          required: true
+          in: query
+          name: brand_id
+          description: The brand for which to return offers.
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+          in: query
+          name: customer_id
+          description: The customer for which to return offers.
+        - schema:
+            type: string
+          in: query
+          name: reference_id
+          description: The reference ID to filter results.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Offer'
+                  cursor:
+                    type: string
+                    description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.'
+                required:
+                  - offers
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: list-offers
+      description: |-
+        Retrieves a list of offers.
+
+        **This endpoint is not rate limited.**
+
+        Scopes: `OFFERS_READ`
+  '/offers/{offer_id}':
+    parameters:
+      - schema:
+          type: string
+        name: offer_id
+        in: path
+        required: true
+        description: ID of the offer.
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Retrieve offer
+      tags:
+        - Offers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offer:
+                    $ref: '#/components/schemas/Offer'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: retrieve-offer
+      description: |-
+        Retrieves data about an offer.
+
+        **This endpoint is not rate limited.**
+
+        Scopes: `OFFERS_READ`
+    patch:
+      summary: Update offer
+      operationId: update-offer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offer:
+                    $ref: '#/components/schemas/Offer'
+                required:
+                  - offer
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Offers
+      description: |-
+        Updates data about an offer.
+
+        **This endpoint is not rate limited.**
+
+        Scopes: `OFFERS_WRITE`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                offer:
+                  $ref: '#/components/schemas/UpdateOffer'
+              required:
+                - offer
+    delete:
+      summary: Delete offer
+      operationId: delete-offer
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Offers
+      description: |-
+        Deletes an offer.
+
+        **This endpoint is not rate limited.**
+
+        Scopes: `OFFERS_WRITE`
+  '/offers/{offer_id}/redemption':
+    parameters:
+      - schema:
+          type: string
+        name: offer_id
+        in: path
+        required: true
+        description: ID of the offer.
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    post:
+      summary: CreateOfferRedemption
+      operationId: create-offer-redemption
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples: {}
+      description: |-
+        Creates a redemption for a specific offer.
+
+        **This endpoint is not rate limited.**
+
+        Scopes: `OFFERS_WRITE`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                redemption:
+                  $ref: '#/components/schemas/CreateRedemption'
+              required:
+                - idempotency_key
+                - redemption
+components:
+  schemas:
+    Offer:
+      title: Offer
+      type: object
+      properties:
+        id:
+          type: string
+          description: |-
+            Unique identifier for this offer issued by Cash App.
+
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          maxLength: 128
+        state:
+          $ref: '#/components/schemas/OfferState'
+        reference_id:
+          type: string
+          description: |-
+            A user-defined identifier for this offer, typically used to associate the offer with a record in an external system.
+
+            Min length: `1`
+            Max length: `1024`
+          minLength: 1
+          maxLength: 1024
+          example: reference-id
+        brand_id:
+          type: string
+          description: The ID of the brand proposing the offer
+          minLength: 1
+          maxLength: 255
+        customer_details:
+          $ref: '#/components/schemas/CustomerDetails'
+        title:
+          type: string
+          description: |-
+            Name of the offer that will be displayed in Cash App's UI
+
+            Min length: `1`
+            Max length: `1024`
+          minLength: 1
+          maxLength: 255
+        offer_details:
+          $ref: '#/components/schemas/OfferDetails'
+        redemption_methods:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/RedemptionMethod'
+        starts_at:
+          type: string
+          description: 'When this offer will become available, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          format: date-time
+        ends_at:
+          type: string
+          description: 'When this offer will no longer be available, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          format: date-time
+        additional_terms:
+          type: string
+          description: |-
+            Additional legal text describing the terms and conditions of using this offer.
+
+            Min length: `1`
+            Max length: `4096`
+          minLength: 1
+          maxLength: 4096
+        created_at:
+          type: string
+          description: "When this offer\_was created, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC)."
+          format: date-time
+        updated_at:
+          type: string
+          description: "When this offer\_was last updated, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC)."
+          format: date-time
+        redirect_url:
+          type: string
+          description: This field specifies the URL that takes the customer directly to the created offer in Cash App.
+        redemption_count:
+          $ref: '#/components/schemas/RedemptionCount'
+        redirect:
+          $ref: '#/components/schemas/OfferRedirect'
+          description: Methods to redirect a user to the offer.
+        historical_sync:
+          type: boolean
+          description: 'Indication whether this coupon is a historical coupon or not. In case this field is omitted, the `external_created_at` field will be used to determine if this coupon is from historical sync.'
+        external_created_at:
+          type: string
+          format: date-time
+          description: |
+            When this offer was created at the integrator.
+      required:
+        - id
+        - state
+        - brand_id
+        - customer_details
+        - title
+        - offer_details
+        - redemption_methods
+        - created_at
+        - updated_at
+    OfferState:
+      type: string
+      title: state
+      description: |-
+        - `PENDING_CUSTOMER_REQUEST`: the offer is temporarily stored, and invisible until the customer approves the request to link their account to Cash.
+        - `ACTIVE`: the offer is permanently stored and may be presented to customers.
+        - `INACTIVE`: the offer is no longer active and will only appear to the customer on history feeds.
+      enum:
+        - PENDING_CUSTOMER_REQUEST
+        - ACTIVE
+    CreateCustomerDetails:
+      title: CustomerDetails
+      description: The details of the customer(s) to which the offer is available.
+      discriminator:
+        propertyName: customer_scope
+        mapping:
+          ALL_CUSTOMER: '#/components/schemas/CreateCustomerDetailsAllCustomers'
+          ONE_CUSTOMER: '#/components/schemas/CreateCustomerDetailsOneCustomer'
+      oneOf:
+        - $ref: '#/components/schemas/CreateCustomerDetailsAllCustomers'
+        - $ref: '#/components/schemas/CreateCustomerDetailsOneCustomer'
+    CreateCustomerDetailsAllCustomers:
+      title: All Customers
+      type: object
+      properties:
+        customer_scope:
+          type: string
+          description: '- `ALL_CUSTOMERS`: the offer is available to all customers.'
+          enum:
+            - ALL_CUSTOMERS
+      required:
+        - customer_scope
+    CreateCustomerDetailsOneCustomer:
+      title: One Customer
+      type: object
+      properties:
+        customer_scope:
+          type: string
+          description: '- `ONE_CUSTOMER`: the offer is available to a specific customer only.'
+          enum:
+            - ONE_CUSTOMER
+        grant_id:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: '*Mutually exclusive with `reference_id` and `auth_url`.* This field accepts a grant ID associated with a `LINK_ACCOUNT` action. If provided, the offer is returned in an `ACTIVE` state.'
+        reference_id:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          example: reference-id
+          description: |-
+            *Mutually exclusive with `grant_id` and `auth_url`.* If provided, a customer request will be created while the offer is returned in a `PENDING` state.
+
+            When the customer request is approved, the offer will become `ACTIVE` and the `reference_id` field on the customer resource will be set to this value.
+        primary_alias:
+          type: string
+          description: _Can only be provided when `reference_id` or `auth_url` is set_. If provided this alias will be shown to the user when linking the account.
+          minLength: 1
+          maxLength: 128
+        secondary_alias:
+          type: string
+          description: _Can only be provided when `reference_id` or `auth_url` is set_. If provided this alias will be shown to the user when linking the account.
+          minLength: 1
+          maxLength: 128
+        auth_url:
+          type: string
+          description: |-
+            *Mutually exclusive with `grant_id` and `reference_id`.* If provided, a customer request will be created while the offer is returned in a `PENDING` state.
+
+            The user will be prompted to login at the `auth_url` specified once they arrive in Cash App. Once the user has successfully authenticated, the page should load the _calback\_url_ (https://cashapp.onelink.me/ui6m)
+
+            Must be a valid http(s) prefixed URL.
+
+            When the customer request is approved, the offer will become `ACTIVE` and the `customer_reference_id` query-parameter appended to the _callback\_url_ will be set on the `Customer` resource (ex: https://cashapp.onelink.me/ui6m?customer_reference_id=cust123
+          minLength: 1
+          maxLength: 8000
+          pattern: '((http://)|(https://)).+'
+          example: 'https://example.com'
+      required:
+        - customer_scope
+    CustomerDetails:
+      title: CustomerDetails
+      description: The details of the customer(s) to which the offer is available.
+      discriminator:
+        propertyName: customer_scope
+        mapping:
+          ALL_CUSTOMER: '#/components/schemas/CustomerDetailsAllCustomers'
+          ONE_CUSTOMER: '#/components/schemas/CustomerDetailsOneCustomer'
+      oneOf:
+        - $ref: '#/components/schemas/CustomerDetailsAllCustomers'
+        - $ref: '#/components/schemas/CustomerDetailsOneCustomer'
+    CustomerDetailsAllCustomers:
+      title: All Customers
+      type: object
+      properties:
+        customer_scope:
+          type: string
+          description: '- `ALL_CUSTOMERS`: the offer is available to all customers.'
+          enum:
+            - ALL_CUSTOMERS
+      required:
+        - customer_scope
+    CustomerDetailsOneCustomer:
+      title: One Customer
+      type: object
+      properties:
+        customer_scope:
+          type: string
+          description: '- `ONE_CUSTOMER`: the offer is available to a specific customer only.'
+          enum:
+            - ONE_CUSTOMER
+        customer_request_id:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: The ID of the customer request associated with the offer.
+        customer_id:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          description: 'The ID of the customer associated with the offer. This may be null for an offer in PENDING_CUSTOMER_REQUEST state, until the customer request is approved.'
+      required:
+        - customer_scope
+        - customer_request_id
+    OfferDetails:
+      title: OfferDetails
+      discriminator:
+        propertyName: type
+        mapping:
+          DISCOUNT: '#/components/schemas/OfferDetailsDiscount'
+      oneOf:
+        - $ref: '#/components/schemas/OfferDetailsDiscount'
+      description: The details of the offer.
+    OfferDetailsDiscount:
+      title: OfferDetailsDiscount
+      type: object
+      properties:
+        type:
+          type: string
+          description: '- `DISCOUNT` - The offer is materialized as a discount.'
+        amount:
+          $ref: '#/components/schemas/DiscountAmount'
+        scope:
+          $ref: '#/components/schemas/DiscountScope'
+      required:
+        - type
+        - amount
+        - scope
+    RedemptionMethod:
+      title: RedemptionMethod
+      description: Ways to redeem the offer.
+      discriminator:
+        propertyName: type
+        mapping:
+          AUTOMATIC: '#/components/schemas/RedemptionMethodAutomatic'
+          OFFER_CODE: '#/components/schemas/RedemptionMethodOfferCode'
+          QR_CODE: '#/components/schemas/RedemptionMethodQrCode'
+      oneOf:
+        - $ref: '#/components/schemas/RedemptionMethodAutomatic'
+        - $ref: '#/components/schemas/RedemptionMethodOfferCode'
+        - $ref: '#/components/schemas/RedemptionMethodQrCode'
+    RedemptionMethodAutomatic:
+      title: Automatic
+      type: object
+      description: Redemption happens automatically.
+      properties:
+        type:
+          type: string
+          enum:
+            - AUTOMATIC
+          description: '- `AUTOMATIC` - Indicates that redemption happens automatically'
+      required:
+        - type
+    RedemptionMethodOfferCode:
+      title: Offer Code
+      type: object
+      properties:
+        type:
+          type: string
+          description: '- `OFFER_CODE` - Indicates that a code is required for redemption. This code will be shown to customers in the Cash App UI when reviewing the offer.'
+          enum:
+            - OFFER_CODE
+        code:
+          type: string
+          description: |-
+            The code the customer has to enter to redeem this offer.
+
+            Min length: `1`
+            Max length: `255`
+          minLength: 1
+          maxLength: 255
+      required:
+        - type
+        - code
+      description: Offer requires inputting a code to redeem it.
+    RedemptionMethodQrCode:
+      title: QR Code
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - QR_CODE
+          description: '`QR_CODE` - Indicates that a QR code is required for redemption. This code will be shown to customers in the Cash App UI when reviewing the offer.'
+        code_data:
+          type: string
+          description: |-
+            Binary data to encode into a QR code that can be scanned to redeem this offer.
+
+            Min length: `1`
+            Max length: `4096`
+          minLength: 1
+          maxLength: 4096
+          format: binary
+      required:
+        - type
+        - code_data
+      description: Offer requires presenting a QR code to redeem it.
+    DiscountScopeCategory:
+      title: Category
+      type: object
+      description: Discount applies to one or more categories of items offered by the brand.
+      properties:
+        type:
+          type: string
+          enum:
+            - CATEGORY
+          description: '`CATEGORY` - indicates the discount applies to one or more categories of items offered by the brand.'
+        categories:
+          type: array
+          description: A list of categories the discount applies to.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 255
+                description: Name of a discounted category.
+            required:
+              - name
+      required:
+        - type
+        - categories
+    DiscountScopeItem:
+      title: Item
+      type: object
+      description: Discount applies to a subset of items offered by the brand.
+      properties:
+        type:
+          type: string
+          enum:
+            - ITEM
+          description: '- `ITEM` - indicates the discount applies to a subset of items offered by the brand.'
+        items:
+          type: array
+          description: A list of items that the discount applies to.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 255
+                description: Name of a discounted item.
+            required:
+              - name
+      required:
+        - type
+        - items
+    DiscountScopeOrder:
+      title: Order
+      type: object
+      description: Discount applies to entire purchase.
+      properties:
+        type:
+          type: string
+          enum:
+            - ORDER
+          description: '- `ORDER` - indicates the discount applies to the entire purchase.'
+      required:
+        - type
+    DiscountScope:
+      title: discount_scope
+      oneOf:
+        - $ref: '#/components/schemas/DiscountScopeCategory'
+        - $ref: '#/components/schemas/DiscountScopeItem'
+        - $ref: '#/components/schemas/DiscountScopeOrder'
+      description: Contains details about what products the discount applies to.
+    DiscountAmountFixed:
+      title: Fixed
+      type: object
+      x-tags:
+        - Offers
+      properties:
+        type:
+          type: string
+          enum:
+            - FIXED
+          description: '- `FIXED` - Indicates that this offer gives a discount of a fixed amount that does not change based on the total amount of a transaction.'
+        amount:
+          type: integer
+          minimum: 1
+          example: 500
+          description: 'The amount of the discount, in the lowest denomination of currency associated with the offer.'
+        currency:
+          $ref: ./Network-API.v1.yaml#/components/schemas/Currency
+      required:
+        - type
+        - amount
+      description: The discount is of a fixed amount.
+    DiscountAmountOther:
+      title: Other
+      type: object
+      x-tags:
+        - Offers
+      description: 'The discount cannot be represented as a percentage or fixed amount, and must be described in freeform text.'
+      properties:
+        type:
+          type: string
+          enum:
+            - OTHER
+          description: '- `OTHER` - Indicates that this offer gives a discount that cannot be represented as a percentage or fixed amount, and must be described in freeform text.'
+        description:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: |-
+            An explanation of the value of the discount.
+
+            Min length: `1`
+            Max length: `255`
+      required:
+        - type
+        - description
+    DiscountAmountPercentage:
+      title: Percentage
+      type: object
+      x-tags:
+        - Offers
+      properties:
+        type:
+          type: string
+          enum:
+            - PERCENTAGE
+          description: '- `PERCENTAGE` - Indicates that this offer gives a discount of a percentage amount.'
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: |-
+            The percentage of the price that will be reduced by the discount.
+
+            Min value: `1`
+            Max value: `100`
+          example: 1
+        maximum_value:
+          title: Maximum discount value
+          type: object
+          properties:
+            amount:
+              type: integer
+              minimum: 1
+              example: 500
+              description: 'The maximum value of the discount, in the lowest denomination of currency associated with the offer.'
+            currency:
+              $ref: ./Network-API.v1.yaml#/components/schemas/Currency
+      required:
+        - type
+        - amount
+      description: The discount is of a percentage amount.
+    DiscountAmount:
+      title: discount_amount
+      discriminator:
+        propertyName: type
+        mapping:
+          FIXED: '#/components/schemas/DiscountAmountFixed'
+          OTHER: '#/components/schemas/DiscountAmountOther'
+          PERCENTAGE: '#/components/schemas/DiscountAmountPercentage'
+      oneOf:
+        - $ref: '#/components/schemas/DiscountAmountFixed'
+        - $ref: '#/components/schemas/DiscountAmountOther'
+        - $ref: '#/components/schemas/DiscountAmountPercentage'
+      description: Contains details about the value of the discount.
+    CreateOffer:
+      title: CreateOffer
+      type: object
+      properties:
+        reference_id:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          example: reference-id
+          description: |-
+            A user-defined identifier for this offer, typically used to associate the offer with a record in an external system.
+
+            Min length: `1`
+            Max length: `1024`
+        brand_id:
+          type: string
+          description: The ID of the brand issuing the offer.
+          minLength: 1
+          maxLength: 255
+        customer_details:
+          $ref: '#/components/schemas/CreateCustomerDetails'
+        title:
+          type: string
+          description: |-
+            The name of the offer.
+
+            Min length: `1`
+            Max length: `1024`
+          minLength: 1
+          maxLength: 1024
+        offer_details:
+          $ref: '#/components/schemas/OfferDetails'
+        redemption_methods:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/RedemptionMethod'
+        starts_at:
+          type: string
+          description: 'When this offer will become available, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          format: date-time
+        ends_at:
+          type: string
+          description: 'When this offer will no longer be available, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          format: date-time
+        additional_terms:
+          type: string
+          description: |-
+            Additional legal text describing the terms and conditions of using this offer.
+
+            Min length: `1`
+            Max length: `4096`
+          minLength: 1
+          maxLength: 4096
+        redemption_count:
+          $ref: '#/components/schemas/CreateRedemptionCount'
+        redirect:
+          $ref: '#/components/schemas/OfferRedirect'
+        historical_sync:
+          type: boolean
+          description: 'Indication whether this coupon is a historical coupon or not. In case this field is omitted, the `external_created_at` field will be used to determine if this coupon is from historical sync.'
+        external_created_at:
+          type: string
+          format: date-time
+          description: |
+            When this offer was created at the integrator.
+      required:
+        - brand_id
+        - customer_details
+        - offer_details
+        - redemption_methods
+    UpdateOffer:
+      title: UpdateOffer
+      type: object
+      properties:
+        reference_id:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          example: reference-id
+          description: |-
+            A user-defined identifier for this offer, typically used to associate the offer with a record in an external system.
+
+            Min length: `1`
+            Max length: `1024`
+        brand_id:
+          type: string
+          description: The ID of the brand issuing the offer.
+          minLength: 1
+          maxLength: 255
+        customer_details:
+          $ref: '#/components/schemas/CustomerDetails'
+        title:
+          type: string
+          description: |-
+            The name of the offer.
+
+            Min length: `1`
+            Max length: `1024`
+          minLength: 1
+          maxLength: 1024
+        offer_details:
+          $ref: '#/components/schemas/OfferDetails'
+        redemption_methods:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/RedemptionMethod'
+        starts_at:
+          type: string
+          description: 'When this offer will become available, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          format: date-time
+        ends_at:
+          type: string
+          description: 'When this offer will no longer be available, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          format: date-time
+        additional_terms:
+          type: string
+          description: |-
+            Additional legal text describing the terms and conditions of using this offer.
+
+            Min length: `1`
+            Max length: `4096`
+          minLength: 1
+          maxLength: 4096
+      required:
+        - title
+    CreateRedemption:
+      title: CreateRedemption
+      x-stoplight:
+        id: a1fz42a2wwtsk
+      type: object
+      properties:
+        redeemed_at:
+          type: string
+          format: date-time
+          description: 'When this offer was redeemed, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+    RedemptionCount:
+      title: RedemptionCount
+      discriminator:
+        propertyName: type
+        mapping:
+          FIXED_NUMBER: '#/components/schemas/RedemptionCountFixedNumber'
+          UNLIMITED: '#/components/schemas/RedemptionCountUnlimited'
+      x-stoplight:
+        id: y1thp3l0kaq4t
+      oneOf:
+        - $ref: '#/components/schemas/RedemptionCountFixedNumber'
+        - $ref: '#/components/schemas/RedemptionCountUnlimited'
+    CreateRedemptionCount:
+      title: CreateRedemptionCount
+      discriminator:
+        propertyName: type
+        mapping:
+          FIXED_NUMBER: '#/components/schemas/RedemptionCountFixedNumber'
+          UNLIMITED: '#/components/schemas/RedemptionCountUnlimited'
+      x-stoplight:
+        id: wdgseksxumzr3
+      oneOf:
+        - $ref: '#/components/schemas/RedemptionCountFixedNumber'
+        - $ref: '#/components/schemas/RedemptionCountUnlimited'
+    RedemptionCountFixedNumber:
+      title: RedemptionCountFixedNumber
+      x-stoplight:
+        id: tb52x63iihlcl
+      type: object
+      description: The coupon can be redeemed the number of times specified in `max_redemptions`
+      properties:
+        type:
+          type: string
+          const: FIXED_NUMBER
+          description: '`FIXED_NUMBER`: The coupon can be redeemed the number of times specified in `max_redemptions`'
+        max_redemptions:
+          type: integer
+          description: The number of times a coupon can be redeemed. Accepts values greater than 0.
+          minimum: 0
+        count:
+          type: integer
+          description: The number of times the coupon was used
+          readOnly: true
+      required:
+        - type
+        - max_redemptions
+    RedemptionCountUnlimited:
+      title: RedemptionCountUnlimited
+      x-stoplight:
+        id: dij64aeqv4k99
+      type: object
+      properties:
+        type:
+          type: string
+          const: UNLIMITED
+          description: '`UNLIMITED`: The coupon can be redeemed an infinite amount of times.'
+        count:
+          type: integer
+          description: The number of times the coupon was used
+          readOnly: true
+      required:
+        - type
+    OfferRedirect:
+      title: OfferRedirect
+      x-stoplight:
+        id: u4d7j73oobpdq
+      type: object
+      properties:
+        qr_code_png_url:
+          type: string
+          description: PNG formatted QR code image URL that can be scanned to direct a user to an Offer. (350px x 350px)
+          format: uri
+        qr_code_svg_url:
+          type: string
+          format: uri
+          description: SVG formatted QR code image URL that can be scanned to direct a user to an Offer.
+    ErrorResponse:
+      $ref: ./components/schemas/ErrorResponse.yaml
+  securitySchemes:
+    Client:
+      name: Authorization
+      type: http
+      in: header
+      description: "Client authentication is provided by setting the `Authorization` header to the following format:\n\n`Authorization: Client <Client ID> <API Key>`.\n\n\n**Note:** Authenticated requests must also be [signed](/docs/api/technical-documentation/api-fundamentals/requests/signing-requests)."
+
+security:
+  - Client: []
+tags:
+  - name: Offers
+x-internal: true
+x-readme:
+  proxy-enabled: false

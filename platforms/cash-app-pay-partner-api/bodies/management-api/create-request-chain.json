@@ -1,0 +1,22 @@
+{
+  "requests": [
+    {
+      "uid": "request_1",
+      "method": "GET",
+      "path": "/network/v1/brands/{brand_id}",
+      "path_params": {},
+      "query_params": {},
+      "body": {}
+    }
+  ],
+  "chains": [
+    {
+      "requests": [
+        {
+          "uid": "request_1"
+        }
+      ],
+      "execution_mode": "SEQUENTIAL"
+    }
+  ]
+}

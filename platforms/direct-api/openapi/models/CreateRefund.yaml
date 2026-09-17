@@ -1,0 +1,40 @@
+title: CreateRefund
+x-stoplight:
+  id: 2uhdlg0cdumo4
+type: object
+examples:
+  - requestId: 49efce77-4bf2-4e41-86e8-c2b92f493c2a
+    amount:
+      amount: '10.00'
+      currency: AUD
+    merchantReference: merchantRefundId-1234
+    refundMerchantReference: merchantRefundId-1234
+x-tags:
+  - response-object
+description: |
+  To guarantee safe retries, the merchant should offer their refund ID or reference, aligning with their internal records
+
+  Unique values for the `requestID`  and `merchantReference` are required to guarantee safe retries. It is recommended that the merchant generates a UUID for each unique refund request. 
+
+  The `refundMerchantReference` is a unique reference that when provided, will appear in the daily settlement file as "Payment Event Id". In most cases, this would hold the same value as the `merchantReference`.
+properties:
+  requestId:
+    type: string
+    x-stoplight:
+      id: xb5ofv07mz2ep
+    description: Unique ID required for safe retries. Max length 64 (varchar).
+  amount:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: cl00zto4onxc0
+  merchantReference:
+    type: string
+    x-stoplight:
+      id: 46x2ht24s3p0o
+    description: The merchant’s internal refund id/reference. This must be included along with the `requestId` to utilise idempotency. Max length 85 (varchar).
+  refundMerchantReference:
+    type: string
+    x-stoplight:
+      id: 8m0ys4yq9m4un
+    description: A unique reference for the individual refund event. Max length 128 (varchar).
+    maxLength: 128

@@ -1,0 +1,16 @@
+{
+  "request": {
+    "actions": [
+      {
+        "amount": 2500,
+        "currency": "USD",
+        "scope_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+        "type": "ONE_TIME_PAYMENT"
+      }
+    ],
+    "reference_id": "<reference_id>",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  }
+}

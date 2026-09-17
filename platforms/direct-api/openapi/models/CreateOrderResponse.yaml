@@ -1,0 +1,13 @@
+title: CreateOrderResponse
+type: object
+required:
+  - token
+  - expires
+properties:
+  token:
+    type: string
+    example: "001.8v3cpfue87bl9gcv6ampnfct9ts5o9vis39vee9tlor2aq6a"
+  expires:
+    type: string
+    format: date-time
+    example: "2025-07-24T03:47:25.278Z"

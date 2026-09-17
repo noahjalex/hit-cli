@@ -1,0 +1,17 @@
+type: object
+description: Represents a scheduled payment installment
+required:
+  - amount
+  - dueDate
+properties:
+  amount:
+    $ref: Money.yaml
+    description: Amount for this payment installment
+    example:
+      amount: "50.00"
+      currency: "USD"
+  dueDate:
+    type: string
+    format: date
+    description: Due date for this installment
+    example: "2024-03-18"

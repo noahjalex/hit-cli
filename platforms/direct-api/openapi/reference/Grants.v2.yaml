@@ -1,0 +1,300 @@
+openapi: 3.1.0
+info:
+  title: Online API
+  version: v2
+servers:
+  - url: 'https://global-api-sandbox.afterpay.com'
+    description: Sandbox
+  - description: Production
+    url: 'https://global-api.afterpay.com'
+components:
+  securitySchemes:
+    sec0:
+      type: http
+      scheme: basic
+security:
+  - sec0: []
+paths:
+  /v2/grants/approvals:
+    post:
+      summary: Create Grant Approval
+      description: |
+        Initiates the approval process for a new grant.
+      operationId: start-grant-approval
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/GrantApprovalRequest.yaml
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../models/GrantApprovalResponse.yaml
+        '401':
+          description: |
+            Authentication failed or insufficient permissions.
+
+            | errorCode | Description |
+            | --- | --- |
+            | unauthorized | The API credentials are invalid or missing. |
+            | insufficient_permissions | The merchant lacks the required 'merchant_api_v2/initiate' permission. |
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | feature_not_enabled | On file payments are not enabled for this merchant. |
+        '415':
+          description: Unsupported Media Type - Content-Type header is missing or invalid
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object | One or more required fields in the request body were missing or invalid. |
+        default:
+          description: Unexpected error
+  /v2/grants:
+    post:
+      summary: Create Grant
+      description: |
+        Creates a new grant from a grant approval token.
+      operationId: create-grant
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/GrantCreateRequest.yaml
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../models/GrantResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | feature_not_enabled | On file payments are not enabled for this merchant. |
+        '412':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | consumer_ineligible | Consumer not eligible |
+        '415':
+          description: Unsupported Media Type - Content-Type header is missing or invalid
+  '/v2/grants/{grantId}':
+    get:
+      summary: Retrieve Grant
+      description: |
+        Retrieves a grant based on its ID.
+      operationId: get-grant
+      parameters:
+        - name: grantId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the grant to retrieve.
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../models/GrantResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | feature_not_enabled | On file payments are not enabled for this merchant. |
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | grant_not_found | The specified grant id was not found. |
+  '/v2/grants/{grantId}/revoke':
+    post:
+      summary: Revoke Grant
+      description: |
+        Revokes a grant, rendering it unusable. Other endpoints will no longer be able to use the grant to perform the associated action.
+      operationId: revoke-grant
+      parameters:
+        - name: grantId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier id of the grant to revoke
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../models/GrantResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | feature_not_enabled | On file payments are not enabled for this merchant. |
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | grant_not_found | The specified grant was not found. |
+  /v2/grants/alias:
+    post:
+      summary: Create Grant Alias
+      description: |
+        Creates an alias for an existing grant to help load the payment schedule widget.
+      operationId: alias-grant
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/GrantAliasRequest.yaml
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../models/GrantAliasResponse.yaml
+        '403':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | feature_not_enabled | On file payments are not enabled for this merchant. |
+        '415':
+          description: Unsupported Media Type - Content-Type header is missing or invalid
+  /v2/grants/start:
+    post:
+      summary: Start Grant Link Flow
+      description: |
+        Initiates the headless grant link flow process.
+      operationId: start-billing-agreement-link
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/GrantStartRequest.yaml
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../models/GrantStartResponse.yaml
+        '404':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | not_found | Afterpay consumer account does not exist |
+        '412':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_state | Failed to send code |
+        '429':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | too_many_requests | Too many requests |
+webhooks:
+  GrantStatusUpdated:
+    post:
+      summary: Grant status updated
+      description: Webhook notification sent when a grant's status changes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/GrantStatusUpdated.yaml
+      responses:
+        '200':
+          description: Acknowledgment that the webhook was received
+x-internal: false

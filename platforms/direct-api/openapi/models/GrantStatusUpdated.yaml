@@ -1,0 +1,47 @@
+title: GrantStatusUpdated
+x-stoplight:
+  id: x6c6vdqmzira3
+type: object
+properties:
+  type:
+    type: string
+    example: "on_file_grant.status.updated"
+  eventId:
+    type: string
+    format: uuid
+    example: "87f5ded7-2747-4e31-95ee-8993e0ae8663"
+  createdAt:
+    type: string
+    format: date-time
+    example: "2025-08-22T19:34:37.497Z"
+  data:
+    type: object
+    required:
+      - id
+      - type
+      - object
+    properties:
+      id:
+        type: string
+        example: "001.lhhm7tim5rv7buhjuvplka7neiam9victmhs3dctj883gcggb8upmvqqeius9j6o"
+      type:
+        type: string
+        enum: [ON_FILE_GRANT]
+        example: "ON_FILE_GRANT"
+      object:
+        type: object
+        example:
+          grant: 
+            id: "001.lhhm7tim5rv7buhjuvplka7neiam9victmhs3dctj883gcggb8upmvqqeius9j6o"
+            created: "2025-08-21T16:22:03.294Z"
+            type: "ON_FILE"
+            status: "CANCELLED"
+            cancelled: "2025-08-22T19:34:35.012Z"
+        properties:
+          grant:
+            $ref: ./Grant.yaml
+required:
+  - type
+  - eventId
+  - createdAt
+  - data

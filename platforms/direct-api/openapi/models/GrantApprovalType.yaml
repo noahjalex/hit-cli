@@ -1,0 +1,18 @@
+title: GrantApprovalType
+type: object
+description: Details about the grant to be created.
+required:
+  - type
+properties:
+  type:
+    type: string
+    description: Grant Type for approval.
+    enum:
+      - ON_FILE
+    example: "ON_FILE"
+  merchantReference:
+    type: string
+    nullable: true
+    maxLength: 255
+    description: A merchant-provided reference for the grant.
+    example: "merchant-order-12345"

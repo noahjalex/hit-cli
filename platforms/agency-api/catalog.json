@@ -1,0 +1,1771 @@
+{
+  "platform": "agency-api",
+  "operations": [
+    {
+      "group": "partner",
+      "command": "get-onboarding-by-merchant-reference",
+      "operationId": "getOnboardingByMerchantReference",
+      "method": "GET",
+      "path": "/v1/onboardings",
+      "summary": "Get an Onboarding by Merchant Reference",
+      "parameters": [
+        {
+          "in": "query",
+          "name": "merchantReference",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).",
+          "example": "merchantId123"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Content type of the request body.",
+          "example": "application/json"
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Specifies media types that are acceptable for the response.",
+          "example": "application/json"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/Onboarding"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "create-onboarding",
+      "operationId": "createOnboarding",
+      "method": "POST",
+      "path": "/v1/onboardings",
+      "summary": "Create an Onboarding",
+      "parameters": [
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "required": true,
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "required": true,
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "#/components/schemas/OnboardingPostPut"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/PostOnboardingResponse"
+          }
+        },
+        "400": {
+          "application/json": {
+            "$ref": "#/components/schemas/400Response"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "409": {
+          "application/json": {
+            "$ref": "#/components/schemas/409Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/create-onboarding.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-onboarding-by-id",
+      "operationId": "getOnboardingById",
+      "method": "GET",
+      "path": "/v1/onboardings/{onboardingId}",
+      "summary": "Get an Onboarding by Onboarding Id",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "onboardingId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The id that is returned during a successful Create an onboarding call.",
+          "example": "123abcd-456efgh-1124bd"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/Onboarding"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "update-onboarding",
+      "operationId": "updateOnboarding",
+      "method": "PUT",
+      "path": "/v1/onboardings/{onboardingId}",
+      "summary": "Update an Onboarding",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "onboardingId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The ID returned during a successful Create an onboarding call.",
+          "example": "123abcd-456efgh-1124bd"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "#/components/schemas/OnboardingPostPut"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "onboardingId": {
+                "type": "string",
+                "description": "The ID that can be used to update merchant's configs and get an onboarding status.",
+                "example": "123abcd-456efgh-1124bd"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "Timestamp of the response.",
+                "example": "2024-02-21T10:21:36.949Z"
+              },
+              "merchantReference": {
+                "type": "string",
+                "description": "Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).",
+                "example": "merchantId1234"
+              },
+              "parentMerchantReference": {
+                "type": "string",
+                "description": "Unique ID for the platform of the merchant in the partner's internal systems to index to merchantReference.",
+                "example": "merchantPlatform"
+              },
+              "status": {
+                "type": "string",
+                "description": "Onboarding approval status.",
+                "example": "APPROVED"
+              }
+            }
+          }
+        },
+        "400": {
+          "application/json": {
+            "$ref": "#/components/schemas/400Response"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/update-onboarding.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-onboarding-status",
+      "operationId": "getOnboardingStatus",
+      "method": "GET",
+      "path": "/v1/onboardings/{onboardingId}/activations",
+      "summary": "Get Activations",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "onboardingId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The ID that is returned during a successful Create an onboarding call.",
+          "example": "123abcd-456efgh-1124bd"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "Approval status of the onboarding.",
+                "example": "APPROVED"
+              },
+              "credentials": {
+                "type": "object",
+                "properties": {
+                  "merchantId": {
+                    "type": "string",
+                    "description": "Afterpay's unique merchant ID (MID) for the merchant.",
+                    "example": "123456789"
+                  },
+                  "merchantSecret": {
+                    "type": "string",
+                    "description": "Secret key for the merchant ID.",
+                    "example": "123abc456def789ghi101112jkl1314mnop1124bdayaya29djsncmxxjxkx9236xu38djx8dn3gbd3m45n21n"
+                  }
+                }
+              },
+              "configuration": {
+                "type": "object",
+                "properties": {
+                  "minimumAmount": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "string",
+                        "description": "Minimum transaction amount.",
+                        "example": "1.00"
+                      },
+                      "currency": {
+                        "type": "string",
+                        "description": "Currency for the minimum amount.",
+                        "example": "USD"
+                      }
+                    }
+                  },
+                  "maximumAmount": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "string",
+                        "description": "Maximum transaction amount.",
+                        "example": "4000.00"
+                      },
+                      "currency": {
+                        "type": "string",
+                        "description": "Currency for the maximum amount.",
+                        "example": "USD"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-capabilities",
+      "operationId": "getCapabilities",
+      "method": "GET",
+      "path": "/v1/onboardings/{onboardingId}/capabilities",
+      "summary": "Get Capabilities",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "onboardingId",
+          "description": "The ID returned during a successful Create an onboarding call.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "123abcd-456efgh-1124bd"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "description": "Content type of the request.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "description": "The user agent string of the HTTP client.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "description": "Specifies media types that are acceptable for the response.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "onboardingId": {
+                "type": "string",
+                "description": "The ID returned during a successful Create an onboarding call.",
+                "example": "123abcd-456efgh-1124bd"
+              },
+              "capabilities": {
+                "$ref": "#/components/schemas/Capabilities"
+              }
+            }
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "update-pm-capabilities",
+      "operationId": "updatePmCapabilities",
+      "method": "PUT",
+      "path": "/v1/onboardings/{onboardingId}/capabilities/lending",
+      "summary": "Enable or Disable Pay Monthly (PM)",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "onboardingId",
+          "description": "The ID returned during a successful Create an onboarding call.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "123abcd-456efgh-1124bd"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "description": "Content type of the request body.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "description": "The user agent string of the HTTP client.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "description": "Specifies media types that are acceptable for the response.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "required": [
+            "lending"
+          ],
+          "type": "object",
+          "properties": {
+            "lending": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "channel",
+                  "enabled"
+                ],
+                "properties": {
+                  "channel": {
+                    "$ref": "#/components/schemas/Channel"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Defines whether the capability is enabled for the above channel.",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "lending": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Lending"
+                }
+              },
+              "errors": {
+                "type": "array",
+                "description": "Shows any errors encountered during the capability enablement."
+              }
+            }
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/update-pm-capabilities.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "configure-cbt",
+      "operationId": "configureCBT",
+      "method": "PUT",
+      "path": "/v1/onboardings/{onboardingId}/capabilities/cbt",
+      "summary": "Enable or Disable Cross Border Trade (CBT)",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "onboardingId",
+          "description": "The ID that is returned during a successful Create an onboarding call.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "123abcd-456efgh-1124bd"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "description": "Content type of the request body.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "description": "The user agent string of the HTTP client.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "description": "Specifies media types that are acceptable for the response.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "required": [
+            "channels"
+          ],
+          "properties": {
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "channel",
+                  "enabled"
+                ],
+                "properties": {
+                  "channel": {
+                    "$ref": "#/components/schemas/Channel"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Defines whether the capability is enabled for the above channel.",
+                    "example": true
+                  },
+                  "currlocEnabled": {
+                    "type": "boolean",
+                    "description": "Shows whether the currency localization variant of CBT is enabled.",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "description": "ID for the CBT config update request.",
+                "example": "86dg3d8-0b28-1627-378d-b9173ndhf87"
+              }
+            }
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/configure-cbt.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-settlement-batches",
+      "operationId": "getSettlementBatches",
+      "method": "GET",
+      "path": "/v1/settlement/batches",
+      "summary": "Get Settlement Batches",
+      "parameters": [
+        {
+          "in": "query",
+          "name": "limit",
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Maximum number of rows to return. Defaults to 15 if not specified.",
+          "example": 100
+        },
+        {
+          "in": "query",
+          "name": "last_known",
+          "schema": {
+            "type": "string"
+          },
+          "description": "A settlement batch ID. Results will contain all settlement batches whose creation date is greater than that of the last_known ID.",
+          "example": "785389121238"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/BatchSettlement"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-settlement-batches-by-date",
+      "operationId": "getSettlementBatchesByDate",
+      "method": "GET",
+      "path": "/v1/settlement/batches/date/{YYYY-MM-DD}",
+      "summary": "Get Settlement Batches by Date",
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "YYYY-MM-DD",
+          "schema": {
+            "type": "string"
+          },
+          "description": "Date of the settlement files to retrieve.",
+          "example": "2024-01-29"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/BatchSettlement"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-settlement-batch-files",
+      "operationId": "getSettlementBatchFiles",
+      "method": "GET",
+      "path": "/v1/settlement/batch",
+      "summary": "Get Settlement Batch Files",
+      "parameters": [
+        {
+          "in": "query",
+          "name": "ids",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Comma separated ids of batches to fetch.",
+          "example": "id1,id2,id3"
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "description": "Content type of the request.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "description": "The user agent string of the HTTP client.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "description": "Specifies media types that are acceptable for the response.",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "batches": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Settlement batch ID.",
+                      "example": "2020-07-10Z_sud294dgzb"
+                    },
+                    "settlement_file": {
+                      "type": "string",
+                      "description": "Signed S3 URL to the settlement file.",
+                      "example": "https://s3.amazonaws.com/settlements/transaction.csv?token"
+                    },
+                    "aggregation_file": {
+                      "type": "string",
+                      "description": "Signed S3 URL to the aggregation file.",
+                      "example": "https://s3.amazonaws.com/settlements/aggregated.csv?token"
+                    }
+                  }
+                }
+              },
+              "meta_data": {
+                "type": "object",
+                "properties": {
+                  "computed_at": {
+                    "type": "string",
+                    "description": "Timestamp of the query computation.",
+                    "example": "2024-02-21T19:25:44Z"
+                  },
+                  "link_expiry": {
+                    "type": "string",
+                    "description": "Timestamp of the link expiration.",
+                    "example": "2024-03-06T19:25:44Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "review-contract",
+      "operationId": "reviewContract",
+      "method": "POST",
+      "path": "/v1/rates-contract/{contractId}/review",
+      "summary": "Approve Contract",
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the contract to approve",
+          "schema": {
+            "type": "string",
+            "example": "123457838"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "properties": {
+            "contractId": {
+              "type": "string",
+              "example": "785389121238",
+              "description": "The unique ID for the contract between Afterpay and the partner."
+            },
+            "userDetails": {
+              "$ref": "#/components/schemas/User"
+            },
+            "comment": {
+              "type": "string",
+              "description": "Comment specific to the contract request.",
+              "example": "Approved by X on date Y for reason Z."
+            },
+            "status": {
+              "type": "string",
+              "description": "The de facto approval field that determines whether the contract request by Afterpay is approved or rejected by the partner.",
+              "example": "APPROVED",
+              "enum": [
+                "APPROVED",
+                "REJECTED"
+              ]
+            },
+            "countryCode": {
+              "type": "string",
+              "description": "Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rates apply.",
+              "example": "US"
+            },
+            "buyRates": {
+              "$ref": "#/components/schemas/BuyRates"
+            }
+          },
+          "required": [
+            "contractId",
+            "comment",
+            "userDetails",
+            "status",
+            "countryCode",
+            "buyRates"
+          ]
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "description": "Datetime field indicating when the contract request was actioned, using the standard ISO 8601 format, returned in UTC Coordinated Universal Time).",
+                "example": "2023-08-17T21:41:47.341+00:00"
+              },
+              "error": {
+                "type": "string",
+                "description": "Shows any errors encountered on the response to the contract approval call.",
+                "example": null
+              },
+              "message": {
+                "type": "string",
+                "description": "Any message that may be attached to the response.",
+                "example": "Successfully reviewed agency contract"
+              },
+              "contractDetails": {
+                "$ref": "#/components/schemas/Contract"
+              }
+            }
+          }
+        },
+        "400": {
+          "application/json": {
+            "$ref": "#/components/schemas/400Response2"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/review-contract.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "review-custom-rate",
+      "operationId": "reviewCustomRate",
+      "method": "POST",
+      "path": "/v1/custom-rate/{customRateId}/review",
+      "summary": "Approve Custom Rate",
+      "parameters": [
+        {
+          "name": "customRateId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the custom rate to approve",
+          "schema": {
+            "type": "string",
+            "example": "123457838"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "required": [
+            "customRateId",
+            "userDetails",
+            "comment",
+            "status",
+            "customRateType",
+            "merchantId",
+            "reference",
+            "rateDetails"
+          ],
+          "properties": {
+            "customRateId": {
+              "type": "string",
+              "example": "712123123556455",
+              "description": "The unique ID for the custom rate between Afterpay and the partner."
+            },
+            "userDetails": {
+              "$ref": "#/components/schemas/User"
+            },
+            "comment": {
+              "type": "string",
+              "description": "Comment specific to the custom rate request.",
+              "example": "Approved by X on date Y for reason Z."
+            },
+            "status": {
+              "type": "string",
+              "description": "The de facto approval field that determines whether the rate request by Afterpay is approved or rejected by the partner.",
+              "example": "APPROVED",
+              "enum": [
+                "APPROVED",
+                "REJECTED"
+              ]
+            },
+            "customRateType": {
+              "type": "string",
+              "description": "Defines whether the custom rate applies to only one seller or applies to multiple sellers under the same platform or brand.",
+              "example": "MERCHANT",
+              "enum": [
+                "MERCHANT",
+                "BRAND"
+              ]
+            },
+            "merchantId": {
+              "type": "string",
+              "description": "Afterpay merchant id MID; this will only be available for existing sellers; for new sellers please use the reference field.",
+              "example": "100405604504"
+            },
+            "reference": {
+              "type": "string",
+              "description": "Seller or brand reference to which the custom rate is being applied; this defines the unique seller or the unique platform or brand and iswill be requested from the partner manually before the custom rate request is created.",
+              "example": "ac_advkasdvasfbaadf:US"
+            },
+            "rateDetails": {
+              "type": "object",
+              "required": [
+                "countryCode",
+                "rates"
+              ],
+              "properties": {
+                "countryCode": {
+                  "type": "string",
+                  "description": "Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rate applies.",
+                  "example": "US"
+                },
+                "rates": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "variableRatePercentage",
+                      "fixedRate",
+                      "fixedRateCurrencyCode",
+                      "rateType",
+                      "durationInMonths"
+                    ],
+                    "properties": {
+                      "variableRatePercentage": {
+                        "type": "number",
+                        "description": "Variable part of the buy-rate.",
+                        "format": "decimal",
+                        "example": 5
+                      },
+                      "fixedRate": {
+                        "type": "number",
+                        "description": "Fixed part of the buy-rate.",
+                        "format": "decimal",
+                        "example": 0.3
+                      },
+                      "fixedRateCurrencyCode": {
+                        "type": "string",
+                        "description": "Currency of the fixed part of the buy-rate.",
+                        "example": "USD"
+                      },
+                      "rateType": {
+                        "type": "string",
+                        "description": "INTRODUCTORY for temporary promotional rate or ONGOING for steady-state rate.",
+                        "example": "ONGOING",
+                        "enum": [
+                          "INTRODUCTORY",
+                          "ONGOING"
+                        ]
+                      },
+                      "durationInMonths": {
+                        "type": "integer",
+                        "description": "Number of months that the introductory rate will be applied.",
+                        "example": 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "description": "Datetime field indicating when the custom rate request was actioned, returned using the standard ISO 8601 format, in UTC Coordinated Universal Time).",
+                "example": "2023-08-17T21:41:47.341+00:00"
+              },
+              "error": {
+                "type": "string",
+                "description": "Shows any errors encountered on the response to the contract approval call."
+              },
+              "message": {
+                "type": "string",
+                "description": "Any message that may be attached to the response."
+              },
+              "customRateDetails": {
+                "$ref": "#/components/schemas/CustomRate"
+              }
+            }
+          }
+        },
+        "400": {
+          "application/json": {
+            "$ref": "#/components/schemas/400Response2"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/review-custom-rate.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "update-rate",
+      "operationId": "updateRate",
+      "method": "PUT",
+      "path": "/v1/onboardings/{onboardingId}/capabilities/buy-rate",
+      "summary": "Update Tier",
+      "parameters": [
+        {
+          "name": "onboardingId",
+          "in": "path",
+          "required": true,
+          "description": "The ID returned during a successful create an onboarding call.",
+          "schema": {
+            "type": "string",
+            "example": "12345769"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "properties": {
+            "tier": {
+              "type": "integer",
+              "example": 3,
+              "description": "GMV tier of the seller that informs the buy rate as defined in the commercial contract."
+            },
+            "gmv": {
+              "type": "integer",
+              "example": 150000000,
+              "description": "Actual transaction volume that informs the tier. Estimated or addressable seller volume accepted when actuals are not available.",
+              "nullable": true
+            },
+            "gmvCurrencyCode": {
+              "type": "string",
+              "example": "USD",
+              "description": "Currency of the gmv volume in ISO 4217 currency code. Please use currency that is defined in the commercial contract only (e.g., USD-equivalent volume for UK sellers)."
+            },
+            "agencyMerchantContractDetails": {
+              "type": "object",
+              "required": [
+                "contractId",
+                "contractDate"
+              ],
+              "properties": {
+                "contractId": {
+                  "type": "string",
+                  "example": "785389121238",
+                  "description": "Unique ID for the contract between the partner and its seller serving as the basis for the new tier update."
+                },
+                "contractDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-09-17T00:00:00.000Z",
+                  "description": "Effective date and time of when the contract was signed between the partner and its seller."
+                }
+              }
+            }
+          },
+          "required": [
+            "tier",
+            "gmvCurrencyCode",
+            "agencyMerchantContractDetails"
+          ]
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "onboardingId": {
+                "type": "string",
+                "description": "The id that is returned during a successful create an onboarding call.",
+                "example": "123snc-d83jndnv-38djcxnxn"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "Datetime field indicating when the tier update request was actioned, returned using the standard ISO 8601 format, in UTC Coordinated Universal Time).",
+                "example": "2023-08-17T21:41:47.341Z"
+              },
+              "error": {
+                "type": "string",
+                "description": "Shows any errors encountered on the response to the contract approval call."
+              },
+              "message": {
+                "type": "string",
+                "description": "Any message that may be attached to the response."
+              },
+              "rateDetails": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RateObjDurationEffectiveFrom"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "application/json": {
+            "$ref": "#/components/schemas/400Response"
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/partner/update-rate.json",
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-contract",
+      "operationId": "getContract",
+      "method": "GET",
+      "path": "/v1/contract/{contractId}",
+      "summary": "Get Contract",
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "description": "The unique ID for the contract between Afterpay and the partner.",
+          "schema": {
+            "type": "string",
+            "example": "785389121238"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "contractId": {
+                "type": "string",
+                "description": "The unique ID for the contract between Afterpay and the partner.",
+                "example": "785389121238"
+              },
+              "effectiveFrom": {
+                "type": "string",
+                "description": "Effective date and time of when the contract applies, using the standard ISO 8601 format, returned in UTC Coordinated Universal Time).",
+                "example": "2023-09-17T21:41:47.341+00:00"
+              },
+              "status": {
+                "type": "string",
+                "description": "Contract status",
+                "example": "APPROVED",
+                "enum": [
+                  "APPROVED",
+                  "REJECTED",
+                  "PENDING"
+                ]
+              },
+              "countryCode": {
+                "type": "string",
+                "description": "Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the contact applies.",
+                "example": "US"
+              },
+              "buyRates": {
+                "description": "Buy rates object that details the rates.",
+                "$ref": "#/components/schemas/BuyRates"
+              }
+            }
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    },
+    {
+      "group": "partner",
+      "command": "get-custom-rate",
+      "operationId": "getCustomRate",
+      "method": "GET",
+      "path": "/v1/custom-rate/{customRateId}",
+      "summary": "Get Custom Rate",
+      "parameters": [
+        {
+          "name": "customRateId",
+          "in": "path",
+          "required": true,
+          "description": "The unique ID for the custom rate between Afterpay and the partner.",
+          "schema": {
+            "type": "string",
+            "example": "712123123556455"
+          }
+        },
+        {
+          "in": "header",
+          "name": "Content-Type",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Content type of the request body."
+        },
+        {
+          "in": "header",
+          "name": "User-Agent",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The user agent string of the HTTP client."
+        },
+        {
+          "in": "header",
+          "name": "Accept",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "Specifies media types that are acceptable for the response."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "customRateId": {
+                "type": "string",
+                "description": "The unique ID for the custom rate between Afterpay and the partner.",
+                "example": "71212312355645"
+              },
+              "status": {
+                "type": "string",
+                "description": "Custom rate status.",
+                "example": "APPROVED",
+                "enum": [
+                  "APPROVED",
+                  "PENDING",
+                  "REJECTED"
+                ]
+              },
+              "customRateType": {
+                "type": "string",
+                "description": "Defines whether the custom rate applies to only one seller or applies to multiple sellers under the same platform or brand.",
+                "example": "MERCHANT",
+                "enum": [
+                  "MERCHANT",
+                  "BRAND"
+                ]
+              },
+              "merchantId": {
+                "type": "string",
+                "description": "Optional merchant id that is unique to the merchant."
+              },
+              "reference": {
+                "type": "string",
+                "description": "Seller or brand reference to which the custom rate is being applied; this defines the unique seller or the unique platform or brand and will be requested from the partner manually before the request is created.",
+                "example": "ac_advkasdvasfbaadf:US"
+              },
+              "effectiveFrom": {
+                "type": "string",
+                "description": "Date the custom rate is effective from.",
+                "example": "2024-02-25T03:47:52Z",
+                "nullable": true
+              },
+              "effectiveEndDate": {
+                "type": "string",
+                "description": "Date the custom rate ends.",
+                "nullable": true
+              },
+              "rateDetails": {
+                "type": "array",
+                "description": "The custom rate details that apply to this seller or platform or brand.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "countryCode": {
+                      "type": "string",
+                      "description": "Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rate applies.",
+                      "example": "US"
+                    },
+                    "rates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/RateObjDuration"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "application/json": {
+            "$ref": "#/components/schemas/401Response"
+          }
+        },
+        "404": {
+          "application/json": {
+            "$ref": "#/components/schemas/404Response"
+          }
+        },
+        "503": {
+          "application/json": {
+            "$ref": "#/components/schemas/503Response"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/Partner.yaml"
+    }
+  ]
+}

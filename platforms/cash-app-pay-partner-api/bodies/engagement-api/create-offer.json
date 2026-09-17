@@ -1,0 +1,46 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "offer": {
+    "reference_id": "reference-id",
+    "brand_id": "<brand_id>",
+    "customer_details": {
+      "customer_scope": "ALL_CUSTOMERS"
+    },
+    "title": "<title>",
+    "offer_details": {
+      "type": "<type>",
+      "amount": {
+        "type": "FIXED",
+        "amount": 500,
+        "currency": "USD"
+      },
+      "scope": {
+        "type": "CATEGORY",
+        "categories": [
+          {
+            "name": "<name>"
+          }
+        ]
+      }
+    },
+    "redemption_methods": [
+      {
+        "type": "AUTOMATIC"
+      }
+    ],
+    "starts_at": "<starts_at>",
+    "ends_at": "<ends_at>",
+    "additional_terms": "<additional_terms>",
+    "redemption_count": {
+      "type": "<type>",
+      "max_redemptions": 0,
+      "count": 0
+    },
+    "redirect": {
+      "qr_code_png_url": "<qr_code_png_url>",
+      "qr_code_svg_url": "<qr_code_svg_url>"
+    },
+    "historical_sync": false,
+    "external_created_at": "<external_created_at>"
+  }
+}

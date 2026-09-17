@@ -1,0 +1,15 @@
+{
+  "webhook_endpoint": {
+    "url": "<url>",
+    "reference_id": "<reference_id>",
+    "api_key_id": "<api_key_id>",
+    "event_configurations": [
+      {
+        "event_type": "customer.created",
+        "api_version": "v1"
+      }
+    ],
+    "delivery_timeout": 5000,
+    "max_delivery_frequency": null
+  }
+}

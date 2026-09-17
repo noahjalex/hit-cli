@@ -1,0 +1,284 @@
+openapi: 3.1.0
+info:
+  title: Online API
+  version: v2
+  description: |-
+    **Connection Timeouts**
+    | Timeout | Time (Seconds) |
+    |---------|----------------|
+    | Open    | 10             |
+    | Read    | 20             |
+servers:
+  - url: 'https://global-api-sandbox.afterpay.com'
+    description: Sandbox
+  - description: Production
+    url: 'https://global-api.afterpay.com'
+components:
+  securitySchemes:
+    sec0:
+      type: http
+      scheme: basic
+  schemas:
+    Checkout-Request:
+      type: object
+      x-stoplight:
+        id: 7faa9914c0f07
+      description: Individual Checkout
+      required:
+        - amount
+        - consumer
+      properties:
+        amount:
+          $ref: ../models/Money.yaml
+        consumer:
+          $ref: ../models/Consumer.yaml
+        merchantReference:
+          type: string
+        billing:
+          $ref: ../models/Contact.yaml
+        shipping:
+          $ref: ../models/Contact.yaml
+        merchant:
+          type: object
+          required:
+            - redirectConfirmUrl
+            - redirectCancelUrl
+          properties:
+            redirectConfirmUrl:
+              type: string
+              example: 'https://example.com/checkout/confirm'
+            redirectCancelUrl:
+              type: string
+              example: 'https://example.com/checkout/cancel'
+            popupOriginUrl:
+              type: string
+              description: The URL location from which Afterpay is initiated (required for express checkout). Optional for standard checkout when a `redirectConfirmURL` is provided.
+              example: 'https://merchant.com/cart'
+            name:
+              type: string
+              x-stoplight:
+                id: 2w1zp5plfctau
+              description: 'The merchant name displayed in the Afterpay checkout flow, confirmation & refund emails, and the consumer portal'
+        items:
+          type: array
+          items:
+            $ref: ../models/Item.yaml
+        courier:
+          $ref: ../models/Shipping-Courier.yaml
+          x-stoplight:
+            id: pc58jm4wu5yy9
+        taxAmount:
+          $ref: ../models/Money.yaml
+        shippingAmount:
+          $ref: ../models/Money.yaml
+          x-stoplight:
+            id: ykk2koj5rx7pj
+        discounts:
+          type: array
+          x-stoplight:
+            id: eh1iy79du935u
+          items:
+            $ref: ../models/Discount.yaml
+            x-stoplight:
+              id: bxhvkyvdkx6ie
+        agreements:
+          type: array
+          description: List of agreements
+          items:
+            $ref: ../models/Agreement.yaml
+        custom:
+          type: object
+          x-stoplight:
+            id: 3vpas6er5999o
+          description: Additional data depending on the goods and services you provide to customers.
+        mode:
+          description: 'Must be set to `express` to enable express checkout. '
+          enum:
+            - express
+            - standard
+          default: standard
+        description:
+          type: string
+          x-stoplight:
+            id: dfyv96oimp7io
+          deprecated: true
+    Checkout-Response:
+      type: object
+      x-stoplight:
+        id: 87d8b3668a0d6
+      properties:
+        token:
+          type: string
+          x-stoplight:
+            id: jxaddks62fh5i
+          example: 005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2
+        expires:
+          type: string
+          x-stoplight:
+            id: afww5xtbpqwyy
+          example: '2023-08-29T00:00:00.000Z'
+        redirectCheckoutUrl:
+          type: string
+          x-stoplight:
+            id: xvoaztva77o0t
+          example: 'https://portal.sandbox.afterpay.com/us/checkout/?token=005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2'
+  requestBodies:
+    CreateCheckout:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Checkout-Request'
+          examples:
+            Example 1:
+              value:
+                amount:
+                  amount: '100.00'
+                  currency: USD
+                consumer:
+                  givenNames: Joe
+                  surname: Consumer
+                  email: test@example.com
+                billing:
+                  name: Joe Consumer
+                  line1: 123 Fake Street
+                  area1: ''
+                  region: ''
+                  postcode: '95050'
+                  countryCode: US
+                shipping:
+                  name: Joe Consumer
+                  line1: 123 Fake Street
+                  area1: ''
+                  region: ''
+                  postcode: '95050'
+                  countryCode: US
+                merchant:
+                  redirectConfirmUrl: 'https://example.com/checkout/confirm'
+                  redirectCancelUrl: 'https://example.com/checkout/cancel'
+      description: ''
+  responses:
+    CheckoutRes:
+      description: Create Checkout Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Checkout-Response'
+          examples:
+            Example 1:
+              value:
+                token: 002.ejh49ovam0acussgg4c6slpqqtn1ntqt3m4efqdh4qe0u8qk
+                expires: '2023-08-29T00:57:25.754Z'
+                redirectCheckoutUrl: 'https://portal.sandbox.afterpay.com/us/checkout/?token=002.ejh49ovam0acussgg4c6slpqqtn1ntqt3m4efqdh4qe0u8qk'
+    GetCheckoutRes:
+      description: GetCheckoutResponse
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Checkout-Request'
+                x-stoplight:
+                  id: 11t5atjvyk3qc
+              - $ref: '#/components/schemas/Checkout-Response'
+                x-stoplight:
+                  id: xms13wvaldwvc
+          examples: {}
+  parameters: {}
+  examples: {}
+security:
+  - sec0: []
+paths:
+  /v2/checkouts:
+    post:
+      summary: Create Checkout
+      description: |
+        The `checkouts` endpoint is responsible for creating a new checkout and returning the associated checkout token
+      operationId: create-checkout-1
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+          description: 'See our <a href="https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header" target = "_blank">User Agent</a> page for formatting details'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Checkout-Request'
+            examples: {}
+        description: ''
+      responses:
+        '201':
+          $ref: '#/components/responses/CheckoutRes'
+        '400':
+          description: Bad Request
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object | One or more required fields were missing or invalid. |
+            | unsupported_payment_type | The `amount` is outside of the merchant's payment limits, as returned by GET Configuration. |
+            | unsupported_currency | Money is not supported by the merchant. |
+        default:
+          description: see additional PUT/POST errors applicable to all POST endpoints.
+      deprecated: false
+  '/v2/checkouts/{token}':
+    get:
+      summary: Get Checkout
+      description: |
+        This endpoint retrieves an incomplete individual checkout by token.
+
+        Checkout details are only retained in this temporary format for up to 60 minutes. If a checkout token expires or has an order created against it, it can no longer be retrieved from this endpoint.
+        To retrieve a Payment record (Afterpay Order) along with its associated checkout details, see Get Payment By Token.
+      operationId: get-checkout
+      parameters:
+        - name: token
+          in: path
+          description: The token of the checkout to be retrieved.
+          schema:
+            type: string
+          required: true
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our <a href="https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header" target = "_blank">User Agent</a> page for formatting details'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      deprecated: false
+      responses:
+        '200':
+          description: |
+            Returns an object combining the [Checkout Request](Checkouts.v2.yaml/components/schemas/Checkout-Request) and [Checkout Response](Checkouts.v2.yaml/components/schemas/Checkout-Response) for a provided token.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Checkout-Response'
+                    x-stoplight:
+                      id: n4c21yj8v9lbh
+                  - $ref: '#/components/schemas/Checkout-Request'
+                    x-stoplight:
+                      id: 1g11qfm84x3zc
+        '404':
+          description: No checkout token was provided.
+        '412':
+          description: 'The checkout token is invalid, expired, completed, or does not exist.'
+        default:
+          description: see additional PUT/POST errors applicable to all POST endpoints.

@@ -1,0 +1,8 @@
+{
+  "lending": [
+    {
+      "channel": "ONLINE",
+      "enabled": true
+    }
+  ]
+}

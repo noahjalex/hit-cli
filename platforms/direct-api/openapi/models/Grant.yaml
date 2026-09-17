@@ -1,0 +1,60 @@
+title: Grant
+type: object
+required:
+  - id
+  - type
+  - status
+  - created
+properties:
+  id:
+    type: string
+    description: Unique id identifying the grant
+    example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
+  type:
+    type: string
+    description: Type of grant
+    enum:
+      - ON_FILE
+    example: ON_FILE
+  status:
+    type: string
+    description: Current status of the grant
+    enum:
+      - ACTIVE
+      - CANCELLED
+    example: "ACTIVE"
+  created:
+    type: string
+    format: date-time
+    description: Timestamp when the grant was created
+    example: "2024-03-04T12:00:00Z"
+  merchantReference:
+    type: string
+    description: Merchant's reference for this grant
+    nullable: true
+    example: "merchant_ref_123"
+  cancelled:
+    type: string
+    format: date-time
+    description: If present, indicates when the grant was cancelled
+    example: "2024-03-05T12:00:00Z"
+  expires:
+    type: string
+    format: date-time
+    description: If present, indicates when the grant's status will become EXPIRED, preventing a client from using it to create payments
+    example: "2025-03-04T12:00:00Z"
+  consumerReference:
+    type: string
+    description: Reference identifier for the consumer
+    nullable: true
+    example: "cust_12345"
+  email:
+    type: string
+    description: Masked email address of the consumer
+    nullable: true
+    example: "j***@e***.com"
+  requestId:
+    type: string
+    description: If present, unique identifier for the request
+    nullable: true
+    example: "req_abc123def456"

@@ -1,0 +1,22 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "request": {
+    "actions": [
+      {
+        "amount": 2500,
+        "currency": "USD",
+        "scope_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+        "type": "ONE_TIME_PAYMENT"
+      }
+    ],
+    "channel": "ONLINE",
+    "redirect_url": "https://example.com",
+    "reference_id": "<reference_id>",
+    "metadata": {
+      "my-meta": "meta-value"
+    },
+    "customer_metadata": {
+      "reference_id": "<reference_id>"
+    }
+  }
+}

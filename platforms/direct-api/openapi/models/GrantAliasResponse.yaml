@@ -1,0 +1,15 @@
+title: Grant Alias Response
+type: object
+required:
+  - token
+  - expiry
+properties:
+  token:
+    type: string
+    description: Token representing the grant alias
+    example: "ba_alias_def789ghi012"
+  expiry:
+    type: string
+    format: date-time
+    description: Timestamp when the alias token expires
+    example: "2025-03-04T22:13:45Z"

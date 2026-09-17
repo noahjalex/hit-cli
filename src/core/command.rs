@@ -18,11 +18,28 @@ pub struct PostScriptConfig {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
+#[serde(tag = "type", rename_all = "kebab-case")]
+pub enum AuthConfig {
+    Agency {
+        api_key_env: String,
+        secret_env: String,
+    },
+    CashApp {
+        client_id_env: String,
+        api_key_env: String,
+        api_secret_env: String,
+        region_env: String,
+    },
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Command {
     pub method: http::HttpMethod,
     pub url: String,
     #[serde(default)]
     pub headers: HashMap<String, String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub auth: Option<AuthConfig>,
     pub body: Option<Value>,
     pub postscript: Option<PostScriptConfig>,
 }
@@ -133,6 +150,7 @@ mod tests {
             method: http::HttpMethod::POST,
             url: String::from("https://example.com/orgs/:orgId/employees/:employeeId"),
             headers: HashMap::new(),
+            auth: None,
             body: Some(json!({
                 "name": ":employeeName",
                 "title": ":title",
@@ -191,6 +209,7 @@ mod tests {
             method: http::HttpMethod::POST,
             url: String::from("https://example.com/api"),
             headers: HashMap::new(),
+            auth: None,
             body: Some(json!({
                 "dryRun": ":dryRun|boolean=false",
                 "limit": ":limit|number=10",

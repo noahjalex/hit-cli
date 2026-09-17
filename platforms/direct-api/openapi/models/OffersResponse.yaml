@@ -1,0 +1,18 @@
+type: object
+description: Response containing available offers for the consumer
+properties:
+  consumerMaskedEmail:
+    type: string
+    description: Masked email address of the consumer
+    example: "j***@e***.com"
+  consumerAmount:
+    $ref: Money.yaml
+    description: Amount in consumer's currency
+    example:
+      amount: "200.00"
+      currency: "USD"
+  offers:
+    type: array
+    description: List of available offers details
+    items:
+      $ref: Offer.yaml

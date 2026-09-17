@@ -1,0 +1,7 @@
+title: GrantResponse
+type: object
+required:
+  - grant
+properties:
+  grant:
+    $ref: "./Grant.yaml"

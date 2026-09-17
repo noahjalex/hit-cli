@@ -1,0 +1,95 @@
+title: RecurringPaymentRequest
+type: object
+properties:
+  requestId:
+    type: string
+    maxLength: 64
+    description: A unique identifier for the request, used for idempotency
+    format: uuid
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  paymentMethod:
+    type: object
+    required:
+      - token
+      - type
+    properties:
+      token:
+        type: string
+        description: The billing agreement token
+        example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
+      type:
+        type: string
+        description: The payment method type
+        enum:
+          - BILLING_AGREEMENT
+        example: "BILLING_AGREEMENT"
+  amount:
+    $ref: ./Money.yaml
+    description: The total amount of the payment
+  consumer:
+    $ref: ./Consumer.yaml
+  billing:
+    $ref: ./Contact.yaml
+  shipping:
+    $ref: ./Contact.yaml
+  courier:
+    $ref: ./Shipping-Courier.yaml
+  items:
+    type: array
+    items:
+      $ref: ./Item.yaml
+  discounts:
+    type: array
+    items:
+      $ref: ./Discount.yaml
+  description:
+    type: string
+    maxLength: 256
+    example: "Monthly Premium Subscription Payment"
+  merchant:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The merchant name to display
+        example: "Merchant Display Name"
+  merchantReference:
+    type: string
+    maxLength: 128
+    description: The reference/order ID in the merchant's system
+    example: "SUB-2024-03-001"
+  shippingAmount:
+    $ref: ./Money.yaml
+    description: The shipping cost amount
+  taxAmount:
+    $ref: ./Money.yaml
+    description: The tax amount
+  custom:
+    type: object
+    additionalProperties: true
+    description: Custom key-value pairs for merchant use
+    example:
+      customerId: "cust_456"
+      plan: "premium"
+  paymentScheduleChecksum:
+    type: string
+    description: Payment schedule validation checksum
+    example: "abc123def456"
+  enrichments:
+    type: object
+    properties:
+      initiation:
+        type: object
+        description: Describes who initiated the transaction
+        properties:
+          actor:
+            type: string
+            description: The actor initiating the transaction. Use MERCHANT when the customer is not present.
+            enum:
+              - CUSTOMER
+              - MERCHANT
+            example: "CUSTOMER"
+required:
+  - requestId
+  - paymentMethod
+  - amount

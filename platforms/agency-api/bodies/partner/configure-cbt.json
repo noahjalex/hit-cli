@@ -1,0 +1,9 @@
+{
+  "channels": [
+    {
+      "channel": "ONLINE",
+      "enabled": true,
+      "currlocEnabled": true
+    }
+  ]
+}

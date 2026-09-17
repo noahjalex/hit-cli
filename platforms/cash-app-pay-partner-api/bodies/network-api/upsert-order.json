@@ -1,0 +1,85 @@
+{
+  "order": {
+    "merchant_id": "MMI_4vxs5egfk7hmta3qx2h6rp91x",
+    "reference_id": "external-id",
+    "grant_id": "GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50",
+    "payments": [
+      {
+        "id": "PWC_4nn21zy6t0v2yhqg5bvhk7xkq",
+        "amount": 2500,
+        "currency": "USD",
+        "type": "<type>",
+        "state": "<state>"
+      }
+    ],
+    "refunds": [
+      {
+        "id": "PWCR_da1v3j4p3z15y47adpzzq0whj",
+        "amount": 2500,
+        "currency": "USD",
+        "type": "<type>",
+        "state": "<state>"
+      }
+    ],
+    "line_items": [
+      {
+        "name": "<name>",
+        "description": "<description>",
+        "reference_id": "external-id",
+        "quantity": "<quantity>",
+        "amount": 0,
+        "image_url": "<image_url>",
+        "discounts": [
+          {
+            "discount_uid": "<discount_uid>",
+            "amount": 0
+          }
+        ],
+        "taxes": [
+          {
+            "tax_uid": "<tax_uid>",
+            "amount": 0
+          }
+        ]
+      }
+    ],
+    "discounts": [
+      {
+        "uid": "external-uid",
+        "name": "<name>",
+        "amount": 0,
+        "bps": 0,
+        "scope": "ORDER"
+      }
+    ],
+    "taxes": [
+      {
+        "uid": "external-uid",
+        "name": "<name>",
+        "amount": 0,
+        "scope": "ORDER"
+      }
+    ],
+    "service_charges": [
+      {
+        "name": "<name>",
+        "description": "<description>",
+        "amount": 0
+      }
+    ],
+    "shipping_charges": [
+      {
+        "name": "<name>",
+        "description": "<description>",
+        "amount": 0
+      }
+    ],
+    "subtotal_amount": 0,
+    "total_amount": 0,
+    "currency": "USD",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  },
+  "validate_amounts": false
+}

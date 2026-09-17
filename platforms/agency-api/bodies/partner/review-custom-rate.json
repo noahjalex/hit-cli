@@ -1,0 +1,26 @@
+{
+  "customRateId": "712123123556455",
+  "userDetails": {
+    "firstName": "John",
+    "lastName": "PSP",
+    "email": "john.psp@psp.com",
+    "adminIdentifier": "1234Admin"
+  },
+  "comment": "Approved by X on date Y for reason Z.",
+  "status": "APPROVED",
+  "customRateType": "MERCHANT",
+  "merchantId": "100405604504",
+  "reference": "ac_advkasdvasfbaadf:US",
+  "rateDetails": {
+    "countryCode": "US",
+    "rates": [
+      {
+        "variableRatePercentage": 5,
+        "fixedRate": 0.3,
+        "fixedRateCurrencyCode": "USD",
+        "rateType": "ONGOING",
+        "durationInMonths": 3
+      }
+    ]
+  }
+}

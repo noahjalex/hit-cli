@@ -1,0 +1,7 @@
+name: X-Signature
+in: header
+required: true
+schema:
+  type: string
+  minLength: 1
+description: 'An HMAC signature generated using the secret value from the API key specified in the `Authorization` header. See [signing requests](https://developers.cash.app/docs/partner/technical-documentation/api-fundamentals/requests/signing-requests) for more information.'

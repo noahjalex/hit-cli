@@ -1,0 +1,12 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "brand": {
+    "name": "<name>",
+    "reference_id": "<reference_id>",
+    "profile_image_url": "<profile_image_url>",
+    "color": "#ffffff",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  }
+}

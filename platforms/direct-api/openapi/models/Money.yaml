@@ -1,0 +1,28 @@
+title: Money
+x-stoplight:
+  id: 8844plx7u0vnd
+type: object
+description: "Object containing amount and currency.\n\nWhere a Money object is included in an API request, it will be validated according to the specification above. Invalid Money objects will trigger a **422 Unprocessable Entity response**. The following is a list of common examples:\n\n|Example|\terrorCode|\tmessage|\n|---|---|---|\n|`amount` is omitted or null\t|invalid_object\t|{Money object}.amount Amount field required|\n|`amount` has more than 2 decimal places\t| invalid_object\tamount| must be a valid ISO 4217 format value|\n|`amount` includes a thousands separator comma, for example: \"1,000\"\t|invalid_amount\t|Amount must be a valid ISO 4217 format value|\n|`amount` is not a decimal number, for example: \"FREE\", \"$2\" or an empty string\t|invalid_object|\t{Money object}.amount Amount field must be a valid ISO 4217 format value|\n|`currency` is omitted or null\t|invalid_object|\t{Money object}.currency Currency field required|\n|`currency` is not a valid currency code, not all uppercase or an empty string\t|invalid_object|\t{Money object}.currency Currency not supported for this merchant|\n|`currency` is supported by Afterpay, but not valid for the Merchant account\t|unsupported_currency\t|An error occurred|"
+x-tags:
+  - request-object
+required:
+  - amount
+  - currency
+properties:
+  amount:
+    type: string
+    x-stoplight:
+      id: gvdjz1nec94rf
+    example: '100.00'
+    description: 'The amount as a string representation of a decimal number, rounded to 2 decimal places.'
+  currency:
+    type: string
+    enum:
+      - AUD
+      - NZD
+      - USD
+      - CAD
+      - GBP
+    x-stoplight:
+      id: dv7v47bg32ukj
+    description: The currency in ISO 4217 format. The value provided must correspond to the currency of the merchant account making the request.

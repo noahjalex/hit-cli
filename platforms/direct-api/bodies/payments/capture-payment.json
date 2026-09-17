@@ -1,0 +1,9 @@
+{
+  "requestId": "<requestId>",
+  "merchantReference": "merchant-order-123",
+  "amount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "paymentEventMerchantReference": "payment-ref-123"
+}

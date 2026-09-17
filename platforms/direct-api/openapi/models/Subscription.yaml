@@ -1,0 +1,20 @@
+title: Subscription
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - FIXED
+      - VARIABLE
+    example: FIXED
+  interval:
+    type: string
+    enum:
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+    example: YEAR
+  intervalCount:
+    type: integer
+    example: 1

@@ -1,0 +1,19 @@
+title: Discount
+x-stoplight:
+  id: oqj8ly76xhapk
+type: object
+x-tags:
+  - request-object
+description: A discount applied to an order.
+properties:
+  displayName:
+    type: string
+    x-stoplight:
+      id: spfdh2oubuly1
+    example: New Customer Coupon
+    description: A display name for the discount. Limited to 128 characters.
+  amount:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: nsfdvjppq8lae
+    description: The discount amount.

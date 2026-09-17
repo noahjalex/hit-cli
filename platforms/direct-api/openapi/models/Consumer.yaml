@@ -1,0 +1,46 @@
+title: Consumer
+x-stoplight:
+  id: saj1ecz1typ6t
+type: object
+description: 'The consumer data model is used for gathering essential user information. It captures details such as the individual''s first name, represented by `givenNames`, and their last name, captured under `surname`. In addition, it stores the user''s contact number under `phoneNumber` and their email address under `email`. These fields collectively provide indispensable contact and identification details for a user.'
+x-tags:
+  - request-object
+examples:
+  - email: test@example.com
+    givenNames: Joe
+    surname: Consumer
+    phoneNumber: 0400 000 000
+  - email: test@example.com
+    givenNames: Joe
+    surname: Consumer
+    phoneNumber: (415) 848-4322
+properties:
+  email:
+    type: string
+    x-stoplight:
+      id: 6dktifeykbuy1
+    example: test@example.com
+    format: email
+    maxLength: 128
+  givenNames:
+    type: string
+    x-stoplight:
+      id: btmbtctfchrlq
+    example: Joe
+    description: The consumer's first name
+    maxLength: 128
+  surname:
+    type: string
+    x-stoplight:
+      id: z9bhhfjtnn22t
+    example: Consumer
+    description: The consumer's last name
+    maxLength: 128
+  phoneNumber:
+    type: string
+    x-stoplight:
+      id: q3i7if1by5zhf
+    example: 0400 000 000
+    maxLength: 32
+required:
+  - email

@@ -1,0 +1,68 @@
+type: object
+description: Response type for billing agreements
+required:
+  - token
+  - type
+  - status
+  - created
+properties:
+  token:
+    type: string
+    description: Unique token identifying the agreement
+    example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
+  type:
+    type: string
+    description: Type of agreement
+    enum:
+      - BILLING
+    example: BILLING
+  status:
+    type: string
+    description: Current status of the agreement
+    enum:
+      - ACTIVE
+      - CANCELLED
+      - EXPIRED
+      - PENDING_RENEWAL
+      - PENDING_RENEWAL_EXPIRED
+    example: "ACTIVE"
+  merchantReference:
+    type: string
+    description: Merchant's reference for this agreement
+    nullable: true
+    example: "merchant_ref_123"
+  created:
+    type: string
+    format: date-time
+    description: Timestamp when the agreement was created
+    example: "2024-03-04T12:00:00Z"
+  cancelled:
+    type: string
+    format: date-time
+    description: If present, indicates when the agreement was cancelled
+    example: "2024-03-05T12:00:00Z"
+  expires:
+    type: string
+    format: date-time
+    description: If present, indicates when the agreement's status will become EXPIRED, preventing a client from using it to create payments
+    example: "2025-03-04T12:00:00Z"
+  events:
+    type: array
+    description: List of events associated with this agreement
+    items:
+      $ref: AgreementEventResponse.yaml
+  requestId:
+    type: string
+    description: Unique identifier for the request
+    nullable: true
+    example: "req_abc123def456"
+  consumerReference:
+    type: string
+    description: Reference identifier for the consumer
+    nullable: true
+    example: "cust_12345"
+  email:
+    type: string
+    description: Masked email address of the consumer
+    nullable: true
+    example: "j***@e***.com"

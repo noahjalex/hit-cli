@@ -1,0 +1,27 @@
+type: object
+title: CapturePayment
+description: Request body for capturing a payment
+properties:
+  requestId:
+    type: string
+    format: uuid
+    description: 'A unique request ID, required for idempotent retries.'
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  merchantReference:
+    type: string
+    description: |-
+      The reference/ order id that this payment corresponds to in the merchant's system. 
+      
+      Note: Providing a new value will update any value previously set in the Create Checkout request.
+    example: merchant-order-123
+  amount:
+    $ref: Money.yaml
+    example:
+      amount: "100.00"
+      currency: "USD"
+  paymentEventMerchantReference:
+    type: string
+    description: |
+      A unique reference for the individual payment capture event. If provided, the value will appear in the daily settlement file as "Payment Event ID"
+    maxLength: 128
+    example: payment-ref-123

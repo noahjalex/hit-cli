@@ -1,0 +1,34 @@
+type: object
+description: Response type for agreement events
+properties:
+  type:
+    type: string
+    description: Type of event
+    enum:
+      - CAPTURE
+      - VOID
+    example: "CAPTURE"
+  created:
+    type: string
+    format: date-time
+    description: Timestamp when the event occurred
+    example: "2024-03-04T10:30:00Z"
+  amount:
+    $ref: Money.yaml
+    description: Amount associated with the event
+  status:
+    type: string
+    description: Status of the agreement at the time of the event
+    enum:
+      - APPROVED
+      - DECLINED
+    example: "APPROVED"
+  merchantReference:
+    type: string
+    description: Merchant's reference associated with this event
+    nullable: true
+    example: "merchant-event-ref-789"
+  orderId:
+    type: number
+    description: Order ID associated with this event
+    example: 123

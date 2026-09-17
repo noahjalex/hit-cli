@@ -1,0 +1,21 @@
+title: GrantApprovalResponse
+type: object
+required:
+  - token
+  - expires
+  - redirectCheckoutUrl
+properties:
+  token:
+    type: string
+    description: Token identifying this grant approval request
+    example: "ba_approval_xyz789abc123"
+  expires:
+    type: string
+    format: date-time
+    description: When this approval request expires
+    example: "2024-03-05T22:13:45Z"
+  redirectCheckoutUrl:
+    type: string
+    format: uri
+    description: URL where the consumer should be redirected to complete approval
+    example: "https://portal.afterpay.com/us/checkout/ba-approval?token=ba_approval_xyz789abc123"

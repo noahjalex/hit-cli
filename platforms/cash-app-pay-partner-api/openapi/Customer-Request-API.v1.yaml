@@ -1,0 +1,1364 @@
+openapi: 3.1.0
+x-fern-explorer: false
+info:
+  title: Customer Request API
+  version: '1.0'
+  description: The Cash App Customer Request API connects clients to Cash App customers to get authorization to perform various actions on their accounts.
+  contact:
+    name: Cash App
+    url: 'https://developers.cash.app'
+    email: developers@cash.app
+servers:
+  - url: 'https://api.cash.app/customer-request/v1'
+    description: Production
+  - url: 'https://sandbox.api.cash.app/customer-request/v1'
+    description: Sandbox
+paths:
+  /requests:
+    parameters:
+      - $ref: ./components/parameters/Accept.yaml
+    post:
+      summary: Create request
+      operationId: create-request
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    $ref: '#/components/schemas/Request'
+                required:
+                  - request
+              examples:
+                Request with One Time Payment Action:
+                  $ref: '#/components/examples/RequestWithOneTimePaymentAction'
+                Request with On File Payment Action:
+                  $ref: '#/components/examples/RequestWithOnFilePaymentAction'
+                Request with On File Payout Action:
+                  $ref: '#/components/examples/RequestWithOnFilePayoutAction'
+                Request with Link Account Action:
+                  $ref: '#/components/examples/RequestWithLinkAccountAction'
+                Request with Checking Balance Action:
+                  $ref: '#/components/examples/RequestWithCheckingBalanceAction'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                request:
+                  type: object
+                  description: Details about the request to create.
+                  additionalProperties: false
+                  required:
+                    - actions
+                    - channel
+                  properties:
+                    actions:
+                      type: array
+                      minItems: 1
+                      uniqueItems: true
+                      description: |-
+                        A list of the different actions a client intends to take on the customer if the request is approved.
+
+                        No duplicate action types allowed.
+
+                        Min number of items: `1`
+                        Max number of items: `5`
+                      maxItems: 5
+                      items:
+                        $ref: '#/components/schemas/Action'
+                    channel:
+                      type: string
+                      description: |-
+                        How the customer is expected to interact with the request.
+
+                        - `IN_PERSON`: The customer presents or scans a QR code at a physical location to approve the request.
+                        - `ONLINE`: The customer scans a QR code or is redirected to Cash App from a browser context.
+                        - `IN_APP`: The customer scans a QR code or is redirected to Cash App from a native mobile application context.
+                      enum:
+                        - IN_PERSON
+                        - ONLINE
+                        - IN_APP
+                      example: ONLINE
+                    redirect_url:
+                      type: string
+                      format: uri
+                      example: 'https://example.com'
+                      minLength: 7
+                      maxLength: 1024
+                      description: |-
+                        If this request is responded to via mobile redirect, this field specifies the URL that Cash App will open for a customer in the mobile device's default browser after the request is approved or declined.
+                    reference_id:
+                      type: string
+                      minLength: 1
+                      maxLength: 1024
+                      description: |-
+                        A user-defined identifier for this request, typically used to associate the resource with a record in an external system.
+
+                        Min length: `1`
+                        Max length: `1024`
+                    metadata:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Metadata
+                    customer_metadata:
+                      $ref: '#/components/schemas/CustomerMetadata'
+              required:
+                - idempotency_key
+                - request
+            examples:
+              Sample request with metadata:
+                value:
+                  idempotency_key: e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19
+                  request:
+                    actions:
+                      - amount: 2500
+                        currency: USD
+                        scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                        type: ONE_TIME_PAYMENT
+                    channel: IN_PERSON
+                    redirect_url: 'https://example.com'
+                    reference_id: string
+                    metadata:
+                      key: value
+                    customer_metadata:
+                      reference_id: string
+              Sample request without metadata:
+                value:
+                  idempotency_key: e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19
+                  request:
+                    actions:
+                      - amount: 2500
+                        currency: USD
+                        scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                        type: ONE_TIME_PAYMENT
+                    channel: IN_PERSON
+                    redirect_url: 'https://example.com'
+                    reference_id: string
+                    customer_metadata:
+                      reference_id: string
+        description: ''
+      description: Creates a request to perform an action on a customer's account. All available actions can be found in the `action` schema.
+      tags:
+        - Requests
+      security:
+        - Client-ID: []
+    get:
+      summary: List requests
+      operationId: list-requests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  requests:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    maxItems: 100
+                    description: A list of requests matching the query parameters.
+                    items:
+                      $ref: '#/components/schemas/Request'
+                  cursor:
+                    type: string
+                    description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.'
+                required:
+                  - requests
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      description: |-
+        Returns a list of customer requests matching the given query parameters.
+
+        This endpoint may be used to listen for new customer requests if you are unable to accept webhooks in your system.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          description: A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of results for the original query.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          in: query
+          name: limit
+          description: Maximum number of requests to return.
+      security:
+        - Client-Secret: []
+      tags:
+        - Requests
+      x-internal: true
+  '/requests/{request_id}':
+    parameters:
+      - schema:
+          type: string
+        name: request_id
+        in: path
+        required: true
+        description: ID of the customer request.
+        example: GRR_1hrxhz136krcq6ezdte2ha5q
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Retrieve request
+      tags:
+        - Requests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  request:
+                    $ref: '#/components/schemas/Request'
+                required:
+                  - request
+              examples:
+                Request with One Time Payment Action:
+                  $ref: '#/components/examples/RequestWithOneTimePaymentAction'
+                Request with On File Payment Action:
+                  $ref: '#/components/examples/RequestWithOnFilePaymentAction'
+                Request with On File Payout Action:
+                  $ref: '#/components/examples/RequestWithOnFilePayoutAction'
+                Request with Link Account Action:
+                  $ref: '#/components/examples/RequestWithLinkAccountAction'
+                Request with One Time Payment Action and Grant:
+                  $ref: '#/components/examples/RequestWithOneTimePaymentActionAndGrant'
+                Request with On File Payment Action and Grant:
+                  $ref: '#/components/examples/RequestWithOnFilePaymentActionAndGrant'
+                Request with On File Payout Action and Grant:
+                  $ref: '#/components/examples/RequestWithOnFilePayoutActionAndGrant'
+                Request with Link Account Action and Grant:
+                  $ref: '#/components/examples/RequestWithLinkAccountActionAndGrant'
+                Request with Checking Balance Action:
+                  $ref: '#/components/examples/RequestWithCheckingBalanceAction'
+                Request with Checking Balance Action and Grant:
+                  $ref: '#/components/examples/RequestWithCheckingBalanceActionAndGrant'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: retrieve-request
+      description: Retrieves a customer request by its ID.
+      security:
+        - Client-ID: []
+    patch:
+      summary: Update request
+      operationId: update-request
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  request:
+                    $ref: '#/components/schemas/Request'
+                required:
+                  - request
+              examples:
+                Request with One Time Payment Action:
+                  $ref: '#/components/examples/RequestWithOneTimePaymentAction'
+                Request with On File Payment Action:
+                  $ref: '#/components/examples/RequestWithOnFilePaymentAction'
+                Request with On File Payout Action:
+                  $ref: '#/components/examples/RequestWithOnFilePayoutAction'
+                Request with Link Account Action:
+                  $ref: '#/components/examples/RequestWithLinkAccountAction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      description: |-
+        Updates a customer request. The request must have its `status` in a `PENDING` state to successfully update.
+
+        To clear a field, set it to `null`. Fields that are not provided in the request will not be changed.
+        If updating an array field, the entire contents of the array must be passed.
+      tags:
+        - Requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                request:
+                  type: object
+                  description: Details about the request to update
+                  additionalProperties: false
+                  properties:
+                    actions:
+                      type: array
+                      description: |-
+                        A list of the different actions a client intends to take on the customer if the request is approved.
+
+                        No duplicate action types allowed.
+
+                        Min number of items: `1`
+                        Max number of items: `5`
+                      uniqueItems: true
+                      minItems: 1
+                      maxItems: 5
+                      items:
+                        $ref: '#/components/schemas/Action'
+                    reference_id:
+                      type: string
+                      description: |-
+                        A user-defined identifier for this request, typically used to associate the resource with a record in an external system.
+
+                        Min length: `1`
+                        Max length: `1024`
+                      minLength: 1
+                      maxLength: 1024
+                      nullable: true
+                    metadata:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Metadata
+              required:
+                - request
+            examples:
+              Sample request with metadata:
+                value:
+                  request:
+                    actions:
+                      - amount: 2500
+                        currency: USD
+                        scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                        type: ONE_TIME_PAYMENT
+                    reference_id: string
+                    metadata:
+                      key: value
+              Sample request without metadata:
+                value:
+                  request:
+                    actions:
+                      - amount: 2500
+                        currency: USD
+                        scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                        type: ONE_TIME_PAYMENT
+                    reference_id: string
+      security:
+        - Client-ID: []
+components:
+  schemas:
+    Action:
+      discriminator:
+        propertyName: type
+        mappings:
+          ONE_TIME_PAYMENT: '#/components/schemas/OneTimePaymentAction'
+          ON_FILE_PAYMENT: '#/components/schemas/OnFilePaymentAction'
+          ON_FILE_DEPOSIT: '#/components/schemas/OnFileDepositAction'
+          ON_FILE_PAYOUT: '#/components/schemas/OnFilePayoutAction'
+          LINK_ACCOUNT: '#/components/schemas/LinkAccountAction'
+          CHECKING_BALANCE: '#/components/schemas/CheckingBalanceAction'
+      oneOf:
+        - $ref: '#/components/schemas/OneTimePaymentAction'
+        - $ref: '#/components/schemas/OnFilePaymentAction'
+        - $ref: '#/components/schemas/OnFileDepositAction'
+        - $ref: '#/components/schemas/OnFilePayoutAction'
+        - $ref: '#/components/schemas/LinkAccountAction'
+        - $ref: '#/components/schemas/CheckingBalanceAction'
+      description: Represents what the client intends to do to a customer if given authorization.
+      title: action
+    Request:
+      type: object
+      title: request
+      description: Describes a request from a client to perform a given action on a customer's account.
+      additionalProperties: false
+      examples:
+        - id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: PENDING
+          actions:
+            - amount: 2500
+              currency: USD
+              scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+              type: ONE_TIME_PAYMENT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId={request_id}'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          grants:
+            - id: GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50
+              customer_id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+              action:
+                amount: 2500
+                currency: USD
+                scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                type: ONE_TIME_PAYMENT
+              status: ACTIVE
+              type: ONE_TIME
+              channel: ONLINE
+              created_at: '2019-08-24T14:15:22Z'
+              updated_at: '2019-08-24T14:15:22Z'
+              expires_at: '2022-04-01T12:00:00Z'
+          reference_id: external-id
+          requester_profile:
+            name: A Brand
+            logo_url: 'https://picsum.photos/200'
+          customer_profile:
+            id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+            cashtag: $CashTag
+          metadata: {}
+          customer_metadata:
+            reference_id: string
+      properties:
+        id:
+          type: string
+          description: |-
+            A unique identifier for the request issued by Cash App.
+
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          maxLength: 128
+          example: GRR_1hrxhz136krcq6ezdte2ha5q
+        status:
+          type: string
+          enum:
+            - APPROVED
+            - DECLINED
+            - PENDING
+            - PROCESSING
+          description: |-
+            Indicates if the state is approved, declined, or pending. Approved requests have grants, while pending and declined grants do not.
+
+            Current values:
+
+            - `PENDING`: The request has been created, but not responded to.
+            - `PROCESSING`: The Cash App customer is actively responding to the request on their mobile device, and will require time to fill out information before the request is approved / declined.
+            - `APPROVED`: The request was approved by the customer and grants have been created for the provided actions.
+            - `DECLINED`: The request was denied by the customer. No grants were created.
+          default: PENDING
+        actions:
+          type: array
+          description: |-
+            Represents what the client intends to do to a customer if given authorization.
+
+            No duplicate action types allowed.
+
+            Min number of items: `1`
+            Max number of items: `5`
+          minItems: 1
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/Action'
+        auth_flow_triggers:
+          type: object
+          description: |-
+            While the request is `PENDING`, contains different methods that can be used to start
+            the authorization flow in the Cash App mobile application. Its contents refresh each time
+            the `refreshes_at` timestamp passes. When the
+            data refreshes, you should update any buttons
+            or QR codes referring to it immediately.
+
+            After a request has been scanned (and is no
+            longer in the `PENDING` status), this
+            field will no longer be returned.
+          additionalProperties: false
+          properties:
+            qr_code_image_url:
+              type: string
+              description: |-
+                Link to a QR code customers can scan with Cash App to authorize the given action, encoded as a PNG file.
+
+                Min length: `8`
+                Max length: `1024`
+              minLength: 8
+              maxLength: 1024
+              format: uri
+              example: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url:
+              type: string
+              format: uri
+              minLength: 8
+              maxLength: 1024
+              description: |-
+                Link to a QR code customers can scan with Cash App to authorize the given action, encoded as an SVG file.
+
+                Min length: `8`
+                Max length: `1024`
+              example: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url:
+              type: string
+              description: |-
+                If on an Android or iOS device, the URL to redirect customers to in order to authorize the given action.
+
+                Min length: `8`
+                Max length: `1024`
+              format: uri
+              maxLength: 1024
+              minLength: 8
+              example: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at:
+              type: string
+              format: date-time
+              description: 'When the QR code image URL will be rotated. Generally, it will rotate every ~20 seconds and become invalid after 30 seconds.'
+            desktop_url:
+              type: string
+              example: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+              minLength: 8
+              maxLength: 1024
+              format: uri
+              description: |-
+                If on a desktop browser, the URL to redirect customers to in order to authorize the given action.
+
+                Min length: `8`
+                Max length: `1024`
+          required:
+            - qr_code_image_url
+            - qr_code_svg_url
+            - mobile_url
+            - refreshes_at
+        redirect_url:
+          type: string
+          format: uri
+          example: 'https://example.com'
+          description: 'If this request is responded to via mobile redirect, this field specifies the URL that Cash App will open for a customer in the mobile device''s default browser after the request is approved or declined.'
+          minLength: 7
+          maxLength: 1024
+        created_at:
+          type: string
+          format: date-time
+          description: 'When this customer request was created, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          example: '2022-01-01T12:09:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: 'When the customer request was last updated, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          example: '2022-01-01T12:10:00Z'
+        expires_at:
+          type: string
+          format: date-time
+          description: 'When this customer request will be automatically declined by Cash App, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+          example: '2033-01-01T12:20:00Z'
+        origin:
+          type: object
+          description: Metadata describing how the customer request was created.
+          additionalProperties: false
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum:
+                - DIRECT
+                - REQUEST_INITIATOR
+              description: |-
+                The method used to create the customer request.
+
+                - `DIRECT` - the client or SDKs created this customer request by calling the "CreateCustomerRequest" endpoint
+                - `REQUEST_INITIATOR` - a customer interacted with a request initiator and caused Cash App to create a customer request.
+            id:
+              type: string
+              description: |-
+                If present, is the ID of the initiator used to create this request.
+
+                Min length: `1`
+                Max length: `128`
+              minLength: 1
+              maxLength: 128
+        channel:
+          $ref: '#/components/schemas/Channel'
+        grants:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          description: |-
+            If present, contains grants that can be used to perform actions specified in the request using the Network API.
+
+            Each grant corresponds directly to an action on the request.
+
+            Min number of items: `1`
+            Max number of items: `5`
+          maxItems: 5
+          items:
+            $ref: ./Network-API.v1.yaml#/components/schemas/Grant
+        reference_id:
+          type: string
+          description: |-
+            A user-defined identifier for this request, typically used to associate the resource with a record in an external system.
+
+            Min length: `1`
+            Max length: `1024`
+          minLength: 1
+          maxLength: 1024
+          example: external-id
+        requester_profile:
+          type: object
+          additionalProperties: false
+          description: Details about the brand or client that are requesting permission to perform the actions on the customer request.
+          properties:
+            name:
+              type: string
+              minLength: 1
+              maxLength: 1024
+              description: |-
+                Name of the brand to be shown in Cash App next to payments.
+
+                Min length: `1`
+                Max length: `1024`
+              example: A Brand
+            logo_url:
+              type: string
+              format: uri
+              minLength: 8
+              maxLength: 8000
+              example: 'https://picsum.photos/200'
+              description: |-
+                URL to the image of the entity (brand or client) that is requesting permission to perform the actions on the customer request.
+
+                Formats:
+                - `.jpg`
+                - `.jpeg`
+                - `.png`
+
+                Min length: `8`
+                Max length: `8000`
+          required:
+            - name
+            - logo_url
+        customer_profile:
+          type: object
+          additionalProperties: false
+          description: 'If the customer request was approved, contains the identity of the Cash App customer that approved it.'
+          properties:
+            id:
+              type: string
+              description: |-
+                Unique identifier for this customer issued by Cash App.
+
+                Min length: `1`
+                Max length: `128`
+              minLength: 1
+              maxLength: 128
+              example: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+            cashtag:
+              type: string
+              description: |-
+                Public identifier for the customer on Cash App. [Learn more](https://cash.app/help/us/en-us/3123-cashtags).
+
+                Min length: `1`
+                Max length: `1024`
+              minLength: 1
+              maxLength: 1024
+              example: $CashTag
+          required:
+            - id
+            - cashtag
+        metadata:
+          $ref: ./Network-API.v1.yaml#/components/schemas/Metadata
+        customer_metadata:
+          $ref: '#/components/schemas/CustomerMetadata'
+      required:
+        - id
+        - status
+        - actions
+        - redirect_url
+        - created_at
+        - updated_at
+        - expires_at
+        - origin
+        - channel
+    LinkAccountAction:
+      title: Link Account Action
+      description: "Describes an\_intent for a client to manage a customer's merchant profiles in Cash App."
+      type: object
+      properties:
+        type:
+          type: string
+          example: LINK_ACCOUNT
+          enum:
+            - LINK_ACCOUNT
+          description: The type of the action (`LINK_ACCOUNT`).
+      required:
+        - type
+    RecurringDepositsAction:
+      title: Recurring Deposits Action
+      description: Describes an intent for a client to deposit funds into the Cash App account balances in perpetuity until the Cash App account revokes the grant.
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the action (`RECURRING_DEPOSITS`).
+          example: RECURRING_DEPOSITS
+          enum:
+            - RECURRING_DEPOSITS
+        primary_alias:
+          type: string
+          example: Tasty Coffee
+          description: Alias for the customer's client account that is displayed during account linking to clarify the client account that is being linked.
+        logo_url:
+          type: string
+          format: uri
+          example: 'https://square-web-staging-f.squarecdn.com/files/b575e1df2c6bc4ddc1625db30ec7fac0c2e0322b/original.jpeg?fit=crop&height=60&width=60'
+          description: The image resource to display during account linking.
+        account_reference_id:
+          type: string
+          example: invest_3650f8cd-855f-4286-bbf6-827cafcf819e
+          description: Identifier of the account in the client system.
+      required:
+        - type
+      x-internal: true
+    OneTimePaymentAction:
+      title: One Time Payment Action
+      description: "Describes an intent for a client to charge a customer a given amount.\n\nNote the following restrictions when using this action:\n\n- If no amount is provided to the action, the payment charged may be **any** amount.\n- If `amount` is provided, `currency` must be provided too (and vice versa)."
+      type: object
+      properties:
+        amount:
+          type: integer
+          minimum: 1
+          description: |-
+            Amount to charge the customer, in the lowest unit of the associated currency.
+
+            Min value: `1`
+          example: 2500
+        currency:
+          $ref: ./Network-API.v1.yaml#/components/schemas/Currency
+        scope_id:
+          type: string
+          description: |-
+            ID of the client, brand, or merchant that will charge the customer.
+
+            If a client ID is passed, the grant from this action can be used to create a payment for any merchant owned by the client.
+
+            If a brand ID is passed, the grant from this action can be used to create a payment for any merchant that has a matching brand ID.
+
+            If a merchant ID is passed, the grant from this action can be used to create a payment for the merchant with a matching ID.
+
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          maxLength: 128
+          example: MMI_4vxs5egfk7hmta3qx2h6rp91x
+        type:
+          type: string
+          example: ONE_TIME_PAYMENT
+          enum:
+            - ONE_TIME_PAYMENT
+          description: The type of the action (`ONE_TIME_PAYMENT`).
+      required:
+        - scope_id
+        - type
+      examples: []
+    OnFileDepositAction:
+      title: On File Deposit Action
+      description: Describes an intent for a client to deposit funds into the Cash App account balances in perpetuity until the Cash App account revokes the grant.
+      type: object
+      x-internal: true
+      properties:
+        type:
+          type: string
+          example: ON_FILE_DEPOSIT
+          description: The type of the action (`ON_FILE_DEPOSIT`).
+          enum:
+            - ON_FILE_DEPOSIT
+        scope_id:
+          type: string
+          description: |-
+            ID of the client or brand that indicates the set of merchants that will deposit to customers.
+
+            If a client ID is passed, the grant from this action can be used to create a deposit for any merchant owned by the client.
+
+            If a brand ID is passed, the grant from this action can be used to create a deposit for any merchant that has a matching brand ID.
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          example: MMI_4vxs5egfk7hmta3qx2h6rp91x
+          maxLength: 128
+        account_reference_id:
+          type: string
+          description: Identifier of the account or customer associated to the on file action.
+      required:
+        - type
+        - scope_id
+        - account_reference_id
+    OnFilePayoutAction:
+      title: On File Payout Action
+      description: Describes an intent for a client to payout funds from the Cash App account balances in perpetuity until the Cash App account revokes the grant.
+      type: object
+      properties:
+        type:
+          type: string
+          example: ON_FILE_PAYOUT
+          description: The type of the action (`ON_FILE_PAYOUT`).
+          enum:
+            - ON_FILE_PAYOUT
+        scope_id:
+          type: string
+          description: |-
+            ID of the client or brand that indicates the set of merchants that will payout to customers.
+
+            If a client ID is passed, the grant from this action can be used to create a payout for any merchant owned by the client.
+
+            If a brand ID is passed, the grant from this action can be used to create a payout for any merchant that has a matching brand ID.
+
+            Merchant IDs may *not* be passed.
+
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          example: BRAND_8ereg0tug2yiik8vx24xpe5br
+          maxLength: 128
+        account_reference_id:
+          type: string
+          description: Identifier of the account or customer associated to the on file action.
+      required:
+        - type
+        - scope_id
+    CheckingBalanceAction:
+      title: Checking Balance Action
+      x-fern-availability: beta
+      description: |-
+        Describes an intent for a client to read a customer's Cash App checking balance until the customer revokes the grant.
+
+        **Beta:** This action is in beta.
+      type: object
+      properties:
+        type:
+          type: string
+          example: CHECKING_BALANCE
+          description: The type of the action (`CHECKING_BALANCE`).
+          enum:
+            - CHECKING_BALANCE
+        scope_id:
+          type: string
+          description: |-
+            ID of the client or brand requesting access to read the customer's balances.
+
+            If a client ID is passed, the grant from this action can be used to read balances on behalf of the client.
+
+            If a brand ID is passed, the grant from this action can be used to read balances on behalf of any merchant that has a matching brand ID.
+
+            Merchant IDs may *not* be passed.
+
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          example: BRAND_8ereg0tug2yiik8vx24xpe5br
+          maxLength: 128
+      required:
+        - type
+        - scope_id
+    OnFilePaymentAction:
+      type: object
+      title: On File Payment Action
+      description: "Describes an\_intent for a client to store a customer's account, allowing a client to create payments or issue refunds for it on a recurring basis."
+      additionalProperties: false
+      properties:
+        scope_id:
+          type: string
+          description: |-
+            ID of the client or brand that will charge customers.
+
+            If a client ID is passed, the grant from this action can be used to create a payment for any merchant owned by the client.
+
+            If a brand ID is passed, the grant from this action can be used to create a payment for any merchant that has a matching brand ID.
+
+            Merchant IDs may *not* be passed.
+
+            Min length: `1`
+            Max length: `128`
+          minLength: 1
+          example: BRAND_8ereg0tug2yiik8vx24xpe5br
+          maxLength: 128
+        type:
+          type: string
+          default: ON_FILE_PAYMENT
+          enum:
+            - ON_FILE_PAYMENT
+          description: The type of the action (`ON_FILE_PAYMENT`).
+        account_reference_id:
+          type: string
+          description: Identifier of the account or customer associated to the on file action.
+          minLength: 1
+          maxLength: 128
+      required:
+        - scope_id
+        - type
+    Channel:
+      type: string
+      title: channel
+      description: |-
+        How the customer is expected to interact with the request.
+
+        - `IN_PERSON`: The customer presents or scans a QR code at a physical location to approve the request.
+        - `ONLINE`: The customer scans a QR code or is redirected to Cash App from a browser context.
+        - `IN_APP`: The customer scans a QR code or is redirected to Cash App from a native mobile application context.
+      enum:
+        - IN_PERSON
+        - ONLINE
+        - IN_APP
+      example: ONLINE
+    CustomerMetadata:
+      type: object
+      title: Customer Metadata
+      additionalProperties: false
+      properties:
+        reference_id:
+          type: string
+          description: 'The `reference_id` of the customer approving this request. When a customer approves this request, that customer will be associated with this `reference_id`.'
+      description: Metadata to associate with the customer that approves this request.
+      x-examples:
+        example-1:
+          reference_id: external-id
+    ErrorResponse:
+      $ref: ./components/schemas/ErrorResponse.yaml
+    customer_request.state.updated:
+      x-tags:
+        - Requests
+      type: object
+      title: 'Event: customer_request.state.updated'
+      description: |-
+        **When is this event triggered?**
+
+        This event is created whenever a customer request's state is updated. This is typically caused by a customer approving or declining the request.
+      examples: []
+      properties:
+        type:
+          type: string
+          description: The type of event that occurred. `customer_request.state.updated` for this event.
+          example: customer_request.state.updated
+        event_id:
+          type: string
+          description: A unique identifier provided by Cash App for the event.
+          example: WE_a61xp8sny73j557bacysv4wkh
+        created_at:
+          type: string
+          format: date-time
+          description: |-
+            When this event occured in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).
+
+            The time that the event is delivered may be significantly later than this timestamp due to webhooks being retried for up to 72 hours.
+        data:
+          description: Data about the customer request that was updated.
+          type: object
+          required:
+            - id
+            - object
+            - type
+          properties:
+            id:
+              type: string
+              description: A unique identifier provided by Cash App for the customer request.
+              example: GRR_1hrxhz136krcq6ezdte2ha5q
+            object:
+              type: object
+              description: A snapshot of the customer request data immediately after the customer request's state was updated.
+              required:
+                - request
+              properties:
+                request:
+                  $ref: '#/components/schemas/Request'
+            type:
+              type: string
+              description: 'The resource type contained in the `object` field. For this event, it is `customer_request`.'
+              example: customer_request
+      required:
+        - type
+        - event_id
+        - created_at
+        - data
+  examples:
+    RequestWithOneTimePaymentAction:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: PENDING
+          actions:
+            - scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+              amount: 2500
+              currency: USD
+              type: ONE_TIME_PAYMENT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithOneTimePaymentActionAndGrant:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: APPROVED
+          actions:
+            - scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+              amount: 2500
+              currency: USD
+              type: ONE_TIME_PAYMENT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          grants:
+            - id: GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50
+              customer_id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+              request_id: GRR_1hrxhz136krcq6ezdte2ha5q
+              action:
+                amount: 2500
+                currency: USD
+                scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                type: ONE_TIME_PAYMENT
+              status: ACTIVE
+              type: ONE_TIME
+              channel: ONLINE
+              created_at: '2019-08-24T14:15:22Z'
+              updated_at: '2019-08-24T14:15:22Z'
+              expires_at: '2022-04-01T12:00:00Z'
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithOnFilePaymentAction:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: PENDING
+          actions:
+            - scope_id: BRAND_8ereg0tug2yiik8vx24xpe5br
+              type: ON_FILE_PAYMENT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithOnFilePaymentActionAndGrant:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: APPROVED
+          actions:
+            - scope_id: BRAND_8ereg0tug2yiik8vx24xpe5br
+              type: ON_FILE_PAYMENT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          grants:
+            - id: GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50
+              customer_id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+              request_id: GRR_1hrxhz136krcq6ezdte2ha5q
+              action:
+                scope_id: BRAND_8ereg0tug2yiik8vx24xpe5br
+                type: ON_FILE_PAYMENT
+              status: ACTIVE
+              type: EXTENDED
+              channel: ONLINE
+              created_at: '2019-08-24T14:15:22Z'
+              updated_at: '2019-08-24T14:15:22Z'
+              expires_at: '2022-04-01T12:00:00Z'
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithLinkAccountAction:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: PENDING
+          actions:
+            - type: LINK_ACCOUNT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithLinkAccountActionAndGrant:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: APPROVED
+          actions:
+            - type: LINK_ACCOUNT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          grants:
+            - id: GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50
+              customer_id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+              request_id: GRR_1hrxhz136krcq6ezdte2ha5q
+              action:
+                type: LINK_ACCOUNT
+              status: ACTIVE
+              type: EXTENDED
+              channel: ONLINE
+              created_at: '2019-08-24T14:15:22Z'
+              updated_at: '2019-08-24T14:15:22Z'
+              expires_at: '2022-04-01T12:00:00Z'
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithOnFilePayoutAction:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: PENDING
+          actions:
+            - account_reference_id: dafdsfasdfasdfasdf
+              scope_id: CASH_CHECKOUT
+              type: ON_FILE_PAYOUT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithOnFilePayoutActionAndGrant:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: APPROVED
+          actions:
+            - account_reference_id: dafdsfasdfasdfasdf
+              scope_id: CASH_CHECKOUT
+              type: ON_FILE_PAYOUT
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          grants:
+            - id: GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50
+              customer_id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+              request_id: GRR_1hrxhz136krcq6ezdte2ha5q
+              action:
+                account_reference_id: dafdsfasdfasdfasdf
+                scope_id: CASH_CHECKOUT
+                type: ON_FILE_PAYOUT
+              status: ACTIVE
+              type: EXTENDED
+              channel: ONLINE
+              created_at: '2019-08-24T14:15:22Z'
+              updated_at: '2019-08-24T14:15:22Z'
+              expires_at: '2022-04-01T12:00:00Z'
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithCheckingBalanceAction:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: PENDING
+          actions:
+            - type: CHECKING_BALANCE
+              scope_id: BRAND_8ereg0tug2yiik8vx24xpe5br
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+    RequestWithCheckingBalanceActionAndGrant:
+      value:
+        request:
+          id: GRR_1hrxhz136krcq6ezdte2ha5q
+          status: APPROVED
+          actions:
+            - type: CHECKING_BALANCE
+              scope_id: BRAND_8ereg0tug2yiik8vx24xpe5br
+          auth_flow_triggers:
+            qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=png'
+            qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=qr?rounded=0&format=svg'
+            mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_1hrxhz136krcq6ezdte2ha5q-k21srg&method=mobile_url'
+            refreshes_at: '2019-08-24T14:15:22Z'
+            desktop_url: 'https://pay.cash.app?customerRequestId=GRR_1hrxhz136krcq6ezdte2ha5q'
+          redirect_url: 'https://example.com'
+          created_at: '2022-01-01T12:09:00Z'
+          updated_at: '2022-01-01T12:10:00Z'
+          expires_at: '2033-01-01T12:20:00Z'
+          origin:
+            type: DIRECT
+            id: string
+          channel: ONLINE
+          grants:
+            - id: GRG_221243dc6985a6819ff6950c1a21332f7bc4a46ebd49b5a7002908ab768e8e5ff7831e084d0d2c9d8d939793b55eff50
+              customer_id: CST_AQmxh4y_QGoNNIG5NUw0jttqyYedL1LklACQdyJ3H-Vs6WmLtP6A_C7XjQNohvY
+              request_id: GRR_1hrxhz136krcq6ezdte2ha5q
+              action:
+                type: CHECKING_BALANCE
+                scope_id: BRAND_8ereg0tug2yiik8vx24xpe5br
+              status: ACTIVE
+              type: EXTENDED
+              channel: ONLINE
+              created_at: '2019-08-24T14:15:22Z'
+              updated_at: '2019-08-24T14:15:22Z'
+              expires_at: '2022-04-01T12:00:00Z'
+          reference_id: external-id
+          requester_profile:
+            name: The Sill
+            logo_url: 'https://picsum.photos/200'
+          metadata: {}
+          customer_metadata: {}
+  securitySchemes:
+    Client-ID:
+      name: Authorization
+      type: http
+      in: header
+      description: "Client authentication is provided by setting the `Authorization` header to the following format:\n\n`Authorization: Client <Client ID>`."
+    Client-Secret:
+      name: Authorization
+      type: http
+      in: header
+      description: "Client authentication is provided by setting the `Authorization` header to the following format:\n\n`Authorization: Client <Client ID> <API Key>`.\n\n\n**Note:** Authenticated requests must also be [signed](https://developers.cash.app/docs/partner/technical-documentation/api-fundamentals/requests/signing-requests)."
+tags:
+  - name: Requests
+x-readme:
+  proxy-enabled: false

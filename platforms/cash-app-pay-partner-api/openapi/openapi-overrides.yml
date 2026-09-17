@@ -1,0 +1,388 @@
+x-fern-global-headers:
+  - header: Accept
+  - header: User-Agent
+
+paths:
+  /requests:
+    get:
+      x-fern-sdk-group-name:
+        - requests
+      x-fern-sdk-method-name: list-requests
+    post:
+      x-fern-sdk-group-name:
+        - requests
+      x-fern-sdk-method-name: create-request
+  /requests/{request_id}:
+    get:
+      x-fern-sdk-group-name:
+        - requests
+      x-fern-sdk-method-name: retrieve-request
+    patch:
+      x-fern-sdk-group-name:
+        - requests
+      x-fern-sdk-method-name: update-request
+components:
+  schemas:
+    Action:
+      x-fern-type-name: Action
+    Request:
+      x-fern-type-name: request
+    LinkAccountAction:
+      x-fern-type-name: LinkAccountAction
+    RecurringDepositsAction:
+      x-fern-type-name: RecurringDepositsAction
+    OneTimePaymentAction:
+      x-fern-type-name: OneTimePaymentAction
+    OnFileDepositAction:
+      x-fern-type-name: OnFileDepositAction
+    OnFilePaymentAction:
+      x-fern-type-name: OnFilePaymentAction
+    OnFilePayoutAction:
+      x-fern-type-name: OnFilePayoutAction
+    CheckingBalanceAction:
+      x-fern-type-name: CheckingBalanceAction
+    Channel:
+      x-fern-type-name: channel
+    CustomerMetadata:
+      x-fern-type-name: CustomerMetadata
+    ErrorResponse:
+      x-fern-type-name: errors
+    customer_request.state.updated:
+      x-fern-type-name: customer_request.state.updated
+    Currency:
+      x-fern-type-name: currency
+    Grant:
+      x-fern-type-name: grant
+    Metadata:
+      x-fern-type-name: Metadata
+    Error:
+      x-fern-type-name: error
+    IdempotencyKey:
+      x-fern-type-name: IdempotencyKey
+paths:
+  /action-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get Action Schema Test
+      operationId: get-action-schema-test
+      description: Describes the action included in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  action:
+                    $ref: '#/components/schemas/Action'
+                required:
+                  - action
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-action-schema-test
+  /link-account-action-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get LinkAccountAction Schema Test
+      operationId: get-link-account-action-schema-test
+      description: Describes a link account action included in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  link_account_action:
+                    $ref: '#/components/schemas/LinkAccountAction'
+                required:
+                  - link_account_action
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-link-account-action-schema-test
+  /one-time-payment-action-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get OneTimePaymentAction Schema Test
+      operationId: get-one-time-payment-action-schema-test
+      description: Describes a one-time payment action included in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  one_time_payment_action:
+                    $ref: '#/components/schemas/OneTimePaymentAction'
+                required:
+                  - one_time_payment_action
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-one-time-payment-action-schema-test
+  /on-file-payment-action-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get OnFilePaymentAction Schema Test
+      operationId: get-on-file-payment-action-schema-test
+      description: Describes an on-file payment action included in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  on_file_payment_action:
+                    $ref: '#/components/schemas/OnFilePaymentAction'
+                required:
+                  - on_file_payment_action
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-on-file-payment-action-schema-test
+  /on-file-payout-action-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get OnFilePayoutAction Schema Test
+      operationId: get-on-file-payout-action-schema-test
+      description: Describes an on-file payout action included in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  on_file_payout_action:
+                    $ref: '#/components/schemas/OnFilePayoutAction'
+                required:
+                  - on_file_payout_action
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-on-file-payout-action-schema-test
+  /checking-balance-action-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get CheckingBalanceAction Schema Test
+      operationId: get-checking-balance-action-schema-test
+      description: Describes a checking balance action included in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  checking_balance_action:
+                    $ref: '#/components/schemas/CheckingBalanceAction'
+                required:
+                  - checking_balance_action
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-checking-balance-action-schema-test
+  /channel-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get Channel Schema Test
+      operationId: get-channel-schema-test
+      description: Describes the channel through which a customer request was initiated.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  channel:
+                    $ref: '#/components/schemas/Channel'
+                required:
+                  - channel
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-channel-schema-test
+  /customer-metadata-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get CustomerMetadata Schema Test
+      operationId: get-customer-metadata-schema-test
+      description: Describes metadata about a customer in a customer request.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  customer_metadata:
+                    $ref: '#/components/schemas/CustomerMetadata'
+                required:
+                  - customer_metadata
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-customer-metadata-schema-test
+  /error-response-schema-test:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Get ErrorResponse Schema Test
+      operationId: get-error-response-schema-test
+      description: Describes an error response returned by the Customer Request API.
+      tags:
+        - Schemas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  error_response:
+                    $ref: '#/components/schemas/ErrorResponse'
+                required:
+                  - error_response
+      x-fern-sdk-group-name:
+        - schemas
+      x-fern-sdk-method-name: get-error-response-schema-test
+webhooks:
+  customer_request.state.updated:
+    post:
+      operationId: customerRequestStateUpdated
+      tags:
+        - Requests
+      summary: 'Event: customer_request.state.updated'
+      description: |-
+        **When is this event triggered?**
+
+        This event is created whenever a customer request's state is updated. This is typically caused by a customer approving or declining the request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - event_id
+                - created_at
+                - data
+              properties:
+                type:
+                  type: string
+                  description: The type of event that occurred. `customer_request.state.updated` for this event.
+                  example: customer_request.state.updated
+                event_id:
+                  type: string
+                  description: A unique identifier provided by Cash App for the event.
+                  example: WE_a61xp8sny73j557bacysv4wkh
+                created_at:
+                  type: string
+                  format: date-time
+                  description: |-
+                    When this event occured in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).
+
+                    The time that the event is delivered may be significantly later than this timestamp due to webhooks being retried for up to 72 hours.
+                data:
+                  description: Data about the customer request that was updated.
+                  type: object
+                  required:
+                    - id
+                    - object
+                    - type
+                  properties:
+                    id:
+                      type: string
+                      description: A unique identifier provided by Cash App for the customer request.
+                      example: GRR_1hrxhz136krcq6ezdte2ha5q
+                    object:
+                      type: object
+                      description: A snapshot of the customer request data immediately after the customer request's state was updated.
+                      required:
+                        - request
+                      properties:
+                        request:
+                          $ref: '#/components/schemas/Request'
+                    type:
+                      type: string
+                      description: 'The resource type contained in the `object` field. For this event, it is `customer_request`.'
+                      example: customer_request
+            examples:
+              default:
+                value:
+                  type: customer_request.state.updated
+                  event_id: WE_a61xp8sny73j557bacysv4wkh
+                  created_at: "2019-08-24T14:15:22Z"
+                  data:
+                    id: GRR_1hrxhz136krcq6ezdte2ha5q
+                    type: customer_request
+                    object:
+                      request:
+                        id: GRR_1hrxhz136krcq6ezdte2ha5q
+                        status: APPROVED
+                        actions:
+                          - scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                            amount: 2500
+                            currency: USD
+                            type: ONE_TIME_PAYMENT
+                        channel: ONLINE
+                        created_at: "2019-08-24T14:15:22Z"
+                        updated_at: "2019-08-24T14:15:22Z"

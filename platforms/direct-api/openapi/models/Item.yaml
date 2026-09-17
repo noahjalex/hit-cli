@@ -1,0 +1,96 @@
+title: Item
+x-stoplight:
+  id: uvl3sbwenyfih
+type: object
+examples:
+  - name: Blue Carabiner
+    sku: '12341234'
+    quantity: 1
+    pageUrl: 'https://merchant.example.com/carabiner-354193.html'
+    imageUrl: 'https://merchant.example.com/carabiner-7378-391453-1.jpg'
+    price:
+      amount: '40.00'
+      currency: AUD
+    categories:
+      - - Sporting Goods
+        - Climbing Equipment
+        - Climbing
+        - Climbing Carabiners
+      - - Sale
+        - Climbing
+    estimatedShipmentDate: '2023-08-01'
+description: |
+  This data model is used to store crucial product details. The `price.amount` field represents the unit price of the individual item. The `quantity` field shows the number of units of the item. The `name` field denotes the name of the product, while `sku` holds the Stock Keeping Unit identifier. 100 is the maximum number of item objects in the items array.
+  <Warning title="Important Note">
+
+    It is crucial that the `price.amount` represents the unit price of the individual item.
+    **Never** populate the `price.amount` by multiplying the quantity by the unit cost. Always enter the price for a single unit to maintain data accuracy.
+  </Warning>
+x-tags:
+  - request-object
+required:
+  - name
+  - quantity
+  - price
+properties:
+  name:
+    type: string
+    x-stoplight:
+      id: ydpy918k3rme6
+    maxLength: 255
+    example: Blue Carabiner
+    description: Product name
+  sku:
+    type: string
+    x-stoplight:
+      id: wa5drngwutz2c
+    description: Product SKU. Limited to 128 characters.
+  pageUrl:
+    type: string
+    x-stoplight:
+      id: 8jbv5nsjkldhf
+    example: 'https://merchant.example.com/carabiner-354193.html'
+    maxLength: 2048
+  imageUrl:
+    type: string
+    x-stoplight:
+      id: bd2aenheumth4
+    example: 'https://merchant.example.com/carabiner-7378-391453-1.jpg'
+    maxLength: 2048
+    description: 'A URL for a web-optimized photo of the item, suitable for use directly as the src attribute of an img tag.'
+  quantity:
+    type: integer
+    x-stoplight:
+      id: oxkmsybx5yxso
+    format: int32
+    example: 1
+  price:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: lug5wz5blk5kl
+  categories:
+    type: array
+    x-stoplight:
+      id: vaub40r2c5znu
+    description: 'An array of arrays to accommodate multiple categories that apply to the item. Each array represents a hierarchical path to a category, with the left-most category being the top-level parent category.'
+    items:
+      x-stoplight:
+        id: sheorhx6pwnfo
+      type: array
+      items:
+        x-stoplight:
+          id: dxyj3ewhmvts2
+        type: string
+  estimatedShipmentDate:
+    type: string
+    x-stoplight:
+      id: tjrgj68n7iom9
+    example: '2023-08-01'
+    format: date
+    description: 'The estimated date when the order will be shipped, in YYYY-MM or YYYY-MM-DD format.'
+  preorder:
+    type: boolean
+    x-stoplight:
+      id: 8nikv7fp091nl
+    default: false
+    description: 'If this item is not expected to be fulfilled immediately, and therefore should be marked as a preorder at checkout, set to `true`. Set to `false` otherwise.'

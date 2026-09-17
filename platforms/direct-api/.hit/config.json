@@ -1,0 +1,375 @@
+{
+  "envs": {
+    "runtime": {}
+  },
+  "commands": {
+    "billing-agreements": {
+      "create-billing-agreement": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "alias-billing-agreement": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/alias",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "start-billing-agreement-approval": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/approvals",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "cancel-billing-agreement-alt": {
+        "method": "PUT",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/cancel",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "retrieve-billing-agreement-offers": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/offers",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "retrieve-billing-agreement": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/retrieve",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "start-billing-agreement-link": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/start",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "get-billing-agreement": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/:token",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "cancel-billing-agreement": {
+        "method": "DELETE",
+        "url": "{{AFTERPAY_API_URL}}/v2/billing-agreements/:token",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "capture-full-recurring-payment": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/recurring-payments",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "auth": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/recurring-payments/auth",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    "checkouts": {
+      "create-checkout-1": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/checkouts",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "get-checkout": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/checkouts/:token",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      }
+    },
+    "configuration": {
+      "get-configuration": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/configuration",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "get-configuration-mappings": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/configuration/mappings",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      }
+    },
+    "disputes": {
+      "retrieve-dispute": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/disputes",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "receive-dispute": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/disputes/:dispute_id",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "respond-to-dispute": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/disputes/:dispute_id",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "accept-dispute": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/disputes/:dispute_id/accept",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "upload-file": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/disputes/files",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "retrieve-file": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/disputes/files/:id?id=:id",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      }
+    },
+    "grants": {
+      "start-grant-approval": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/grants/approvals",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "create-grant": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/grants",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "get-grant": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/grants/:grantId",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "revoke-grant": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/grants/:grantId/revoke",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "alias-grant": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/grants/alias",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "start-billing-agreement-link": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/grants/start",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    "orders": {
+      "create-grant": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/orders",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    "payments": {
+      "list-payments": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "auth": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/auth",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "capture-full-payment": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/capture",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "get-payment-by-order-id": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "update-payment-by-order-id": {
+        "method": "PUT",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "capture-payment": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/capture",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "update-shipping-courier": {
+        "method": "PUT",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/courier",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "create-refund": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/refund",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "void-payment": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/:orderId/void",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "get-payment-by-token": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/token::token",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "reverse-payment-by-token": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/token::token/reversal",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      },
+      "void-by-checkout-token": {
+        "method": "POST",
+        "url": "{{AFTERPAY_API_URL}}/v2/payments/token::token/void",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      }
+    },
+    "service-status": {
+      "ping": {
+        "method": "GET",
+        "url": "{{AFTERPAY_API_URL}}/ping",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "{{basicAuth AFTERPAY_MERCHANT_ID AFTERPAY_MERCHANT_SECRET}}"
+        }
+      }
+    }
+  }
+}

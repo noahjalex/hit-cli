@@ -1,0 +1,65 @@
+{
+  "merchantCountry": "US",
+  "merchantReference": "merchantId1234",
+  "parentMerchantReference": "merchantPlatform",
+  "parameters": {
+    "settlementContractId": "0xt5txyloqru4vx5XuQ88W",
+    "instoreCardsettlementContractId": "0xt5txyloqru4vx5XuQ88W",
+    "channels": {
+      "online": true,
+      "instoreCard": false
+    },
+    "owners": [
+      {
+        "firstName": "Sam",
+        "lastName": "Merchant",
+        "dob": "2023-02-21",
+        "taxId": "TaxId123",
+        "jobTitle": "CEO",
+        "owns25": true,
+        "significantResponsibility": false,
+        "address": {
+          "address1": "123 Main St",
+          "address2": "Apt 1403",
+          "city": "New York",
+          "state": "NY",
+          "postCode": "10011",
+          "countryCode": "US"
+        }
+      }
+    ],
+    "business": {
+      "email": "merchant123@email.com",
+      "legalBusinessName": "Merchant Business LLC",
+      "tradingName": "Merchant Trading",
+      "businessIdentificationNumber": "1234567891",
+      "businessType": "limited_liability_company",
+      "websiteUrl": "https://www.merchant.com",
+      "websiteUrls": [
+        "https://www.merchant.com",
+        "https://www.merchant2.com",
+        "https://www.merchant3.com"
+      ],
+      "monthlyOnlineSalesAmount": "100000",
+      "customerSupportUrl": "https://help.merchant.com",
+      "customerSupportPhoneNumber": "+1999999999",
+      "tradingCountry": "US",
+      "merchantCategoryCode": "5826",
+      "ecommercePlatform": "BLOCK",
+      "avgTimeToShip": "Less than 1 Week",
+      "selfFulfillment": true,
+      "tier": 1,
+      "gmv": "150000000",
+      "gmvCurrencyCode": "USD",
+      "brandReference": "brand_xyz",
+      "address": {
+        "address1": "123 Main St",
+        "address2": "Apt 1403",
+        "city": "New York",
+        "state": "NY",
+        "postCode": "10011",
+        "countryCode": "US"
+      }
+    }
+  }
+}

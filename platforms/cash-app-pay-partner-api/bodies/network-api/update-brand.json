@@ -1,0 +1,11 @@
+{
+  "brand": {
+    "name": "My Brand",
+    "reference_id": "example-id",
+    "profile_image_url": "<profile_image_url>",
+    "color": "#ffffff",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  }
+}

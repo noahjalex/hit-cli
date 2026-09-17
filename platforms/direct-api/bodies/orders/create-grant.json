@@ -1,0 +1,84 @@
+{
+  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "grantId": "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2",
+  "amount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "enrichments": {
+    "initiation": {
+      "actor": "CUSTOMER"
+    },
+    "subscription": {
+      "type": "FIXED",
+      "interval": "YEAR",
+      "intervalCount": 1
+    }
+  },
+  "consumer": {
+    "email": "test@example.com",
+    "givenNames": "Joe",
+    "surname": "Consumer",
+    "phoneNumber": "0400 000 000"
+  },
+  "billing": {
+    "name": "Joe Consumer",
+    "line1": "Level 8",
+    "line2": "390 Collins Street",
+    "area1": "Melbourne",
+    "area2": "<area2>",
+    "region": "VIC",
+    "postcode": "3000",
+    "countryCode": "AU",
+    "phoneNumber": "0400 000 000"
+  },
+  "shipping": {
+    "name": "Joe Consumer",
+    "line1": "Level 8",
+    "line2": "390 Collins Street",
+    "area1": "Melbourne",
+    "area2": "<area2>",
+    "region": "VIC",
+    "postcode": "3000",
+    "countryCode": "AU",
+    "phoneNumber": "0400 000 000"
+  },
+  "items": [
+    {
+      "name": "Blue Carabiner",
+      "sku": "<sku>",
+      "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+      "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+      "quantity": 1,
+      "price": {
+        "amount": "100.00",
+        "currency": "AUD"
+      },
+      "categories": [
+        [
+          "<categories>"
+        ]
+      ],
+      "estimatedShipmentDate": "2023-08-01",
+      "preorder": false
+    }
+  ],
+  "discounts": [
+    {
+      "displayName": "New Customer Coupon",
+      "amount": {
+        "amount": "100.00",
+        "currency": "AUD"
+      }
+    }
+  ],
+  "merchantReference": "SUB-2024-03-001",
+  "shippingAmount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "taxAmount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  }
+}

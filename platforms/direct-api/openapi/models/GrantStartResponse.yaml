@@ -1,0 +1,27 @@
+type: object
+required:
+  - token
+  - requestId
+  - expiresAt
+  - deliveryType
+properties:
+  token:
+    type: string
+    description: Token identifying the grant to be created
+    example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
+  requestId:
+    type: string
+    description: The unique identifier from the request
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  expiresAt:
+    type: string
+    format: date-time
+    description: When this link attempt will expire
+    example: "2025-03-22T12:00:00Z"
+  deliveryType:
+    type: string
+    enum:
+      - SMS
+      - EMAIL
+    description: How the verification code was delivered to the consumer
+    example: "SMS"

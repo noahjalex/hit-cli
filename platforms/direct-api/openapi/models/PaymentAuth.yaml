@@ -1,0 +1,147 @@
+title: Payment
+x-stoplight:
+  id: 8wpsj19qjrdtd
+type: object
+examples:
+  - id: '300000016189'
+    token: 002.6bjbsaowxvfqam2nw4u3xudppheuh4gsuat3n2w3f6t44euzgy
+    status: APPROVED
+    created: '2024-03-11T20:11:42.487Z'
+    originalAmount:
+      amount: '37.00'
+      currency: USD
+    openToCaptureAmount:
+      amount: '0.00'
+      currency: USD
+    paymentState: AUTH_APPROVED
+    merchantReference: updated-k6-reference-utaddnpx
+    refunds: []
+    orderDetails:
+      consumer: {}
+      billing:
+        name: Joe Customer
+        line1: 1004 New Avenue
+        postcode: '94121'
+        countrycode: US
+        phoneNumber: '2120000000'
+      shipping:
+        name: Joe Customer
+        line1: 1004 New Avenue
+        postcode: '94121'
+        countrycode: US
+        phoneNumber: '2120000000'
+      courier:
+        shippedAt: '2024-01-01T08:00:00Z'
+        name: FedEx
+        tracking: 000 000 000 000
+        priority: STANDARD
+      items:
+        name: Blue Carabiner
+        sku: '12341234'
+        quantity: 1
+        price:
+          amount: '40.00'
+          currency: USD
+      categories:
+        name: Jeans
+        sku: '123412345'
+        quantity: 1
+        price:
+          amount: '20.00'
+          currency: USD
+        categories: null
+    discounts: []
+    shippingAmount:
+      amount: '10.00'
+      currency: USD
+    taxAmount:
+      amount: '0.00'
+      currency: USD
+    events:
+      id: 2dYbLXpOtEPQbg1DT7x9D8R4oCY
+      created: '2024-03-11T20:11:43.897Z'
+      expires: null
+      type: CAPTURED
+      amount:
+        amount: '37.00'
+        currency: USD
+      paymentEventMerchantReference: k6-gsrdqspusf
+description: Describes the schema for a (read-only) payment object
+x-tags:
+  - response-object
+properties:
+  id:
+    type: string
+    x-stoplight:
+      id: e8lfzmtfe7v9n
+    description: 'The unique, permanent, Afterpay generated Order ID.'
+  token:
+    type: string
+    x-stoplight:
+      id: zpntq7onypg8u
+    example: 005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2
+    description: The token obtained from the checkout call
+  status:
+    x-stoplight:
+      id: bmtuwt8zjs4nb
+    enum:
+      - APPROVED
+      - DECLINED
+    description: represents the status of the order
+  created:
+    type: string
+    x-stoplight:
+      id: s9lixdptkrf1r
+    description: ' is the UTC timestamp of when the payment was completed.'
+  originalAmount:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: ftm500p95r5wd
+  openToCaptureAmount:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: ox0myz7ccd1l5
+  paymentState:
+    x-stoplight:
+      id: cfrh60cvespsp
+    enum:
+      - AUTH_APPROVED
+      - AUTH_DECLINED
+      - PARTIALLY_CAPTURED
+      - CAPTURED
+      - CAPTURE_DECLINED
+      - VOIDED
+    description: is the current state for capturing payments
+    example: AUTH_APPROVED
+    readOnly: true
+  merchantReference:
+    type: string
+    x-stoplight:
+      id: o68xxrmgasfyt
+    description: is the merchant's order id/reference that the payment corresponds to.
+    example: merchant-order-123
+  refunds:
+    x-stoplight:
+      id: h8i33i7d0fi17
+    type: array
+    items:
+      $ref: ./Refund.yaml
+      x-stoplight:
+        id: nw2dtkard0xrm
+  orderDetails:
+    $ref: ./Order-Details.yaml
+    x-stoplight:
+      id: d4vvd4as5u937
+  events:
+    x-stoplight:
+      id: xmltusfgp9x29
+    type: array
+    items:
+      $ref: ./Payment-Event.yaml
+      x-stoplight:
+        id: va981jcl2rzz6
+  agreements:
+    type: array
+    description: List of billing agreements utilized or created if any (field omitted if empty)
+    items:
+      $ref: "./BillingAgreementResponse.yaml"

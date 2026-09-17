@@ -1,0 +1,51 @@
+title: Order Details
+x-stoplight:
+  id: fgcqiz6wvh74l
+type: object
+x-tags:
+  - request-object
+description: 'This comprehensive schema is designed to store an entire transaction''s detail, covering crucial aspects like consumer information, billing and shipping details, courier particulars, item list, discounts, tax, and shipping amount.'
+properties:
+  consumer:
+    $ref: ./Consumer.yaml
+    x-stoplight:
+      id: m2kxybohxxj45
+    description: The customer who placed or is placing the order.
+  billing:
+    $ref: ./Contact.yaml
+    x-stoplight:
+      id: 4nukfzifbhrin
+    description: The customer's billing address.
+  courier:
+    $ref: ./Shipping-Courier.yaml
+    x-stoplight:
+      id: ro5rs1ifhnhyc
+    description: The customer's chosen shipping courier.
+  items:
+    x-stoplight:
+      id: 991ioud8hzde4
+    type: array
+    description: An array of order items.
+    items:
+      $ref: ./Item.yaml
+      x-stoplight:
+        id: nxt2fg7tei7yu
+  discounts:
+    type: array
+    x-stoplight:
+      id: 7tdzc5xfwjvk4
+    description: An array of discounts.
+    items:
+      $ref: ./Discount.yaml
+      x-stoplight:
+        id: ccvzmsmh6mnxv
+  taxAmount:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: ip9oofl49e4k7
+    description: 'The included tax amount, after applying all discounts.'
+  shippingAmount:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: f3u36ujub27jw
+    description: The shipping price charged to the customer.

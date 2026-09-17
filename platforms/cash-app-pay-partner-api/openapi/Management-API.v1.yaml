@@ -1,0 +1,1684 @@
+openapi: 3.1.0
+info:
+  title: Management API
+  version: '1.0'
+  description: The Cash App Management API empowers API clients to rotate credentials for their integration for security.
+  contact:
+    name: Cash App
+    url: 'https://developers.cash.app'
+    email: developers@cash.app
+servers:
+  - url: 'https://api.cash.app/management/v1'
+    description: Production
+  - url: 'https://sandbox.api.cash.app/management/v1'
+    description: Sandbox
+paths:
+  /api-keys:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: List API keys
+      tags:
+        - API Keys
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  api_keys:
+                    type: array
+                    description: List of API keys for the given query parameters.
+                    uniqueItems: true
+                    minItems: 1
+                    maxItems: 100
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+                  cursor:
+                    type: string
+                    description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.'
+                required:
+                  - api_keys
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: list-api-keys
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+          in: query
+          name: cursor
+          description: A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of results for the original query.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          in: query
+          name: limit
+          description: Maximum number of API keys to return.
+      description: |-
+        Returns a list of active API keys matching the given query parameters.
+
+        **This endpoint is rate limited to 5 QPS.**
+
+        Scopes: `API_KEYS_READ`
+      security:
+        - Client:
+            - API_KEYS_READ
+    post:
+      summary: Create API key
+      operationId: create-api-key
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  api_key:
+                    $ref: '#/components/schemas/ApiKey'
+                  secret:
+                    type: string
+                    minLength: 32
+                    maxLength: 256
+                    description: |-
+                      Secret value to use when calculating the `X-Signature` header of requests.
+
+                      This value is not returned when retrieving an API key, so make sure to store it immediately.
+
+                      Min length: `32`
+                      Max length: `256`
+                required:
+                  - api_key
+                  - secret
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - API Keys
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                api_key:
+                  type: object
+                  description: Details about the API key to create.
+                  required:
+                    - scopes
+                  additionalProperties: false
+                  properties:
+                    scopes:
+                      $ref: '#/components/schemas/Scopes'
+                    reference_id:
+                      type: string
+                      description: |-
+                        A user-defined identifier for this API key, typically used to associate the API key with a record in an external system.
+
+                        Min length: `1`
+                        Max length: `1024`
+                      minLength: 1
+                      maxLength: 1024
+              required:
+                - idempotency_key
+                - api_key
+        description: ''
+      description: |-
+        Creates a new API key and secret to use in the `Authorization` and `X-Signature` headers for requests to the Cash App Pay API. This key will automatically expire at the date and time specified in the `expires_at` field in the response payload.
+
+        > **Note:** The `secret` returned in the response payload is what you use to calculate the `X-Signature` header. The API key ID is only used to keep track of which API keys are active, and isn't considered secret.
+        > Keep in mind that the `secret` can never be retrieved in subsequent requests to the API, so make sure to store it immediately!
+
+        **This endpoint is rate limited to 5 QPS.**
+
+        Scopes: `API_KEYS_WRITE`
+      security:
+        - Client:
+            - API_KEYS_WRITE
+  '/api-keys/{api_key_id}':
+    parameters:
+      - schema:
+          type: string
+        name: api_key_id
+        in: path
+        required: true
+        description: ID of the API key.
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Retrieve API key
+      tags:
+        - API Keys
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  api_key:
+                    $ref: '#/components/schemas/ApiKey'
+                required:
+                  - api_key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: retrieve-api-key
+      description: |-
+        Retrieves an API key by ID.
+
+        **This endpoint is rate limited to 10 QPS.**
+
+        Scopes: `API_KEYS_READ`
+      security:
+        - Client:
+            - API_KEYS_READ
+    delete:
+      summary: Delete API key
+      operationId: delete-api-key
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Deletes an API key. After an API key is deleted, it can no longer be used for authentication. All API clients using the secret associated with this API key  will immediately be forbidden from talking to the Cash App Pay API.
+
+        > **Note:** There is no way to un-delete an API key, so treat this endpoint with caution in production environments.
+
+        **This endpoint is rate limited to 5 QPS.**
+
+        Scopes: `API_KEYS_WRITE`
+      tags:
+        - API Keys
+      security:
+        - Client:
+            - API_KEYS_WRITE
+  /webhook-endpoints:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: List webhook endpoints
+      tags:
+        - Webhooks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook_endpoints:
+                    type: array
+                    minItems: 0
+                    maxItems: 50
+                    items:
+                      $ref: '#/components/schemas/WebhookEndpoint'
+                  cursor:
+                    type: string
+                    description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.'
+                required:
+                  - webhook_endpoints
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Example 1:
+                  value:
+                    errors:
+                      - category: WEBHOOK_ERROR
+                        code: NOT_FOUND
+                        detail: Could not find webhook endpoint.
+      operationId: list-webhook-endpoints
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          description: A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of results for the original query.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 50
+          in: query
+          name: limit
+          description: Maximum number of webhook endpoints to return.
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 1024
+          in: query
+          name: reference_id
+          description: 'A user-defined identifier for this webhook endpoint, typically used to associate the webhook endpoint with a record in an external system.'
+      description: |-
+        Returns a list of webhook endpoints matching the query parameters provided.
+
+        Scopes: `WEBHOOK_CONFIG_READ`
+      security:
+        - Client:
+            - WEBHOOK_CONFIG_READ
+    post:
+      summary: Create webhook endpoint
+      operationId: create-webhook-endpoint
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook_endpoint:
+                    $ref: '#/components/schemas/WebhookEndpoint'
+                required:
+                  - webhook_endpoint
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Example 2:
+                  value:
+                    errors:
+                      - category: WEBHOOK_ERROR
+                        code: WEBHOOK_ENDPOINT_TOO_MANY
+                        detail: 'The maximum number of webhook endpoints has been reached: 50. Delete existing webhook endpoints to create new ones.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                webhook_endpoint:
+                  type: object
+                  required:
+                    - api_key_id
+                    - event_configurations
+                    - url
+                  properties:
+                    api_key_id:
+                      type: string
+                      description: The API key ID which will be used to sign requests made to this webhook endpoint.
+                      example: <api_key_id>
+                      minLength: 1
+                      maxLength: 128
+                    event_configurations:
+                      type: array
+                      minItems: 1
+                      description: The list of supported event types for this webhook endpoint. Events of a particular type will only be sent to endpoints that contain the type in this list.
+                      maxItems: 100
+                      uniqueItems: true
+                      items:
+                        $ref: '#/components/schemas/EventConfiguration'
+                    url:
+                      description: 'The URL of the endpoint which events will be delivered to. If NULL is specified, events will be not be delivered to an endpoint but will still be persisted and accessible via the List Webhook Events API.'
+                      type: string
+                      nullable: true
+                    reference_id:
+                      type: string
+                      description: 'A user-defined identifier for this webhook endpoint, typically used to associate the webhook endpoint with a record in an external system.'
+                      minLength: 1
+                      maxLength: 1024
+                    delivery_timeout:
+                      type: number
+                      default: 5000
+                      minimum: 1000
+                      maximum: 10000
+                      description: 'The duration, in milliseconds, that Cash App will take to deliver an event to this endpoint before timing out.'
+                    max_delivery_frequency:
+                      type: number
+                      minimum: 1
+                      maximum: 100000
+                      description: 'The maximum number of events per second that will be delivered to this endpoint before rate limiting kicks in. The default for this field is unset (NULL) which means no rate limiting. However, if you enable rate limiting, the values can range from 1 to 100000.'
+              required:
+                - idempotency_key
+                - webhook_endpoint
+      description: |-
+        Creates a new webhook endpoint which Cash App can send events to.
+
+        > **Note:** Webhook events will not be successfully delivered for new domains until the new domain is allow-listed. New domains must be manually reviewed and allow-listed. It will typically take 1 business day to allow-list new domains.
+
+        Scopes: `WEBHOOK_CONFIG_WRITE`
+      security:
+        - Client:
+            - WEBHOOK_CONFIG_WRITE
+      tags:
+        - Webhooks
+  '/webhook-endpoints/{webhook_endpoint_id}':
+    parameters:
+      - schema:
+          type: string
+        name: webhook_endpoint_id
+        description: ID of the webhook endpoint.
+        in: path
+        required: true
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: Retrieve webhook endpoint
+      tags:
+        - Webhooks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook_endpoint:
+                    $ref: '#/components/schemas/WebhookEndpoint'
+                required:
+                  - webhook_endpoint
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: retrieve-webhook-endpoint
+      description: |-
+        Returns the webhook endpoint matching the `webhook_endpoint_id` provided.
+
+        Scopes: `WEBHOOK_CONFIG_READ`
+      security:
+        - Client:
+            - WEBHOOK_CONFIG_READ
+    patch:
+      summary: Update webhook endpoint
+      operationId: update-webhook-endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook_endpoint:
+                    $ref: '#/components/schemas/WebhookEndpoint'
+                required:
+                  - webhook_endpoint
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                webhook_endpoint:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      format: uri
+                      description: The events are delivered to this endpoint URL.
+                      nullable: true
+                    reference_id:
+                      type: string
+                      description: 'A user-defined identifier for this webhook endpoint, typically used to associate the webhook endpoint with a record in an external system.'
+                      minLength: 1
+                      maxLength: 1024
+                      nullable: true
+                    api_key_id:
+                      type: string
+                      description: The API key ID which will be used to sign requests made to this webhook endpoint.
+                      minLength: 1
+                      maxLength: 128
+                    event_configurations:
+                      type: array
+                      description: The list of supported event types for this webhook endpoint. Events of a particular type will only be sent to endpoints that contain the type in this list.
+                      minItems: 1
+                      maxItems: 100
+                      uniqueItems: true
+                      items:
+                        $ref: '#/components/schemas/EventConfiguration'
+                    delivery_timeout:
+                      type: number
+                      default: 5000
+                      minimum: 1000
+                      maximum: 10000
+                      description: 'The duration, in milliseconds, that Cash App will take to deliver an event to this endpoint before timing out.'
+                    max_delivery_frequency:
+                      type: number
+                      description: 'The maximum number of events per second that will be delivered to this endpoint before rate limiting kicks in. The default for this field is unset (NULL) which means no rate limiting. However, if you enable rate limiting, the values can range from 1 to 100000.'
+                      minimum: 1
+                      maximum: 100000
+                      default: null
+                      nullable: true
+              required:
+                - webhook_endpoint
+      description: |-
+        Updates the webhook endpoint matching the `webhook_endpoint_id` provided.
+
+        Scopes: `WEBHOOK_CONFIG_WRITE`
+      security:
+        - Client:
+            - WEBHOOK_CONFIG_WRITE
+      tags:
+        - Webhooks
+    delete:
+      summary: Delete webhook endpoint
+      operationId: delete-webhook-endpoint
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      description: |-
+        Deletes the webhook endpoint matching the `webhook_endpoint_id` provided. Note: Events that are created before the webhook endpoint was deleted will still be delivered after the webhook endpoint gets deleted.
+
+        Scopes: `WEBHOOK_CONFIG_WRITE`
+      security:
+        - Client:
+            - WEBHOOK_CONFIG_WRITE
+      tags:
+        - Webhooks
+  /webhook-events:
+    parameters:
+      - $ref: ./components/parameters/Region.yaml
+      - $ref: ./components/parameters/Signature.yaml
+      - $ref: ./components/parameters/Accept.yaml
+    get:
+      summary: List webhook events
+      tags:
+        - Webhooks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook_events:
+                    type: array
+                    minItems: 0
+                    maxItems: 500
+                    uniqueItems: true
+                    items:
+                      $ref: '#/components/schemas/WebhookEvent'
+                  cursor:
+                    type: string
+                    description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.'
+                required:
+                  - webhook_events
+          headers: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: list-webhook-events
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+          in: query
+          name: webhook_endpoint_id
+          description: Events delivered to this webhook endpoint ID.
+        - schema:
+            type: string
+            enum:
+              - PENDING
+              - SUCCESS
+              - FAILED
+          in: query
+          name: status
+          description: 'The status of an event that was delivered to a webhook endpoint. The status can either be PENDING, SUCCESS, or FAILED.'
+        - schema:
+            type: string
+            enum:
+              - customer.created
+              - customer.deleted
+              - customer.updated
+              - customer_request.state.updated
+              - dispute.created
+              - dispute.state.updated
+              - grant.created
+              - grant.status.updated
+              - merchant.status.updated
+              - payment.status.updated
+              - refund.status.updated
+          in: query
+          name: event_type
+          description: The type of event that will be sent to the webhook endpoint.
+        - schema:
+            type: string
+          in: query
+          name: cursor
+          description: A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of results for the original query.
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+          in: query
+          name: limit
+          description: Maximum number of webhook events to return.
+      description: |-
+        Returns a list of all webhook events matching the query parameters provided. Expired events are not included.
+
+        Scopes: `WEBHOOK_EVENTS_READ`
+      security:
+        - Client:
+            - WEBHOOK_EVENTS_READ
+  /request-chains:
+    post:
+      summary: Create request chain
+      operationId: create-request-chain
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responses:
+                    type: array
+                    minItems: 1
+                    items:
+                      $ref: '#/components/schemas/Response'
+                required:
+                  - responses
+              examples:
+                Create brand -> create merchant -> retrieve brand -> list brands:
+                  value:
+                    responses:
+                      - request_uid: request_1
+                        execution_status: EXECUTED
+                        path: /network/v1/brands
+                        method: POST
+                        status_code: 201
+                        body:
+                          brand:
+                            id: BRAND_brand-id
+                            reference_id: reference_id
+                            name: Brand Name
+                            created_at: '2023-01-01T00:00:00Z'
+                            updated_at: '2023-01-01T00:00:00Z'
+                            metadata: {}
+                        completed_at: '2023-01-01T00:00:00Z'
+                      - request_uid: request_2
+                        execution_status: EXECUTED
+                        path: /network/v1/merchants
+                        method: POST
+                        status_code: 201
+                        body:
+                          merchant:
+                            id: MMI_merchant-id
+                            address:
+                              country: US
+                            brand_id: BRAND_brand-id
+                            category: '5432'
+                            country: US
+                            currency: USD
+                            name: Merchant Name
+                            reference_id: reference_id
+                            status: ACTIVE
+                            created_at: '2023-01-01T00:00:00Z'
+                            updated_at: '2023-01-01T00:00:00Z'
+                            metadata: {}
+                        completed_at: '2023-01-01T00:00:00Z'
+                      - request_uid: request_3
+                        execution_status: EXECUTED
+                        path: /network/v1/brands/BRAND_brand-id
+                        method: GET
+                        status_code: 200
+                        body:
+                          brand:
+                            id: BRAND_brand-id
+                            reference_id: reference_id
+                            name: Brand Name
+                            profile_image_url: 'https://example.com'
+                            created_at: '2023-01-01T00:00:00Z'
+                            updated_at: '2023-01-01T00:00:00Z'
+                            metadata: {}
+                        completed_at: '2023-01-01T00:00:00Z'
+                      - request_uid: request_4
+                        execution_status: EXECUTED
+                        path: /network/v1/brands?limit=1
+                        method: GET
+                        status_code: 200
+                        body:
+                          brands:
+                            - id: BRAND_brand-id
+                              reference_id: reference_id
+                              name: Brand Name
+                              profile_image_url: 'https://example.com'
+                              created_at: '2023-01-01T00:00:00Z'
+                              updated_at: '2023-01-01T00:00:00Z'
+                              color: '#ffffff'
+                              metadata: {}
+                          cursor: example-cursor
+                        completed_at: '2023-01-01T00:00:00Z'
+                Create brand -> create merchant -> create customer request:
+                  value:
+                    responses:
+                      - request_uid: request_1
+                        execution_status: EXECUTED
+                        path: /network/v1/brands
+                        method: POST
+                        status_code: 201
+                        body:
+                          brand:
+                            id: BRAND_brand-id
+                            reference_id: reference_id
+                            name: Brand Name
+                            created_at: '2023-01-01T00:00:00Z'
+                            updated_at: '2023-01-01T00:00:00Z'
+                            metadata: {}
+                        completed_at: '2023-01-01T00:00:00Z'
+                      - request_uid: request_2
+                        execution_status: EXECUTED
+                        path: /network/v1/merchants
+                        method: POST
+                        status_code: 201
+                        body:
+                          merchant:
+                            id: MMI_merchant-id
+                            address:
+                              country: US
+                            brand_id: BRAND_brand-id
+                            category: '5432'
+                            country: US
+                            currency: USD
+                            name: Merchant Name
+                            reference_id: reference_id
+                            status: ACTIVE
+                            created_at: '2023-01-01T00:00:00Z'
+                            updated_at: '2023-01-01T00:00:00Z'
+                            metadata: {}
+                        completed_at: '2023-01-01T00:00:00Z'
+                      - request_uid: request_3
+                        execution_status: EXECUTED
+                        path: /customer-request/v1/requests
+                        method: POST
+                        status_code: 201
+                        body:
+                          request:
+                            id: GRR_customer-request-id
+                            status: PENDING
+                            actions:
+                              - scope_id: MMI_merchant-id
+                                amount: 2500
+                                currency: USD
+                                type: ONE_TIME_PAYMENT
+                            auth_flow_triggers:
+                              qr_code_image_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_customer-request-id&method=qr?rounded=0&format=png'
+                              qr_code_svg_url: 'https://api.cash.app/qr/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_customer-request-id&method=qr?rounded=0&format=svg'
+                              mobile_url: 'https://cash.app/f/GRANTLY_MANAGED_GRANT%3Frequest_id=GRR_customer-request-id&method=mobile_url'
+                              refreshes_at: '2023-01-01T00:00:00Z'
+                              desktop_url: 'https://pay.cash.app?customerRequestId=GRR_customer-request-id'
+                            redirect_url: 'https://example.com'
+                            created_at: '2023-01-01T00:00:00Z'
+                            updated_at: '2023-01-01T00:00:00Z'
+                            expires_at: '2033-01-01T12:20:00Z'
+                            origin:
+                              type: DIRECT
+                              id: string
+                            channel: ONLINE
+                            reference_id: external-id
+                            requester_profile:
+                              name: The Sill
+                              logo_url: 'https://picsum.photos/200'
+                            metadata: {}
+                            customer_metadata: {}
+                        completed_at: '2023-01-01T00:00:00Z'
+                Upsert brand -> upsert merchant -> create payment:
+                  value:
+                    responses:
+                      - request_uid: request_1
+                        execution_status: EXECUTED
+                        path: /network/v1/brands
+                        method: PUT
+                        status_code: 200
+                        body:
+                          brand:
+                            id: BRAND_brand-id
+                            reference_id: reference_id
+                            name: brand name
+                            profile_image_url: 'https://example.com'
+                            created_at: '2023-09-06T23:50:11.397Z'
+                            updated_at: '2023-09-06T23:50:11.397Z'
+                            metadata: {}
+                        completed_at: '2023-09-06T23:50:11.397Z'
+                      - request_uid: request_2
+                        execution_status: EXECUTED
+                        path: /network/v1/merchants
+                        method: PUT
+                        status_code: 200
+                        body:
+                          merchant:
+                            id: MMI_merchant-id
+                            address:
+                              address_line_1: 1215 4th Ave
+                              address_line_2: Suite 2300
+                              locality: Seattle
+                              administrative_district_level_1: Washington
+                              postal_code: 98161-1001
+                              country: US
+                            brand_id: BRAND_brand-id
+                            category: '5432'
+                            country: US
+                            currency: USD
+                            name: merchant name
+                            reference_id: reference ID
+                            status: ACTIVE
+                            created_at: '2023-09-06T23:50:11.397Z'
+                            updated_at: '2023-09-06T23:50:11.397Z'
+                            metadata: {}
+                        completed_at: '2023-09-06T23:50:11.397Z'
+                      - request_uid: request_3
+                        execution_status: EXECUTED
+                        path: /network/v1/payments
+                        method: POST
+                        status_code: 201
+                        body:
+                          payment:
+                            id: PWC_payment-id
+                            amount: 100
+                            net_amount: 100
+                            captured_amount: 100
+                            voided_amount: 0
+                            refunded_amount: 0
+                            currency: USD
+                            customer_id: CST_customer-id
+                            merchant_id: MMI_merchant-id
+                            grant_id: GRG_grant-id
+                            status: AUTHORIZED
+                            created_at: '2023-09-06T23:50:11.473Z'
+                            updated_at: '2023-09-06T23:50:11.473Z'
+                            reference_id: external-id
+                            metadata: {}
+                            enrichments:
+                              recurring_series_id: string
+                            decline_errors:
+                              - category: INVALID_REQUEST_ERROR
+                                code: MISSING_REQUIRED_FIELD
+                                detail: Missing required parameter.
+                                field: 'field_a[2].field_b'
+                        completed_at: '2023-09-06T23:50:11.473Z'
+                Retrieve fee plan -> upsert merchant:
+                  value:
+                    responses:
+                      - request_uid: request_1
+                        execution_status: EXECUTED
+                        path: /network/v1/fee-plans/FEE_fee-plan-id
+                        method: GET
+                        status_code: 200
+                        body:
+                          fee_plan:
+                            id: FEE_fee-plan-id
+                            rate:
+                              basis_points: 111
+                              fixed_amount: 22
+                            currency: USD
+                            status: ACTIVE
+                            metadata: {}
+                            description: ''
+                            created_at: '2023-09-12T00:51:46.900Z'
+                            updated_at: '2023-09-12T00:51:46.900Z'
+                        completed_at: '2023-09-12T00:51:46.900Z'
+                      - request_uid: request_2
+                        execution_status: EXECUTED
+                        path: /network/v1/merchants
+                        method: PUT
+                        status_code: 200
+                        body:
+                          merchant:
+                            id: MMI_merchant-id
+                            address:
+                              address_line_1: 1215 4th Ave
+                              address_line_2: Suite 2300
+                              locality: Seattle
+                              administrative_district_level_1: Washington
+                              postal_code: 98161-1001
+                              country: US
+                            brand_id: BRAND_brand-id
+                            category: '5432'
+                            country: US
+                            currency: USD
+                            name: merchant name
+                            reference_id: reference ID
+                            status: ACTIVE
+                            created_at: '2023-09-06T23:50:11.397Z'
+                            updated_at: '2023-09-06T23:50:11.397Z'
+                            metadata: {}
+                        completed_at: '2023-09-06T23:50:11.397Z'
+                Create API key -> update webhook endpoint:
+                  value:
+                    responses:
+                      - request_uid: request_1
+                        execution_status: EXECUTED
+                        path: /management/v1/api-keys
+                        method: POST
+                        status_code: 201
+                        body:
+                          api_key:
+                            id: KEY_api-key-id
+                            created_at: '2023-09-12T00:51:46.900Z'
+                            expires_at: '2023-09-12T00:51:46.900Z'
+                            scopes:
+                              - PAYMENTS_READ
+                            reference_id: string
+                          secret: stringstringstringstringstringst
+                        completed_at: '2023-09-12T00:51:46.900Z'
+                      - request_uid: request_2
+                        execution_status: EXECUTED
+                        path: /management/v1/webhook-endpoints/WC_webhook-configuration-id
+                        method: PATCH
+                        status_code: 200
+                        body:
+                          webhook_endpoint:
+                            id: WC_webhook-endpoint-id
+                            api_key_id: string
+                            reference_id: string
+                            url: 'http://example.com'
+                            event_configurations:
+                              - event_type: customer.created
+                                api_version: v1
+                            created_at: '2023-09-06T23:50:11.397Z'
+                            updated_at: '2023-09-06T23:50:11.397Z'
+                            delivery_timeout: 5000
+                            max_delivery_frequency: null
+                            status: APPROVED
+                        completed_at: '2023-09-06T23:50:11.397Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      description: |
+        Executes multiple requests, grouped into "chains", in a single call. The API Client (Client) can use multiple chains and specify sub-requests within each chain to run sequentially or in parallel. However the chains, themselves, will only run sequentially.
+
+        ### Accessing a previous response's value
+
+        Clients can access a previous response's value by using the format: `$[previous request's uid]:[key path]`. Clients can use this in the value fields of:
+        - `requests[].body`
+        - `requests[].path_params`
+        - `requests[].query_params`
+
+        The request's path `requests[].path` has an extra step to access a previous response's value. In the request's path, the Client will first refer to a key in the `requests[].path_params` field using the format: `{[path_params key name]}`. From there `requests[].path_params` can use the pattern described in **Accessing a previous response's value** to obtain a previous response's value.
+
+        <Warning>
+        The initial security headers will be passed to all requests.
+
+        Scopes are not required for this endpoint. However, the API key must contain the appropriate scopes required by the individual requests to execute.
+        </Warning>
+
+        For FAQs and performance improvement details, visit [Optimizing Performance with Request Chaining](../docs/partner-onboarding/optimizing-performance-with-request-chaining.md).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requests:
+                  type: array
+                  minItems: 1
+                  maxItems: 50
+                  description: Requests to execute
+                  items:
+                    type: object
+                    properties:
+                      uid:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                        description: Unique identifier for the request
+                        example: request_1
+                      method:
+                        type: string
+                        enum:
+                          - GET
+                          - POST
+                          - PATCH
+                          - PUT
+                          - DELETE
+                        description: HTTP method of the request
+                      path:
+                        type: string
+                        example: '/network/v1/brands/{brand_id}'
+                        description: 'URL path to call. Use format `{path_params key name}` to add variable path parameters.'
+                      path_params:
+                        type: object
+                        minProperties: 0
+                        maxProperties: 2
+                        description: A map of path parameters. The keys represent variables from the `path`. The value fields allow for **Accessing a previous response's value**.
+                      query_params:
+                        type: object
+                        description: A map of query parameters. The value fields allow for **Accessing a previous response's value**.
+                      body:
+                        type: object
+                        description: The body that is required for the requested endpoint. The value fields allow for **Accessing a previous response's value**.
+                    required:
+                      - uid
+                      - method
+                      - path
+                chains:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  description: Chains control the order and execution modes of requests
+                  items:
+                    type: object
+                    properties:
+                      requests:
+                        type: array
+                        minItems: 1
+                        maxItems: 50
+                        items:
+                          type: object
+                          properties:
+                            uid:
+                              type: string
+                              description: Unique identifier for the request to execute
+                              example: request_1
+                          required:
+                            - uid
+                      execution_mode:
+                        type: string
+                        enum:
+                          - SEQUENTIAL
+                          - PARALLEL
+                        description: Execution mode of the requests in a chain
+                    required:
+                      - requests
+                      - execution_mode
+              required:
+                - requests
+                - chains
+            examples:
+              Create brand -> create merchant -> retrieve brand -> list brands:
+                value:
+                  requests:
+                    - uid: request_1
+                      method: POST
+                      path: /network/v1/brands
+                      body:
+                        idempotency_key: idempotency_key
+                        brand:
+                          name: Brand Name
+                          reference_id: reference_id
+                    - uid: request_2
+                      method: POST
+                      path: /network/v1/merchants
+                      body:
+                        idempotency_key: idempotency_key
+                        merchant:
+                          name: Merchant Name
+                          brand_id: '$request_1:brand.id'
+                          country: US
+                          currency: USD
+                          category: '5432'
+                          reference_id: reference_id
+                          address:
+                            country: US
+                    - uid: request_3
+                      method: GET
+                      path: '/network/v1/brands/{brandId}'
+                      path_params:
+                        brandId: '$request_1:brand.id'
+                    - uid: request_4
+                      method: GET
+                      path: /network/v1/brands
+                      query_params:
+                        limit: '1'
+                  chains:
+                    - requests:
+                        - uid: request_1
+                        - uid: request_2
+                        - uid: request_3
+                        - uid: request_4
+                      execution_mode: SEQUENTIAL
+              Create brand -> create merchant -> create customer request:
+                value:
+                  requests:
+                    - uid: request_1
+                      method: POST
+                      path: /network/v1/brands
+                      body:
+                        idempotency_key: idempotency_key
+                        brand:
+                          name: Brand Name
+                          reference_id: reference_id
+                    - uid: request_2
+                      method: POST
+                      path: /network/v1/merchants
+                      body:
+                        idempotency_key: idempotency_key
+                        merchant:
+                          name: Merchant Name
+                          brand_id: '$request_1:brand.id'
+                          country: US
+                          currency: USD
+                          category: '5432'
+                          reference_id: reference_id
+                          address:
+                            country: US
+                    - uid: request_3
+                      method: POST
+                      path: /customer-request/v1/requests
+                      body:
+                        idempotency_key: idempotency_key
+                        request:
+                          actions:
+                            - amount: 2500
+                              currency: USD
+                              scope_id: '$request_2:merchant.id'
+                              type: ONE_TIME_PAYMENT
+                          channel: IN_PERSON
+                          redirect_url: 'https://example.com'
+                          reference_id: string
+                          metadata:
+                            key: value
+                          customer_metadata:
+                            reference_id: string
+                  chains:
+                    - requests:
+                        - uid: request_1
+                        - uid: request_2
+                        - uid: request_3
+                      execution_mode: SEQUENTIAL
+              Upsert brand -> upsert merchant -> create payment:
+                value:
+                  requests:
+                    - uid: request_1
+                      method: PUT
+                      path: /network/v1/brands
+                      body:
+                        brand:
+                          name: brand name
+                          reference_id: reference_id
+                    - uid: request_2
+                      method: PUT
+                      path: /network/v1/merchants
+                      body:
+                        merchant:
+                          name: merchant name
+                          brand_id: '$request_1:brand.id'
+                          country: US
+                          currency: USD
+                          category: '5432'
+                          reference_id: reference ID
+                          address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                    - uid: request_3
+                      method: POST
+                      path: /network/v1/payments
+                      body:
+                        idempotency_key: idempotency_key
+                        payment:
+                          amount: 100
+                          currency: USD
+                          merchant_id: '$request_2:merchant.id'
+                          grant_id: GRG_grant-id
+                          reference_id: external-id
+                          capture: true
+                          metadata:
+                            key: value
+                          enrichments:
+                            recurring_series_id: string
+                  chains:
+                    - requests:
+                        - uid: request_1
+                        - uid: request_2
+                        - uid: request_3
+                      execution_mode: SEQUENTIAL
+              Retrieve fee plan -> upsert merchant:
+                value:
+                  requests:
+                    - uid: request_1
+                      method: GET
+                      path: /network/v1/fee-plans/FEE_fee-plan-id
+                    - uid: request_2
+                      method: PUT
+                      path: /network/v1/merchants
+                      body:
+                        merchant:
+                          name: merchant name
+                          brand_id: BRAND_brand-id
+                          country: US
+                          currency: USD
+                          category: '5432'
+                          reference_id: reference ID
+                          address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                          default_fee_plans:
+                            in_app_fee_plan_id: '$request_1:fee_plan.id'
+                  chains:
+                    - requests:
+                        - uid: request_1
+                        - uid: request_2
+                      execution_mode: SEQUENTIAL
+              Create API key -> update webhook endpoint:
+                value:
+                  requests:
+                    - uid: request_1
+                      method: POST
+                      path: /management/v1/api-keys
+                      body:
+                        idempotency_key: e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19
+                        api_key:
+                          scopes:
+                            - PAYMENTS_READ
+                          reference_id: string
+                    - uid: request_2
+                      method: PATCH
+                      path: /management/v1/webhook-endpoints/WC_webhook-configuration-id
+                      body:
+                        webhook_endpoint:
+                          api_key_id: '$request_1:api_key.id'
+                  chains:
+                    - requests:
+                        - uid: request_1
+                        - uid: request_2
+                      execution_mode: SEQUENTIAL
+        description: ''
+      tags:
+        - Request Chains
+      x-internal: false
+      parameters: []
+      security:
+        - Client: []
+components:
+  schemas:
+    ApiKey:
+      title: api_key
+      type: object
+      x-tags:
+        - API Keys
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 128
+          example: <api_key_id>
+          description: Unique identifier for this API key issued by Cash App. This is the API key value that is passed in the `Authorization` header.
+        created_at:
+          type: string
+          format: date-time
+          example: '2022-01-01T00:00:00Z'
+          description: 'When this API key was created, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+        expires_at:
+          type: string
+          format: date-time
+          example: '2022-02-01T00:00:00Z'
+          description: 'When this API key will be automatically deleted and become unusable, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+        scopes:
+          $ref: '#/components/schemas/Scopes'
+        reference_id:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          description: |-
+            A user-defined identifier for this API key, typically used to associate the API key with a record in an external system.
+
+            Min length: `1`
+            Max length: `1024`
+      required:
+        - id
+        - created_at
+        - expires_at
+        - scopes
+    Scopes:
+      type: array
+      title: scopes
+      uniqueItems: true
+      minItems: 1
+      x-tags:
+        - API Keys
+      description: |-
+        An array of permissions granted to the API key.
+
+        Current values:
+
+        - `API_KEYS_READ`: Permits listing API keys and retrieving individual keys.
+        - `API_KEYS_WRITE`: Permits creating and deleting API keys.
+        - `BRANDS_READ`: Permits listing brands and retrieving individual brands.
+        - `BRANDS_WRITE`: Permits creating, upserting, and updating brands.
+        - `CUSTOMERS_READ`: Permits listing customers and retrieving individual customers.
+        - `DISPUTES_READ`: Permits listing disputes / dispute evidence and retrieving details about individual disputes / dispute evidence.
+        - `DISPUTES_WRITE`: Permits uploading dispute evidence, accepting disputes, and challenging disputes.
+        - `FEE_PLANS_READ`: Permits listing fee plans and retrieving individual fee plans.
+        - `GRANTS_READ`: Permits listing grants for a customer and retrieving individual grants.
+        - `GRANTS_WRITE`: Permits revoking a grant.
+        - `MERCHANTS_READ`: Permits listing merchants and retrieving individual merchants.
+        - `MERCHANTS_WRITE`: Permits creating, upserting, and updating merchants.
+        - `PAYMENTS_READ`: Permits listing payments and retrieving individual payments.
+        - `PAYMENTS_WRITE`: Permits taking payments, capturing payments, and voiding payments.
+        - `REFUNDS_READ`: Permits listing refunds and retrieving individual refunds.
+        - `REFUNDS_WRITE`: Permits issuing refunds, capturing refunds, and voiding refunds.
+        - `WEBHOOK_CONFIG_READ`: Permits listing webhook delivery settings and retrieving individual configurations.
+        - `WEBHOOK_CONFIG_WRITE`: Permits creating and updating webhook delivery settings.
+        - `WEBHOOK_EVENTS_READ`: Permits listing webhook events and retrieving individual events.
+
+        Min number of items: `1`
+      items:
+        type: string
+        enum:
+          - PAYMENTS_READ
+          - PAYMENTS_WRITE
+          - REFUNDS_READ
+          - REFUNDS_WRITE
+          - DISPUTES_READ
+          - DISPUTES_WRITE
+          - CUSTOMERS_READ
+          - FEE_PLANS_READ
+          - GRANTS_READ
+          - GRANTS_WRITE
+          - API_KEYS_READ
+          - API_KEYS_WRITE
+          - BRANDS_READ
+          - BRANDS_WRITE
+          - MERCHANTS_READ
+          - MERCHANTS_WRITE
+          - WEBHOOK_CONFIG_READ
+          - WEBHOOK_CONFIG_WRITE
+          - WEBHOOK_EVENTS_READ
+    WebhookEndpoint:
+      title: WebhookEndpoint
+      type: object
+      x-examples: {}
+      description: The events will be sent to this webhook endpoint.
+      x-tags:
+        - Webhooks
+      properties:
+        id:
+          type: string
+          description: The unique ID for a webhook endpoint issued by Cash App.
+          example: WC_2f6cd0d5cc26b34ac8785026b149797ecc0758be3dc3a857d405f2f62074ef30
+          minLength: 1
+          maxLength: 128
+        api_key_id:
+          type: string
+          description: The API key ID which will be used to sign requests made to this webhook endpoint.
+          minLength: 1
+          maxLength: 128
+        reference_id:
+          type: string
+          description: 'A user-defined identifier for this webhook endpoint, typically used to associate the webhook endpoint with a record in an external system.'
+          minLength: 1
+          maxLength: 1024
+        url:
+          type: string
+          format: uri
+          description: 'The events are delivered to this endpoint URL. If NULL, events will be not be delivered to an endpoint but will still be persisted and accessible via the List Webhook Events API.'
+          nullable: true
+        event_configurations:
+          type: array
+          description: The list of supported event types for this webhook endpoint. Events of a particular type will only be sent to endpoints that contain the type in this list.
+          minItems: 1
+          maxItems: 100
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/EventConfiguration'
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp of when this webhook endpoint was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp of when this endpoint was last updated.
+        delivery_timeout:
+          type: number
+          default: 5000
+          minimum: 1000
+          maximum: 10000
+          description: 'The duration, in milliseconds, that Cash App will take to deliver an event to this endpoint before timing out.'
+        max_delivery_frequency:
+          type: number
+          default: null
+          description: 'The maximum number of events per second that will be delivered to this endpoint before rate limiting kicks in. The default for this field is unset (NULL) which means no rate limiting. However, if you enable rate limiting, the values can range from 1 to 100000.'
+          minimum: 1
+          maximum: 100000
+          nullable: true
+        status:
+          $ref: '#/components/schemas/WebhookEndpointStatus'
+      required:
+        - id
+        - api_key_id
+        - url
+        - event_configurations
+        - created_at
+        - updated_at
+        - delivery_timeout
+        - status
+    WebhookEndpointStatus:
+      title: WebhookEndpointStatus
+      description: 'The approval status of a webhook endpoint. Once a webhook endpoint is approved, Cash App will deliver events to that webhook endpoint.'
+      x-tags:
+        - Webhooks
+      type: string
+      enum:
+        - APPROVED
+        - ENDPOINT_URL_UNDER_REVIEW
+    EventConfiguration:
+      title: EventConfiguration
+      x-tags:
+        - Webhooks
+      type: object
+      properties:
+        event_type:
+          $ref: '#/components/schemas/EventType'
+        api_version:
+          $ref: '#/components/schemas/ApiVersion'
+      required:
+        - event_type
+        - api_version
+      description: Represents a supported event type and the API version that the event of this type should be serialized to.
+    ApiVersion:
+      x-tags:
+        - Webhooks
+      type: string
+      title: ApiVersion
+      enum:
+        - v1
+      description: 'Represents the API version. '
+    WebhookEvent:
+      x-tags:
+        - Webhooks
+      title: WebhookEvent
+      type: object
+      description: 'The event that is being sent to a particular webhook endpoint. The event is either in the process of being delivered (PENDING), has been successfully delivered (SUCCESS), or has failed all attempts to deliver (FAILED).'
+      properties:
+        id:
+          type: string
+          description: The unique identifier for a webhook event issued by Cash App.
+          example: WE_2f6cd0d5cc26b34ac8785026b149797ecc0758be3dc3a857d405f2f62074ef30
+          minLength: 1
+          maxLength: 128
+        webhook_endpoint_id:
+          type: string
+          description: This event is delivered to this webhook endpoint ID.
+          minLength: 1
+          maxLength: 128
+          example: WC_2f6cd0d5cc26b34ac8785026b149797ecc0758be3dc3a857d405f2f62074ef30
+        event_type:
+          $ref: '#/components/schemas/EventType'
+        status:
+          $ref: '#/components/schemas/EventStatus'
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp of when the event was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The timestamp of when the event was last updated.
+        expires_at:
+          type: string
+          format: date-time
+          description: The timestamp of when this event will expire and no longer be available in Cash App.
+        event_data:
+          $ref: '#/components/schemas/EventData'
+        api_version:
+          type: string
+          description: The API version used to serialize the event data.
+      required:
+        - id
+        - webhook_endpoint_id
+        - event_type
+        - status
+        - created_at
+        - updated_at
+        - expires_at
+        - event_data
+        - api_version
+    EventType:
+      x-tags:
+        - Webhooks
+      type: string
+      title: EventType
+      enum:
+        - customer.created
+        - customer.deleted
+        - customer.updated
+        - customer_request.state.updated
+        - dispute.created
+        - dispute.state.updated
+        - grant.created
+        - grant.status.updated
+        - merchant.status.updated
+        - payment.status.updated
+        - refund.status.updated
+      description: The type of event that will be sent to the webhook endpoint.
+    EventStatus:
+      x-tags:
+        - Webhooks
+      type: string
+      title: EventStatus
+      enum:
+        - PENDING
+        - FAILED
+        - SUCCESS
+      description: |-
+        The status of an event that was delivered to a webhook endpoint. The status can either be PENDING, SUCCESS, or FAILED.
+
+        PENDING: The webhook event has been dispatched and is in the process of being delivered to the endpoint. If the event has failed and is being retried, it will continue to be in the PENDING status.
+
+        SUCCESS: The webhook event has been delivered to the endpoint and we've received receipt of the delivery from the client's endpoint (e.g. 200OK).
+
+        FAILED: The webhook event has failed all delivery attempts for 72 hours. No more deliveries will be attempted.
+    EventData:
+      x-tags:
+        - Webhooks
+      title: EventData
+      type: object
+      description: This represents the data that is delivered to a webhook endpoint.
+      properties:
+        event_id:
+          type: string
+          description: The unique ID of the webhook event.
+          example: WE_2f6cd0d5cc26b34ac8785026b149797ecc0758be3dc3a857d405f2f62074ef30
+          minLength: 1
+          maxLength: 128
+        type:
+          $ref: '#/components/schemas/EventType'
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp of when the event was created.
+        data:
+          type: object
+          description: The underlying data encapsulated in the event.
+          required:
+            - id
+            - object
+            - type
+          properties:
+            id:
+              type: string
+              description: The unique ID provided by Cash App for the resource contained in the event.
+            object:
+              oneOf:
+                - title: customer
+                  type: object
+                  properties:
+                    customer:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Customer
+                - title: merchant
+                  type: object
+                  properties:
+                    merchant:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Merchant
+                - title: dispute
+                  type: object
+                  properties:
+                    dispute:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Dispute
+                - title: payment
+                  type: object
+                  properties:
+                    payment:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Payment
+                - title: grant
+                  type: object
+                  properties:
+                    grant:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Grant
+                - title: refund
+                  type: object
+                  properties:
+                    refund:
+                      $ref: ./Network-API.v1.yaml#/components/schemas/Refund
+                - properties:
+                    request:
+                      $ref: ./Customer-Request-API.v1.yaml#/components/schemas/Request
+              description: The snapshot of the resource contained in the event.
+              type: object
+            type:
+              $ref: '#/components/schemas/EventDataType'
+      required:
+        - event_id
+        - type
+        - created_at
+        - data
+    EventDataType:
+      x-tags:
+        - Webhooks
+      type: string
+      title: EventDataType
+      x-stoplight:
+        id: pkr2a0y2lm6h8
+      description: The type of the resource contained in the event.
+      enum:
+        - customer
+        - merchant
+        - dispute
+        - grant
+        - payment
+        - refund
+        - request
+    ErrorResponse:
+      $ref: ./components/schemas/ErrorResponse.yaml
+    Response:
+      title: Response
+      x-stoplight:
+        id: acz89pwwjkbdw
+      type: object
+      x-internal: false
+      properties:
+        request_uid:
+          type: string
+          description: Unique identifier for the request
+        execution_status:
+          type: string
+          enum:
+            - EXECUTED
+            - NOT_STARTED
+          description: Execution status of the request
+        path:
+          type: string
+          example: /network/v1/brands
+          description: URL path that was called
+        method:
+          type: string
+          enum:
+            - GET
+            - POST
+            - PATCH
+            - PUT
+            - DELETE
+          description: HTTP method of the request
+        status_code:
+          type: integer
+          description: Status code of the request
+        body:
+          type: object
+          description: Response body of the requested endpoint
+        completed_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T00:00:00Z'
+          description: 'When the request was completed, in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format (UTC).'
+      required:
+        - request_uid
+        - execution_status
+        - path
+        - method
+  securitySchemes:
+    Client:
+      type: http
+      description: |-
+        Client authentication is provided by setting the `Authorization` header to the following format:
+
+        `Authorization: Client <Client ID> <API Key>`.
+
+
+        **Note:** Authenticated requests must also be [signed](https://developers.cash.app/docs/partner/technical-documentation/api-fundamentals/requests/signing-requests).
+      in: header
+      name: Authorization
+security:
+  - Client: []
+tags:
+  - name: API Keys
+  - name: Webhooks
+x-readme:
+  proxy-enabled: false

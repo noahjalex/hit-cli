@@ -1,0 +1,1229 @@
+openapi: 3.1.0
+x-stoplight:
+  id: 7cc1c48313fd8
+info:
+  title: Checkout API
+  version: '0.0'
+  contact:
+    name: Cash App
+    url: 'https://developers.cash.app'
+    email: developers@cash.app
+  description: The Cash App Checkout API connects clients to Cash App customers to process purchase order.
+servers:
+  - url: 'https://api.cash.app/checkout/v0'
+    description: Production
+  - url: 'https://sandbox.api.cash.app/checkout/v0'
+    description: Sandbox
+paths:
+  /orders:
+    post:
+      summary: Create Checkout
+      operationId: create-checkout
+      responses:
+        '201':
+          description: Checkout created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order:
+                    $ref: '#/components/schemas/Order'
+                  request:
+                    $ref: ./Customer-Request-API.v1.yaml#/components/schemas/Request
+                  loan_availability:
+                    type: string
+                    description: |-
+                      The status loan availability specific to this Checkout instance.
+
+                      Current values:
+                      - `AVAILABLE`: The lending and installment product is available. An additional credit check may be required for the customer to continue with a payment-plan.
+                      - `NOT_AVAILABLE`: The lending and installment product is not available.
+                      - `DISABLED`: BNPL is disabled and should not be shown to the customer.
+                  loan_unavailable_reason_codes:
+                    $ref: '#/components/schemas/LoanUnavailableReasonCodes'
+                required:
+                  - order
+                  - request
+                  - loan_availability
+                  - loan_unavailable_reason_codes
+              examples:
+                Loan Unavailable:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      version: 0
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                    request:
+                      id: GRR_1hrxhz136krcq6ezdte2ha5q
+                      status: PROCESSING
+                      actions:
+                        - amount: 10000
+                          currency: USD
+                          scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                          type: ONE_TIME_PAYMENT
+                      redirect_url: 'https://example.com'
+                      created_at: '2022-01-01T12:09:00Z'
+                      updated_at: '2022-01-01T12:10:00Z'
+                      expires_at: '2033-01-01T12:20:00Z'
+                      origin:
+                        type: DIRECT
+                      channel: ONLINE
+                      reference_id: external-id
+                      requester_profile:
+                        name: The Sill
+                        logo_url: 'https://picsum.photos/200'
+                    loan_availability: NOT_AVAILABLE
+                    loan_unavailable_reason_codes:
+                      - CREDIT_LIMIT_EXCEEDED
+                Loan Available:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      version: 0
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                    request:
+                      id: GRR_1hrxhz136krcq6ezdte2ha5q
+                      status: PROCESSING
+                      actions:
+                        - amount: 10000
+                          currency: USD
+                          scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                          type: ONE_TIME_PAYMENT
+                      redirect_url: 'https://example.com'
+                      created_at: '2022-01-01T12:09:00Z'
+                      updated_at: '2022-01-01T12:10:00Z'
+                      expires_at: '2033-01-01T12:20:00Z'
+                      origin:
+                        type: DIRECT
+                      channel: ONLINE
+                      reference_id: external-id
+                      requester_profile:
+                        name: The Sill
+                        logo_url: 'https://picsum.photos/200'
+                    loan_availability: AVAILABLE
+                    loan_unavailable_reason_codes: []
+                Loan Disabled:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      version: 0
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                    request:
+                      id: GRR_1hrxhz136krcq6ezdte2ha5q
+                      status: PROCESSING
+                      actions:
+                        - amount: 10000
+                          currency: USD
+                          scope_id: MMI_4vxs5egfk7hmta3qx2h6rp91x
+                          type: ONE_TIME_PAYMENT
+                      redirect_url: 'https://example.com'
+                      created_at: '2022-01-01T12:09:00Z'
+                      updated_at: '2022-01-01T12:10:00Z'
+                      expires_at: '2033-01-01T12:20:00Z'
+                      origin:
+                        type: DIRECT
+                      channel: ONLINE
+                      reference_id: external-id
+                      requester_profile:
+                        name: The Sill
+                        logo_url: 'https://picsum.photos/200'
+                    loan_availability: DISABLED
+                    loan_unavailable_reason_codes: []
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid request:
+                  value:
+                    errors:
+                      - category: INVALID_REQUEST_ERROR
+                        code: INVALID_CONTENT_TYPE
+                        detail: "The Content-Type header must be `application/json`. The provided Content-Type was: '`null`'."
+      description: 'Create a new Checkout, where a Checkout is an augmentation of an Order with CustomerRequest and Loan data.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                customer_request_id:
+                  type: string
+                  description: |-
+                    A unique identifier for the customer request issued by Cash App.
+
+                    Min length: `1`
+                    Max length: `128`
+              required:
+                - idempotency_key
+                - customer_request_id
+            examples: {}
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+  '/orders/{order_id}':
+    parameters:
+      - schema:
+          type: string
+        name: order_id
+        in: path
+        required: true
+        description: The ID of the order.
+        example: ORD_12345
+    get:
+      summary: Retrieve order
+      responses:
+        '200':
+          description: Order Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order:
+                    $ref: '#/components/schemas/Order'
+                required:
+                  - order
+              examples: {}
+        '404':
+          description: Order Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid request:
+                  value:
+                    errors:
+                      - category: INVALID_REQUEST_ERROR
+                        code: NOT_FOUND
+                        detail: The requested order could not be found.
+      operationId: retrieve-order
+      description: Retrives an Order by ID.
+    patch:
+      summary: Update Checkout
+      operationId: update-checkout
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order:
+                    $ref: '#/components/schemas/Order'
+                required:
+                  - order
+              examples:
+                Pay All:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                      version: 0
+                Pay in 4:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                      version: 0
+                      loan:
+                        due_today:
+                          amount: 2575
+                          currency: USD
+                        grand_total:
+                          amount: 10300
+                          currency: USD
+                        id: mockPaymentPlanPayin4-1
+                        loan_type: PAY_IN_FOUR
+                        payment_schedule:
+                          - amount:
+                              amount: 2575
+                              currency: USD
+                            payment_date: '2022-04-12'
+                          - amount:
+                              amount: 2575
+                              currency: USD
+                            payment_date: '2022-04-26'
+                          - amount:
+                              amount: 2575
+                              currency: USD
+                            payment_date: '2022-05-10'
+                        tila_data:
+                          financed_money:
+                            amount: 7500
+                            currency: USD
+                          finance_charge_money:
+                            amount: 300
+                            currency: USD
+                          setup_fee_percentage: 5%
+                          total_of_payments_money:
+                            amount: 10300
+                            currency: USD
+                          apr_percentage: 36%
+                          loan_duration_days: 29
+                          flat_fee_as_daily_fee: 0.172%
+                          final_due_date: '2022-05-10'
+                          money_due_on_due_date:
+                            amount: 7900
+                            currency: USD
+                          late_fee_grace_period_days: 4
+                          late_fee_money:
+                            amount: 500
+                            currency: USD
+                          date_borrowed: '2022-08-24'
+                          e_sign_consent_url: 'http://example.com'
+                          privacy_notices_url: 'http://example.com'
+                          auto_pay_auth_url: 'http://example.com'
+                          loan_agreement_url: 'http://example.com'
+                          account_opening_disclosure_url: 'http://example.com'
+                          lender_name: First Electronic Bank
+                          lender_address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                          borrower_name: Erin Hills
+                          borrower_address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                Pay in 2:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                      version: 0
+                      loan:
+                        due_today:
+                          amount: 5100
+                          currency: USD
+                        grand_total:
+                          amount: 10200
+                          currency: USD
+                        id: mockPaymentPlanPayin2-1
+                        loan_type: PAY_IN_TWO
+                        payment_schedule:
+                          - amount:
+                              amount: 5100
+                              currency: USD
+                            payment_date: '2022-05-10'
+                        tila_data:
+                          financed_money:
+                            amount: 5000
+                            currency: USD
+                          finance_charge_money:
+                            amount: 200
+                            currency: USD
+                          setup_fee_percentage: 5%
+                          total_of_payments_money:
+                            amount: 10200
+                            currency: USD
+                          apr_percentage: 36%
+                          loan_duration_days: 29
+                          flat_fee_as_daily_fee: 0.172%
+                          final_due_date: '2022-05-10'
+                          money_due_on_due_date:
+                            amount: 5100
+                            currency: USD
+                          late_fee_grace_period_days: 4
+                          late_fee_money:
+                            amount: 500
+                            currency: USD
+                          date_borrowed: '2022-08-24'
+                          e_sign_consent_url: 'http://example.com'
+                          privacy_notices_url: 'http://example.com'
+                          auto_pay_auth_url: 'http://example.com'
+                          loan_agreement_url: 'http://example.com'
+                          account_opening_disclosure_url: 'http://example.com'
+                          lender_name: First Electronic Bank
+                          lender_address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                          borrower_name: Erin Hills
+                          borrower_address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                Pay in 4 Large:
+                  value:
+                    order:
+                      id: mockedOrderId
+                      total_order:
+                        amount: 10000
+                        currency: USD
+                      version: 0
+                      loan:
+                        due_today:
+                          amount: 4300
+                          currency: USD
+                        grand_total:
+                          amount: 10300
+                          currency: USD
+                        id: mockPaymentPlanPayin4-1
+                        loan_type: PAY_IN_FOUR
+                        payment_schedule:
+                          - amount:
+                              amount: 2000
+                              currency: USD
+                            payment_date: '2022-04-12'
+                          - amount:
+                              amount: 2000
+                              currency: USD
+                            payment_date: '2022-04-26'
+                          - amount:
+                              amount: 2000
+                              currency: USD
+                            payment_date: '2022-05-10'
+                        tila_data:
+                          financed_money:
+                            amount: 6000
+                            currency: USD
+                          finance_charge_money:
+                            amount: 300
+                            currency: USD
+                          setup_fee_percentage: 5%
+                          total_of_payments_money:
+                            amount: 10300
+                            currency: USD
+                          apr_percentage: 36%
+                          loan_duration_days: 29
+                          flat_fee_as_daily_fee: 0.172%
+                          final_due_date: '2022-05-10'
+                          money_due_on_due_date:
+                            amount: 6300
+                            currency: USD
+                          late_fee_grace_period_days: 4
+                          late_fee_money:
+                            amount: 500
+                            currency: USD
+                          date_borrowed: '2022-08-24'
+                          e_sign_consent_url: 'http://example.com'
+                          privacy_notices_url: 'http://example.com'
+                          auto_pay_auth_url: 'http://example.com'
+                          loan_agreement_url: 'http://example.com'
+                          account_opening_disclosure_url: 'http://example.com'
+                          lender_name: First Electronic Bank
+                          lender_address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+                          borrower_name: Erin Hills
+                          borrower_address:
+                            address_line_1: 1215 4th Ave
+                            address_line_2: Suite 2300
+                            locality: Seattle
+                            country: US
+                            postal_code: 98161-1001
+                            administrative_district_level_1: Washington
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid request:
+                  value:
+                    errors:
+                      - category: INVALID_REQUEST_ERROR
+                        code: INVALID_CONTENT_TYPE
+                        detail: "The Content-Type header must be `application/json`. The provided Content-Type was: '`null`'."
+      description: |-
+        Update a checkout, with (ex.) a customer-selected loan.
+
+        To clear a field, set it to `null`. Fields that are not provided in the request will not be changed.
+        If updating an array field, the entire contents of the array must be passed.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotency_key:
+                  $ref: ./Network-API.v1.yaml#/components/schemas/IdempotencyKey
+                selected_loan_id:
+                  type: string
+                  nullable: true
+  '/orders/{order_id}/payment-plan':
+    parameters:
+      - schema:
+          type: string
+        name: order_id
+        in: path
+        required: true
+        description: The ID of the order to retrieve.
+        example: ORD_12345
+    post:
+      summary: Create PaymentPlans
+      operationId: create-payment-plans
+      requestBody:
+        content:
+          application/json: {}
+      responses:
+        '201':
+          description: Payment plan created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_plans:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PaymentPlanProjection'
+                  loan_unavailable_reason_codes:
+                    $ref: '#/components/schemas/LoanUnavailableReasonCodes'
+                required:
+                  - payment_plans
+                  - loan_unavailable_reason_codes
+              examples:
+                Nil Payment Plan:
+                  value:
+                    payment_plans: []
+                    loan_unavailable_reason_codes: []
+                Standard Payment Plan:
+                  value:
+                    payment_plans:
+                      - due_today:
+                          amount: 2575
+                          currency: USD
+                        finance_charge:
+                          amount: 300
+                          currency: USD
+                        id: mockPaymentPlanPayin4-1
+                        schedule:
+                          - amount:
+                              amount: 2575
+                              currency: USD
+                            payment_date: '2022-04-12'
+                          - amount:
+                              amount: 2575
+                              currency: USD
+                            payment_date: '2022-04-26'
+                          - amount:
+                              amount: 2575
+                              currency: USD
+                            payment_date: '2022-05-10'
+                      - due_today:
+                          amount: 5100
+                          currency: USD
+                        finance_charge:
+                          amount: 200
+                          currency: USD
+                        id: mockPaymentPlanPayin2-1
+                        schedule:
+                          - amount:
+                              amount: 5100
+                              currency: USD
+                            payment_date: '2022-05-10'
+                    loan_unavailable_reason_codes: []
+                Large Downpayment Payment Plan:
+                  value:
+                    payment_plans:
+                      - due_today:
+                          amount: 4300
+                          currency: USD
+                        finance_charge:
+                          amount: 300
+                          currency: USD
+                        id: mockPaymentPlanPayin4-1
+                        schedule:
+                          - amount:
+                              amount: 2000
+                              currency: USD
+                            payment_date: '2022-04-12'
+                          - amount:
+                              amount: 2000
+                              currency: USD
+                            payment_date: '2022-04-26'
+                          - amount:
+                              amount: 2000
+                              currency: USD
+                            payment_date: '2022-05-10'
+                      - due_today:
+                          amount: 5100
+                          currency: USD
+                        finance_charge:
+                          amount: 200
+                          currency: USD
+                        id: mockPaymentPlanPayin2-1
+                        schedule:
+                          - amount:
+                              amount: 5100
+                              currency: USD
+                            payment_date: '2022-05-10'
+                    loan_unavailable_reason_codes: []
+      description: |-
+        Retrieves available payment plans by an order ID.
+
+        Financing details are projection.
+  '/orders/{order_id}/denial-reason':
+    parameters:
+      - schema:
+          type: string
+        name: order_id
+        in: path
+        required: true
+        example: ORD_12345
+        description: The ID of the order.
+    get:
+      summary: Retrieve Denial Reason
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  denial_reason_message:
+                    type: string
+                    description: 'A message to display to the customer, describing why their loan application was denied.'
+              examples:
+                Customer with denied loan application:
+                  value:
+                    denial_reason_message: This option isn't available to people under 18.
+                No denial_reason_message:
+                  value: {}
+      operationId: denied-reason
+      description: Retrieve loan application denial details.
+  '/orders/{order_id}/confirm':
+    parameters:
+      - schema:
+          type: string
+        name: order_id
+        in: path
+        required: true
+        description: The ID of the order to confirm.
+        example: ORD_12345
+    post:
+      summary: Confirm Checkout
+      operationId: confirm-checkout
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order:
+                    $ref: '#/components/schemas/Order'
+                  request:
+                    $ref: ./Customer-Request-API.v1.yaml#/components/schemas/Request
+                required:
+                  - order
+                  - request
+              examples: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid request:
+                  value:
+                    errors:
+                      - category: INVALID_REQUEST_ERROR
+                        code: INVALID_CONTENT_TYPE
+                        detail: "The Content-Type header must be `application/json`. The provided Content-Type was: '`null`'."
+      description: Confirm a checkout by ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderConfirmRequest'
+  '/orders/{order_id}/cancel':
+    parameters:
+      - schema:
+          type: string
+        name: order_id
+        description: The ID of the order.
+        in: path
+        required: true
+    post:
+      summary: Cancel Checkout
+      operationId: cancel-checkout
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: 'The actual response body is empty, so this empty schema allows "anything"'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid request:
+                  value:
+                    errors:
+                      - category: INVALID_REQUEST_ERROR
+                        code: INVALID_CONTENT_TYPE
+                        detail: "The Content-Type header must be `application/json`. The provided Content-Type was: '`null`'."
+      description: Cancel a checkout by ID.
+components:
+  schemas:
+    Address:
+      type: object
+      title: Address
+      x-stoplight:
+        id: f3fsqfj2yj1kn
+      additionalProperties: false
+      properties:
+        address_line_1:
+          type: string
+          description: |-
+            First line of the street address, typically including street number, street name, and / or building name.
+
+            Min length: `1`
+            Max length: `1024`
+          example: 1215 4th Ave
+          minLength: 1
+          maxLength: 1024
+        address_line_2:
+          type: string
+          description: |-
+            Second line of the address, if any.
+
+            Min length: `1`
+            Max length: `1024`
+          example: Suite 2300
+          minLength: 1
+          maxLength: 1024
+        locality:
+          type: string
+          description: |-
+            City or township where the entity is located.
+
+            Min length: `1`
+            Max length: `1024`
+          minLength: 1
+          maxLength: 1024
+          example: Seattle
+        country:
+          $ref: '#/components/schemas/Country'
+        postal_code:
+          type: string
+          description: |-
+            ZIP or postal code.
+
+            Min length: `1`
+            Max length: `128`
+          example: 98161-1001
+          minLength: 1
+          maxLength: 128
+        administrative_district_level_1:
+          type: string
+          description: |-
+            State or province.
+
+            Min length: `1`
+            Max length: `1024`
+          example: Washington
+          minLength: 1
+          maxLength: 1024
+      required:
+        - country
+    CardPaymentMethod:
+      title: Card Payment Method
+      x-stoplight:
+        id: wxpfwqbujgord
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the given payment method.
+        type:
+          type: string
+          enum:
+            - CARD
+          example: CARD
+        provider:
+          type: string
+          description: Cash balance or card issuer's name.
+          example: Wells Fargo
+        provider_logo_src:
+          type: string
+          format: uri
+        masked_pan:
+          type: string
+          example: '1234'
+        card_brand:
+          type: string
+          enum:
+            - MASTERCARD
+            - VISA
+            - AMEX
+      required:
+        - id
+        - type
+        - provider
+        - masked_pan
+        - card_brand
+    CashBalancePaymentMethod:
+      title: Cash Balance Payment Method
+      x-stoplight:
+        id: uhvboiufyr1x4
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the given payment method.
+        type:
+          type: string
+          enum:
+            - CASH_BALANCE
+          example: CASH_BALANCE
+        provider:
+          type: string
+          description: Cash balance or card issuer's name.
+          example: Cash balance
+        provider_logo_src:
+          type: string
+          format: uri
+        masked_pan:
+          type: string
+          example: '1234'
+      required:
+        - id
+        - type
+        - provider
+        - masked_pan
+    Country:
+      type: string
+      title: Country
+      x-stoplight:
+        id: ig0127ph388g3
+      description: |-
+        Indicates the country associated with an entity. Values are from the [ISO-3166 Alpha-2](https://www.iso.org/iso-3166-country-codes.html) specification.
+
+        Current values:
+
+        - `US`: United States of America
+      example: US
+      enum:
+        - US
+    Currency:
+      type: string
+      title: Currency
+      x-stoplight:
+        id: is7r4j34f9uq6
+      description: |-
+        Indicates the country associated with an entity. Values are from the [ISO-4217 Alpha-3](https://www.iso.org/iso-4217-currency-codes.html) specification.
+
+        Current values:
+
+        - `USD`: United States Dollar
+      pattern: '[A-Z]'
+      enum:
+        - USD
+      example: USD
+    LineItem:
+      title: Line Item
+      x-stoplight:
+        id: iuaki8vbl9193
+      type: object
+      properties:
+        name:
+          type: string
+        quantity:
+          type: integer
+          example: 1
+        price:
+          $ref: '#/components/schemas/Money'
+        image_src:
+          type: string
+          format: uri
+      required:
+        - name
+        - quantity
+    LoanRequest:
+      title: Loan Request
+      x-stoplight:
+        id: ft2oqv85xq0l7
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Payment Plan Identifier.
+        idempotency_key:
+          type: string
+          maxLength: 192
+          description: |-
+            A value you specify that uniquely identifies this loan request.
+
+            If you are unsure whether a particular loan was created successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate loan creation.
+      required:
+        - id
+        - idempotency_key
+    Loan:
+      title: Loan
+      x-stoplight:
+        id: 9ufskcf6un8nm
+      type: object
+      description: 'Note: Not finalised'
+      properties:
+        due_today:
+          $ref: '#/components/schemas/Money'
+        grand_total:
+          $ref: '#/components/schemas/Money'
+        id:
+          type: string
+          description: Unique Payment Plan Identifier.
+        loan_type:
+          type: string
+          enum:
+            - PAY_IN_FOUR
+            - PAY_IN_TWO
+          example: PAY_IN_FOUR
+        payment_schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentSchedule'
+        tila_data:
+          $ref: '#/components/schemas/Tila'
+      required:
+        - due_today
+        - grand_total
+        - id
+        - loan_type
+        - payment_schedule
+        - tila_data
+    LoanUnavailableReasonCodes:
+      title: LoanUnavailableReasonCodes
+      type: array
+      description: |-
+        List of enumerated codes corresponding to why loans are not available for the customer. This list will be empty if loan_availability is AVAILABLE or DISABLED.
+
+        Current values:
+        - `AGE_INVALID`: The customer cannot access the loan products due to their age.
+        - `IDV_FAILED`: The customer has not completed Identity Verification.
+        - `STATE_NOT_SUPPORTED`: The customer's state or territory is not supported for the available loan products.
+        - `LOANS_OVERDUE`: The customer has existing overdue loans.
+        - `CREDIT_LIMIT_EXCEEDED`: The customer has exceeded their available credit limit.
+        - `CART_AMOUNT_INVALID`: The checkout amount is not valid for the available loan products.
+        - `APP_VERSION_INVALID`: The customer's app version cannot access the available loan products.
+        - `MISSING_PHONE_OR_EMAIL`: The customer's account does not have a phone and email attached.
+        - `ADVERSE_ACTION_REASONS`: There are loan products available but the customer is not eligible.
+        - `BLOCK_EMPLOYEE`: The customer is an employee of Block.
+        - `ACCOUNT_INACTIVE`: The customer's account is inactive.
+        - `GENERIC`: The reason for loan unavailablility is unknown.
+        - `UNKNOWN_APPLICATION_DENIED_REASON`: The reason for loan unavailability is unknown.
+        - `CUSTOMER_HAS_MAXIMUM_PERMITTED_LOANS`: The customer has taken out the maximum number of loans for the lending product.
+        - `REPAYMENT_DELAY_DAYS_EXCEEDS_MAX`: The requested repayment delay exceeds the maximum repayment delay for this lending product.
+        - `TAX_REFUND_ADV_ALREADY_EXISTS`: The customer is only allowed a single tax refund advance loan in a given tax season.
+        - `NOT_AVAILABLE_IN_LOCALITY`: The lending product is not available in the customer's locality.
+        - `CUSTOMER_MISSING_ADDRESS`: The customer address was not able to be determined.
+      items:
+        type: string
+    Merchant:
+      title: Merchant
+      x-stoplight:
+        id: s5umvp67iflst
+      type: object
+      properties:
+        name:
+          type: string
+        logo_src:
+          type: string
+          format: uri
+        callback_url:
+          type: string
+          format: uri
+          example: 'https://example.com/checkout'
+      required:
+        - name
+        - callback_url
+    Money:
+      title: Money
+      x-stoplight:
+        id: kp14c3xvo6rfq
+      type: object
+      properties:
+        amount:
+          type: integer
+          example: 10000
+          description: Amount in smallest denomination of the currency.
+          minimum: 0
+        currency:
+          $ref: '#/components/schemas/Currency'
+      required:
+        - amount
+        - currency
+      x-examples:
+        example-1:
+          amount: 10000
+          currency: USD
+    PaymentMethod:
+      title: Payment Method
+      x-stoplight:
+        id: vzjoo79p1s57a
+      oneOf:
+        - $ref: '#/components/schemas/CardPaymentMethod'
+        - $ref: '#/components/schemas/CashBalancePaymentMethod'
+    PaymentPlanProjection:
+      title: Payment Plan Projection
+      x-stoplight:
+        id: wijp2enf3bcu1
+      type: object
+      properties:
+        due_today:
+          $ref: '#/components/schemas/Money'
+        finance_charge:
+          $ref: '#/components/schemas/Money'
+        id:
+          type: string
+          description: Unique Payment Plan Identifier.
+        schedule:
+          description: Projected installment dates.
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentSchedule'
+      required:
+        - due_today
+        - finance_charge
+        - id
+        - schedule
+    PaymentSchedule:
+      title: Payment Schedule
+      x-stoplight:
+        id: 0ef2cw06s68dk
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        payment_date:
+          type: string
+          format: date
+          description: |-
+            Installment date.
+
+            ISO format date string.
+      required:
+        - amount
+        - payment_date
+    Order:
+      title: Order
+      x-stoplight:
+        id: isaltubauuk4g
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the order.
+        total_order:
+          $ref: '#/components/schemas/Money'
+        version:
+          type: integer
+          description: 'The version number, which is incremented each time an update is committed to the order. Orders not created through the API do not include a version number and therefore cannot be updated.'
+        loan:
+          $ref: '#/components/schemas/Loan'
+      required:
+        - id
+        - total_order
+    OrderConfirmRequest:
+      title: Order Confirm Request
+      x-stoplight:
+        id: surmyjmtgi5bw
+      type: object
+      properties:
+        idempotency_key:
+          type: string
+          maxLength: 192
+          description: |-
+            A value you specify that uniquely identifies this confirm request.
+
+            If you are unsure whether a particular confirm was applied to an order successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate order.
+      required:
+        - idempotency_key
+    OrderUpdateRequest:
+      title: Order Update Request
+      x-stoplight:
+        id: xuwwfrkcymd9k
+      type: object
+      properties:
+        idempotency_key:
+          type: string
+          description: |-
+            A value you specify that uniquely identifies this update request.
+
+            If you are unsure whether a particular update was applied to an order successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate updates to the order. The latest order version is returned.
+          maxLength: 192
+        payment_plan:
+          type: string
+          description: Unique Payment Plan Identifier.
+          nullable: true
+        payment_method:
+          type: string
+          description: Unique payment method identifier.
+      required:
+        - idempotency_key
+    SelectedPaymentMethod:
+      title: Selected Payment Method
+      x-stoplight:
+        id: fj31pzkqi9akt
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the selected payment method.
+        reason:
+          type: string
+          description: Reason of the selection.
+          enum:
+            - DEFAULT
+            - DEFAULT_EXPIRED
+            - USER_SELECTION
+            - INSUFFICIENT_CASH_BALANCE
+            - MERCHANT_RESTRICTION
+          example: DEFAULT
+      required:
+        - id
+        - reason
+    Tila:
+      title: Tila
+      x-stoplight:
+        id: mipy1si0gkn1e
+      type: object
+      properties:
+        financed_money:
+          $ref: '#/components/schemas/Money'
+        finance_charge_money:
+          $ref: '#/components/schemas/Money'
+        setup_fee_percentage:
+          type: string
+          example: 5%
+        total_of_payments_money:
+          $ref: '#/components/schemas/Money'
+        apr_percentage:
+          type: string
+          description: Annual Percentage Rate. (%)
+          example: 36%
+        loan_duration_days:
+          type: integer
+          description: Total Loan Duration in day(s)
+          example: 29
+        flat_fee_as_daily_fee:
+          type: string
+          description: Flat fee as a daily fee (%)
+          example: 0.172%
+        final_due_date:
+          type: string
+          format: date
+        money_due_on_due_date:
+          $ref: '#/components/schemas/Money'
+        late_fee_grace_period_days:
+          type: integer
+        late_fee_money:
+          $ref: '#/components/schemas/Money'
+        date_borrowed:
+          type: string
+          format: date
+        e_sign_consent_url:
+          type: string
+          format: uri
+        privacy_notices_url:
+          type: string
+          format: uri
+        auto_pay_auth_url:
+          type: string
+          format: uri
+        loan_agreement_url:
+          type: string
+          format: uri
+        account_opening_disclosure_url:
+          type: string
+          format: uri
+        lender_name:
+          type: string
+        lender_address:
+          $ref: '#/components/schemas/Address'
+        borrower_name:
+          type: string
+        borrower_address:
+          $ref: '#/components/schemas/Address'
+      required:
+        - financed_money
+        - finance_charge_money
+        - setup_fee_percentage
+        - total_of_payments_money
+        - apr_percentage
+        - loan_duration_days
+        - flat_fee_as_daily_fee
+        - final_due_date
+        - money_due_on_due_date
+        - late_fee_grace_period_days
+        - late_fee_money
+        - date_borrowed
+        - e_sign_consent_url
+        - privacy_notices_url
+        - auto_pay_auth_url
+        - loan_agreement_url
+        - account_opening_disclosure_url
+        - lender_name
+        - lender_address
+        - borrower_name
+        - borrower_address
+    ErrorResponse:
+      $ref: ./components/schemas/ErrorResponse.yaml
+  securitySchemes:
+    Client-ID:
+      name: Authorization
+      type: http
+      in: header
+      description: |-
+        Client authentication is provided by setting the `Authorization` header to the following format:
+
+        `Authorization: Client <Client ID>`.
+    Client-Secret:
+      name: Authorization
+      type: http
+      in: header
+      description: |-
+        Client authentication is provided by setting the `Authorization` header to the following format:
+
+        `Authorization: Client <Client ID> <API Key>`.
+
+
+        **Note:** Authenticated requests must also be [signed](https://developers.cash.app/docs/partner/technical-documentation/api-fundamentals/requests/signing-requests).
+x-internal: true

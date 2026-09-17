@@ -1,0 +1,9 @@
+{
+  "requestId": "<requestId>",
+  "amount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "merchantReference": "<merchantReference>",
+  "refundMerchantReference": "<refundMerchantReference>"
+}

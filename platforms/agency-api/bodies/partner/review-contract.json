@@ -1,0 +1,37 @@
+{
+  "contractId": "785389121238",
+  "userDetails": {
+    "firstName": "John",
+    "lastName": "PSP",
+    "email": "john.psp@psp.com",
+    "adminIdentifier": "1234Admin"
+  },
+  "comment": "Approved by X on date Y for reason Z.",
+  "status": "APPROVED",
+  "countryCode": "US",
+  "buyRates": {
+    "defaultRates": {
+      "variableRatePercentage": "5.00",
+      "fixedRate": "0.30",
+      "fixedRateCurrencyCode": "USD",
+      "rateType": "ONGOING",
+      "durationInMonths": 3
+    },
+    "tierDetails": [
+      {
+        "tier": 1,
+        "minimumGmv": "0",
+        "maximumGmv": "1000000",
+        "GmvCurrencyCode": "USD",
+        "tieredRates": [
+          {
+            "variableRatePercentage": "3.5",
+            "fixedRate": "0.3",
+            "fixedRateCurrencyCode": "USD",
+            "rateType": "ONGOING"
+          }
+        ]
+      }
+    ]
+  }
+}

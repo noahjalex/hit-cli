@@ -1,0 +1,67 @@
+type: object
+description: Represents an offer with payment details
+properties:
+  type:
+    type: string
+    description: Type of the offer
+    enum:
+      - PAY_IN_4
+    example: "PAY_IN_4"
+  merchantAmount:
+    $ref: Money.yaml
+    description: Amount for the merchant
+    example:
+      amount: "200.00"
+      currency: "USD"
+  exchangeRate:
+    type: number
+    format: double
+    description: Exchange rate for cross-border transactions
+    example: 1.35
+  amountDueToday:
+    $ref: Money.yaml
+    description: Amount due for immediate payment
+    example:
+      amount: "50.00"
+      currency: "USD"
+  payments:
+    type: array
+    description: List of scheduled payments
+    items:
+      $ref: PaymentSchedule.yaml
+    example:
+      - amount:
+          amount: "50.00"
+          currency: "USD"
+        dueDate: "2024-03-04"
+      - amount:
+          amount: "50.00"
+          currency: "USD"
+        dueDate: "2024-03-18"
+      - amount:
+          amount: "50.00"
+          currency: "USD"
+        dueDate: "2024-04-01"
+      - amount:
+          amount: "50.00"
+          currency: "USD"
+        dueDate: "2024-04-15"
+  crossBorder:
+    type: boolean
+    description: Indicates if this is a cross-border transaction
+    example: false
+  appliedPromotion:
+    $ref: Money.yaml
+    description: Amount of promotion applied
+    example:
+      amount: "20.00"
+      currency: "USD"
+  consumer:
+    $ref: ConsumerOffers.yaml
+    description: Consumer offer details
+    example:
+      noPaymentUpFront:
+        eligible: true
+        eligibilityLimit:
+          amount: "2000.00"
+          currency: "USD"

@@ -1,0 +1,2677 @@
+openapi: 3.0.0
+info:
+  title: Afterpay Partner API
+  description: |-
+    API for creating an Afterpay account for merchants. Please contact your Afterpay technical representative about using this API.
+
+    Client authentication is provided by setting the following request headers:
+    - X-Afterpay-Request-Signature: \<Request Signature>
+    - X-Afterpay-Request-Date: \<Request Date>
+    - X-Afterpay-Request-Apikey: \<API Key>
+    Note: More information on how to authenticate API requests [here](https://afterpay.docs.buildwithfern.com/afterpay-partner-api/guides/technical-guides/welcome/introduction).
+  version: '1'
+tags:
+  - name: Partner
+  - name: Onboardings
+  - name: Capabilities
+  - name: Rates
+  - name: Settlements
+servers:
+  - url: 'https://agencyapi.afterpay.com'
+    description: Production
+  - url: 'https://agencyapi.sandbox.afterpay.com'
+    description: Sandbox
+paths:
+  /v1/onboardings:
+    post:
+      tags:
+        - Onboardings
+      parameters:
+        - in: header
+          name: Content-Type
+          schema:
+            type: string
+            default: application/json
+          required: true
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          schema:
+            type: string
+          required: true
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          schema:
+            type: string
+            default: application/json
+          required: true
+          description: Specifies media types that are acceptable for the response.
+      summary: Create an Onboarding
+      description: |-
+        Create an onboarding allows a partner to create an Afterpay account for the merchant and dynamically auto-enable the merchant for all eligible Afterpay products based on agreed-on gating logic. See [here](https://afterpay.docs.buildwithfern.com/afterpay-partner-api/guides/technical-guides/onboarding) for more information about `businessType`.
+      operationId: createOnboarding
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingPostPut'
+      responses:
+        '200':
+          description: Onboarding created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostOnboardingResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Response'
+              example:
+                httpStatus: 400
+                errors:
+                  CheckOwnersNameForBusinessType: Owners first and last name required
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '409':
+          description: 'Conflict, onboarding already exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/409Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: e756tfetks7bm
+    get:
+      tags:
+        - Onboardings
+      description: Get an Onboarding by `merchantReference`.
+      summary: Get an Onboarding by Merchant Reference
+      operationId: getOnboardingByMerchantReference
+      parameters:
+        - in: query
+          name: merchantReference
+          required: true
+          schema:
+            type: string
+          description: Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).
+          example: merchantId123
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+          description: Content type of the request body.
+          example: application/json
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+          description: Specifies media types that are acceptable for the response.
+          example: application/json
+      responses:
+        '200':
+          description: Onboarding details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Onboarding'
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Not Found - The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: sqvvwkzm5cp3r
+  '/v1/onboardings/{onboardingId}':
+    get:
+      tags:
+        - Onboardings
+      summary: Get an Onboarding by Onboarding Id
+      description: Allows a partner to retrieve onboarding details using the `onboardingId`.
+      operationId: getOnboardingById
+      parameters:
+        - in: path
+          name: onboardingId
+          required: true
+          schema:
+            type: string
+          description: The id that is returned during a successful Create an onboarding call.
+          example: 123abcd-456efgh-1124bd
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      responses:
+        '200':
+          description: Onboarding details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Onboarding'
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Onboarding not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: bh0u4crl7q24u
+    put:
+      tags:
+        - Onboardings
+      summary: Update an Onboarding
+      description: Allows a partner to update onboarding details using the onboardingId. For secondary rate updates please see the Rates page in the Capabilities API section.
+      operationId: updateOnboarding
+      parameters:
+        - in: path
+          name: onboardingId
+          required: true
+          schema:
+            type: string
+          description: The ID returned during a successful Create an onboarding call.
+          example: 123abcd-456efgh-1124bd
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingPostPut'
+      responses:
+        '200':
+          description: Onboarding updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  onboardingId:
+                    type: string
+                    description: The ID that can be used to update merchant's configs and get an onboarding status.
+                    example: 123abcd-456efgh-1124bd
+                  timestamp:
+                    type: string
+                    description: Timestamp of the response.
+                    example: '2024-02-21T10:21:36.949Z'
+                  merchantReference:
+                    type: string
+                    description: Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).
+                    example: merchantId1234
+                  parentMerchantReference:
+                    type: string
+                    description: Unique ID for the platform of the merchant in the partner's internal systems to index to merchantReference.
+                    example: merchantPlatform
+                  status:
+                    type: string
+                    description: Onboarding approval status.
+                    example: APPROVED
+        '400':
+          description: Bad Request. If this error is thrown when attempting to apply a tier update, the error body will return the response body of a [400Response2](https://afterpay.docs.buildwithfern.com/afterpay-partner-api/guides/technical-guides/welcome/introduction) error instead.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Response'
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Not Found - The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: mo0se10ei50bi
+  '/v1/onboardings/{onboardingId}/activations':
+    get:
+      tags:
+        - Onboardings
+      summary: Get Activations
+      description: 'Returns the onboarding status, merchant credentials, configuration details.'
+      operationId: getOnboardingStatus
+      parameters:
+        - in: path
+          name: onboardingId
+          required: true
+          schema:
+            type: string
+          description: The ID that is returned during a successful Create an onboarding call.
+          example: 123abcd-456efgh-1124bd
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      responses:
+        '200':
+          description: 'Returns the onboarding status, merchant credentials, and configuration details.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Approval status of the onboarding.
+                    example: APPROVED
+                  credentials:
+                    type: object
+                    properties:
+                      merchantId:
+                        type: string
+                        description: Afterpay's unique merchant ID (MID) for the merchant.
+                        example: '123456789'
+                      merchantSecret:
+                        type: string
+                        description: Secret key for the merchant ID.
+                        example: 123abc456def789ghi101112jkl1314mnop1124bdayaya29djsncmxxjxkx9236xu38djx8dn3gbd3m45n21n
+                  configuration:
+                    type: object
+                    properties:
+                      minimumAmount:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            description: Minimum transaction amount.
+                            example: '1.00'
+                          currency:
+                            type: string
+                            description: Currency for the minimum amount.
+                            example: USD
+                      maximumAmount:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            description: Maximum transaction amount.
+                            example: '4000.00'
+                          currency:
+                            type: string
+                            description: Currency for the maximum amount.
+                            example: USD
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Not Found - The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: j6likuzi6jvag
+  '/v1/onboardings/{onboardingId}/capabilities':
+    get:
+      tags:
+        - Capabilities
+      summary: Get Capabilities
+      description: Returns details for all Afterpay products and their configurations by onboardingId.
+      operationId: getCapabilities
+      parameters:
+        - in: path
+          name: onboardingId
+          description: The ID returned during a successful Create an onboarding call.
+          required: true
+          schema:
+            type: string
+            example: 123abcd-456efgh-1124bd
+        - in: header
+          name: Content-Type
+          description: Content type of the request.
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - in: header
+          name: User-Agent
+          description: The user agent string of the HTTP client.
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: Specifies media types that are acceptable for the response.
+          required: true
+          schema:
+            type: string
+            default: application/json
+      responses:
+        '200':
+          description: Returns the capabilities configurations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  onboardingId:
+                    type: string
+                    description: The ID returned during a successful Create an onboarding call.
+                    example: 123abcd-456efgh-1124bd
+                  capabilities:
+                    $ref: '#/components/schemas/Capabilities'
+        '404':
+          description: Not Found - The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: kl3ghvkj16mnb
+  '/v1/onboardings/{onboardingId}/capabilities/lending':
+    put:
+      tags:
+        - Capabilities
+      summary: Enable or Disable Pay Monthly (PM)
+      description: |-
+        Monthly Payments (MP) is Afterpay's interest-bearing product that allows consumers to split the purchase into 6 to 24 monthly payments. 
+
+        All merchants are synchronously enrolled into Afterpay's PM product during the Create an onboarding call. This is based on merchant country, merchant category code (MCC), and agreed-on gating logic between Afterpay and the partner.
+
+        Optionally, partners have an option to call this capabilities endpoint to disable PM or enable PM if it has been disabled before.  
+      operationId: updatePmCapabilities
+      parameters:
+        - in: path
+          name: onboardingId
+          description: The ID returned during a successful Create an onboarding call.
+          required: true
+          schema:
+            type: string
+            example: 123abcd-456efgh-1124bd
+        - in: header
+          name: Content-Type
+          description: Content type of the request body.
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - in: header
+          name: User-Agent
+          description: The user agent string of the HTTP client.
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: Specifies media types that are acceptable for the response.
+          required: true
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                required:
+                  - lending
+                type: object
+                properties:
+                  lending:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - channel
+                        - enabled
+                      properties:
+                          channel:
+                            $ref: '#/components/schemas/Channel'
+                          enabled:
+                            type: boolean
+                            description: Defines whether the capability is enabled for the above channel.
+                            example: true
+      responses:
+        '200':
+          description: Pay Monthly (PM) capability updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lending:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Lending'
+                  errors:
+                    type: array
+                    description: Shows any errors encountered during the capability enablement.
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: hb896mynm9nn8
+  '/v1/onboardings/{onboardingId}/capabilities/cbt':
+    put:
+      tags:
+        - Capabilities
+      summary: Enable or Disable Cross Border Trade (CBT)
+      description: Cross Border Trade (CBT) is Afterpay's FX product that enables merchants to transact internationally.
+      operationId: configureCBT
+      parameters:
+        - in: path
+          name: onboardingId
+          description: The ID that is returned during a successful Create an onboarding call.
+          required: true
+          schema:
+            type: string
+            example: 123abcd-456efgh-1124bd
+        - in: header
+          name: Content-Type
+          description: Content type of the request body.
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - in: header
+          name: User-Agent
+          description: The user agent string of the HTTP client.
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: Specifies media types that are acceptable for the response.
+          required: true
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - channels
+              properties:
+                channels:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - channel
+                      - enabled
+                    properties:
+                      channel:
+                        $ref: '#/components/schemas/Channel'
+                      enabled:
+                        type: boolean
+                        description: Defines whether the capability is enabled for the above channel.
+                        example: true
+                      currlocEnabled:
+                        type: boolean
+                        description: Shows whether the currency localization variant of CBT is enabled.
+                        example: true
+      responses:
+        '200':
+          description: CBT configuration updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requestId:
+                    type: string
+                    description: ID for the CBT config update request.
+                    example: 86dg3d8-0b28-1627-378d-b9173ndhf87
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: xecshjirglxcu
+  /v1/settlement/batches:
+    get:
+      tags:
+        - Settlements
+      summary: Get Settlement Batches
+      description: 'Returns a list of settlement batches, sorted by creation date in ascending order.'
+      operationId: getSettlementBatches
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of rows to return. Defaults to 15 if not specified.
+          example: 100
+        - in: query
+          name: last_known
+          schema:
+            type: string
+          description: A settlement batch ID. Results will contain all settlement batches whose creation date is greater than that of the last_known ID.
+          example: '785389121238'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      responses:
+        '200':
+          description: Successful response with a list of settlement batches.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchSettlement'
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: f0nr5kwrajmk3
+  '/v1/settlement/batches/date/{YYYY-MM-DD}':
+    get:
+      tags:
+        - Settlements
+      summary: Get Settlement Batches by Date
+      description: 'Returns a list of settlement batches, sorted by creation date in ascending order.'
+      operationId: getSettlementBatchesByDate
+      parameters:
+        - in: path
+          required: true
+          name: YYYY-MM-DD
+          schema:
+            type: string
+          description: Date of the settlement files to retrieve.
+          example: '2024-01-29'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      responses:
+        '200':
+          description: Successful response with a list of settlement batches.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchSettlement'
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: gzqix16wxvm06
+  /v1/settlement/batch:
+    get:
+      tags:
+        - Settlements
+      summary: Get Settlement Batch Files
+      description: Returns signed S3 urls to the settlement file and aggregation file for specified batch IDs.
+      operationId: getSettlementBatchFiles
+      parameters:
+        - in: query
+          name: ids
+          required: true
+          schema:
+            type: string
+          description: Comma separated ids of batches to fetch.
+          example: 'id1,id2,id3'
+        - in: header
+          name: Content-Type
+          description: Content type of the request.
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - in: header
+          name: User-Agent
+          description: The user agent string of the HTTP client.
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: Specifies media types that are acceptable for the response.
+          required: true
+          schema:
+            type: string
+            default: application/json
+      responses:
+        '200':
+          description: Successful response with signed S3 URLs for the settlement and aggregation files.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batches:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Settlement batch ID.
+                          example: 2020-07-10Z_sud294dgzb
+                        settlement_file:
+                          type: string
+                          description: Signed S3 URL to the settlement file.
+                          example: 'https://s3.amazonaws.com/settlements/transaction.csv?token'
+                        aggregation_file:
+                          type: string
+                          description: Signed S3 URL to the aggregation file.
+                          example: 'https://s3.amazonaws.com/settlements/aggregated.csv?token'
+                  meta_data:
+                    type: object
+                    properties:
+                      computed_at:
+                        type: string
+                        description: Timestamp of the query computation.
+                        example: '2024-02-21T19:25:44Z'
+                      link_expiry:
+                        type: string
+                        description: Timestamp of the link expiration.
+                        example: '2024-03-06T19:25:44Z'
+        '401':
+          description: 'Unauthorized, HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Not Found - The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+      x-stoplight:
+        id: ak1jk5sshp9an
+  '/v1/rates-contract/{contractId}/review':
+    post:
+      tags:
+        - Rates
+      summary: Approve Contract
+      description: 'Partners can set up their unique, volume-based buy-rate contract that precisely enforces their commercial agreement with Afterpay. This prevents any mis-billings from day one and has with a full audit trail.'
+      operationId: reviewContract
+      parameters:
+        - name: contractId
+          in: path
+          required: true
+          description: ID of the contract to approve
+          schema:
+            type: string
+            example: '123457838'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contractId:
+                  type: string
+                  example: '785389121238'
+                  description: The unique ID for the contract between Afterpay and the partner.
+                userDetails:
+                  $ref: '#/components/schemas/User'
+                comment:
+                  type: string
+                  description: Comment specific to the contract request.
+                  example: Approved by X on date Y for reason Z.
+                status:
+                  type: string
+                  description: The de facto approval field that determines whether the contract request by Afterpay is approved or rejected by the partner.
+                  example: APPROVED
+                  enum:
+                    - APPROVED
+                    - REJECTED
+                countryCode:
+                  type: string
+                  description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rates apply.'
+                  example: US
+                buyRates:
+                  $ref: '#/components/schemas/BuyRates'
+              required:
+                - contractId
+                - comment
+                - userDetails
+                - status
+                - countryCode
+                - buyRates
+      responses:
+        '200':
+          description: Contract reviewed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    description: 'Datetime field indicating when the contract request was actioned, using the standard ISO 8601 format, returned in UTC Coordinated Universal Time).'
+                    example: '2023-08-17T21:41:47.341+00:00'
+                  error:
+                    type: string
+                    description: Shows any errors encountered on the response to the contract approval call.
+                    example: null
+                  message:
+                    type: string
+                    description: Any message that may be attached to the response.
+                    example: "Successfully reviewed agency contract"
+                  contractDetails:
+                    $ref: '#/components/schemas/Contract'
+        '400':
+          description: 'Bad request, e.g., contract not in PENDING status'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Response2'
+        '401':
+          description: 'Unauthorized, e.g., HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+  '/v1/custom-rate/{customRateId}/review':
+    post:
+      tags:
+        - Rates
+      summary: Approve Custom Rate
+      description: 'Partners can set up a unique, custom buy-rate for a unique managed seller, such as enterprise, mid-market, or a platform. To set up a custom rate, Afterpay teams will create a custom rate via internal Afterpay tooling.'
+      operationId: reviewCustomRate
+      parameters:
+        - name: customRateId
+          in: path
+          required: true
+          description: ID of the custom rate to approve
+          schema:
+            type: string
+            example: '123457838'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customRateId
+                - userDetails
+                - comment
+                - status
+                - customRateType
+                - merchantId
+                - reference
+                - rateDetails
+              properties:
+                customRateId:
+                  type: string
+                  example: '712123123556455'
+                  description: The unique ID for the custom rate between Afterpay and the partner.
+                userDetails:
+                  $ref: '#/components/schemas/User'
+                comment:
+                  type: string
+                  description: Comment specific to the custom rate request.
+                  example: Approved by X on date Y for reason Z.
+                status:
+                  type: string
+                  description: The de facto approval field that determines whether the rate request by Afterpay is approved or rejected by the partner.
+                  example: APPROVED
+                  enum:
+                    - APPROVED
+                    - REJECTED
+                customRateType:
+                  type: string
+                  description: Defines whether the custom rate applies to only one seller or applies to multiple sellers under the same platform or brand.
+                  example: MERCHANT
+                  enum:
+                    - MERCHANT
+                    - BRAND
+                merchantId:
+                  type: string
+                  description: Afterpay merchant id MID; this will only be available for existing sellers; for new sellers please use the reference field.
+                  example: '100405604504'
+                reference:
+                  type: string
+                  description: Seller or brand reference to which the custom rate is being applied; this defines the unique seller or the unique platform or brand and iswill be requested from the partner manually before the custom rate request is created.
+                  example: 'ac_advkasdvasfbaadf:US'
+                rateDetails:
+                  type: object
+                  required:
+                    - countryCode
+                    - rates
+                  properties:
+                    countryCode:
+                      type: string
+                      description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rate applies.'
+                      example: US
+                    rates:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - variableRatePercentage
+                          - fixedRate
+                          - fixedRateCurrencyCode
+                          - rateType
+                          - durationInMonths
+                        properties:
+                          variableRatePercentage:
+                            type: number
+                            description: Variable part of the buy-rate.
+                            format: decimal
+                            example: 5
+                          fixedRate:
+                            type: number
+                            description: Fixed part of the buy-rate.
+                            format: decimal
+                            example: 0.3
+                          fixedRateCurrencyCode:
+                            type: string
+                            description: Currency of the fixed part of the buy-rate.
+                            example: USD
+                          rateType:
+                            type: string
+                            description: INTRODUCTORY for temporary promotional rate or ONGOING for steady-state rate.
+                            example: ONGOING
+                            enum:
+                              - INTRODUCTORY
+                              - ONGOING
+                          durationInMonths:
+                            type: integer
+                            description: Number of months that the introductory rate will be applied.
+                            example: 3
+      responses:
+        '200':
+          description: Custom rate reviewed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    description: 'Datetime field indicating when the custom rate request was actioned, returned using the standard ISO 8601 format, in UTC Coordinated Universal Time).'
+                    example: '2023-08-17T21:41:47.341+00:00'
+                  error:
+                    type: string
+                    description: Shows any errors encountered on the response to the contract approval call.
+                  message:
+                    type: string
+                    description: Any message that may be attached to the response.
+                  customRateDetails:
+                    $ref: '#/components/schemas/CustomRate'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Response2'
+        '401':
+          description: 'Unauthorized, e.g., HMAC verification failed.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: Not Found - The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+  '/v1/onboardings/{onboardingId}/capabilities/buy-rate':
+    put:
+      tags:
+        - Rates
+      summary: Update Tier
+      description: Allows partners to pass a new tier and use a new contractId between the partner and the seller for audit purposes.
+      operationId: updateRate
+      parameters:
+        - name: onboardingId
+          in: path
+          required: true
+          description: The ID returned during a successful create an onboarding call.
+          schema:
+            type: string
+            example: '12345769'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tier:
+                  type: integer
+                  example: 3
+                  description: GMV tier of the seller that informs the buy rate as defined in the commercial contract.
+                gmv:
+                  type: integer
+                  example: 150000000
+                  description: Actual transaction volume that informs the tier. Estimated or addressable seller volume accepted when actuals are not available.
+                  nullable: true
+                gmvCurrencyCode:
+                  type: string
+                  example: USD
+                  description: 'Currency of the gmv volume in ISO 4217 currency code. Please use currency that is defined in the commercial contract only (e.g., USD-equivalent volume for UK sellers).'
+                agencyMerchantContractDetails:
+                  type: object
+                  required:
+                    - contractId
+                    - contractDate
+                  properties:
+                    contractId:
+                      type: string
+                      example: '785389121238'
+                      description: Unique ID for the contract between the partner and its seller serving as the basis for the new tier update.
+                    contractDate:
+                      type: string
+                      format: date-time
+                      example: '2023-09-17T00:00:00.000Z'
+                      description: Effective date and time of when the contract was signed between the partner and its seller.
+              required:
+                - tier
+                - gmvCurrencyCode
+                - agencyMerchantContractDetails
+      responses:
+        '200':
+          description: Tier update request was successfully actioned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  onboardingId:
+                    type: string
+                    description: The id that is returned during a successful create an onboarding call.
+                    example: 123snc-d83jndnv-38djcxnxn
+                  timestamp:
+                    type: string
+                    description: 'Datetime field indicating when the tier update request was actioned, returned using the standard ISO 8601 format, in UTC Coordinated Universal Time).'
+                    example: '2023-08-17T21:41:47.341Z'
+                  error:
+                    type: string
+                    description: Shows any errors encountered on the response to the contract approval call.
+                  message:
+                    type: string
+                    description: Any message that may be attached to the response.
+                  rateDetails:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RateObjDurationEffectiveFrom'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400Response'
+        '401':
+          description: 'Unauthorized, e.g., HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: 'Not found, e.g., onboarding not found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+  '/v1/contract/{contractId}':
+    get:
+      tags:
+        - Rates
+      summary: Get Contract
+      description: Returns details for the volume-based tiered contract between the partner and Afterpay.
+      operationId: getContract
+      parameters:
+        - name: contractId
+          in: path
+          required: true
+          description: The unique ID for the contract between Afterpay and the partner.
+          schema:
+            type: string
+            example: '785389121238'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      responses:
+        '200':
+          description: Details of the volume-based tiered contract.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contractId:
+                    type: string
+                    description: The unique ID for the contract between Afterpay and the partner.
+                    example: '785389121238'
+                  effectiveFrom:
+                    type: string
+                    description: 'Effective date and time of when the contract applies, using the standard ISO 8601 format, returned in UTC Coordinated Universal Time).'
+                    example: '2023-09-17T21:41:47.341+00:00'
+                  status:
+                    type: string
+                    description: Contract status
+                    example: APPROVED
+                    enum:
+                      - APPROVED
+                      - REJECTED
+                      - PENDING
+                  countryCode:
+                    type: string
+                    description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the contact applies.'
+                    example: US
+                  buyRates:
+                    description: Buy rates object that details the rates.
+                    $ref: '#/components/schemas/BuyRates'
+        '401':
+          description: 'Unauthorized, e.g., HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: 'Not found, e.g., contract not found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+  '/v1/custom-rate/{customRateId}':
+    get:
+      tags:
+        - Rates
+      summary: Get Custom Rate
+      description: Returns details for the custom rate between the partner and Afterpay.
+      operationId: getCustomRate
+      parameters:
+        - name: customRateId
+          in: path
+          required: true
+          description: The unique ID for the custom rate between Afterpay and the partner.
+          schema:
+            type: string
+            example: '712123123556455'
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Content type of the request body.
+        - in: header
+          name: User-Agent
+          required: true
+          schema:
+            type: string
+          description: The user agent string of the HTTP client.
+        - in: header
+          name: Accept
+          required: true
+          schema:
+            type: string
+            default: application/json
+          description: Specifies media types that are acceptable for the response.
+      responses:
+        '200':
+          description: Details of the custom rate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customRateId:
+                    type: string
+                    description: The unique ID for the custom rate between Afterpay and the partner.
+                    example: '71212312355645'
+                  status:
+                    type: string
+                    description: Custom rate status.
+                    example: APPROVED
+                    enum:
+                      - APPROVED
+                      - PENDING
+                      - REJECTED
+                  customRateType:
+                    type: string
+                    description: Defines whether the custom rate applies to only one seller or applies to multiple sellers under the same platform or brand.
+                    example: MERCHANT
+                    enum:
+                      - MERCHANT
+                      - BRAND
+                  merchantId:
+                    type: string
+                    description: Optional merchant id that is unique to the merchant.
+                  reference:
+                    type: string
+                    description: Seller or brand reference to which the custom rate is being applied; this defines the unique seller or the unique platform or brand and will be requested from the partner manually before the request is created.
+                    example: 'ac_advkasdvasfbaadf:US'
+                  effectiveFrom:
+                    type: string
+                    description: Date the custom rate is effective from.
+                    example: '2024-02-25T03:47:52Z'
+                    nullable: true
+                  effectiveEndDate:
+                    type: string
+                    description: Date the custom rate ends.
+                    nullable: true
+                  rateDetails:
+                    type: array
+                    description: The custom rate details that apply to this seller or platform or brand.
+                    items:
+                      type: object
+                      properties:
+                        countryCode:
+                          type: string
+                          description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rate applies.'
+                          example: US
+                        rates:
+                          type: array
+                          items:
+                            type: object
+                            $ref: '#/components/schemas/RateObjDuration'
+        '401':
+          description: 'Unauthorized, e.g., HMAC verification failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401Response'
+        '404':
+          description: 'Not found, e.g., contract not found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404Response'
+        '503':
+          description: 'Service unavailable.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/503Response'
+components:
+  schemas:
+    BatchSettlement:
+      x-tags:
+        - Settlements
+      type: object
+      x-stoplight:
+        id: 1ae2ea3b9f8df
+      properties:
+        settlement_batches:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Settlement batch ID.
+                example: 2020-07-10Z_a8xhc6DJF3h48377DCV
+              created_at:
+                type: string
+                description: Creation date of the settlement batch ID.
+                example: '2020-07-10T22:53:46Z'
+        meta_data:
+          type: object
+          properties:
+            more_data:
+              type: boolean
+              description: Whether there is more settlement batches beyond the limit provided.
+              example: true
+            computed_at:
+              type: string
+              description: Timestamp of the query computation.
+              example: '2024-02-21T18:53:26Z'
+    BuyRates:
+      type: object
+      x-stoplight:
+        id: 2a53445dd4a9f
+      x-tags:
+        - Rates
+      required:
+        - defaultRates
+        - tierDetails
+      properties:
+        defaultRates:
+          type: object
+          $ref: '#/components/schemas/BaseRate'
+        tierDetails:
+          type: array
+          description: Volume-based tiers and rates object.
+          example:
+            - tier: 1
+              minimumGmv: '0'
+              maximumGmv: '1000000'
+              GmvCurrencyCode: USD
+              tieredRates:
+                - variableRatePercentage: '3.5'
+                  fixedRate: '0.3'
+                  fixedRateCurrencyCode: USD
+                  rateType: ONGOING
+          items:
+            type: object
+            required:
+              - tier
+              - minimumGmv
+              - maximumGmv
+              - GmvCurrencyCode
+              - tieredRates
+            properties:
+              tier:
+                type: integer
+                description: Volume-based tier that was defined during commercial discussions.
+                example: 1
+              minimumGmv:
+                type: string
+                description: Lower bound of the tier.
+                example: '0'
+              maximumGmv:
+                type: string
+                description: Higher bound of the tier.
+                example: '15000000'
+              GmvCurrencyCode:
+                type: string
+                description: Currency of the GMV tier.
+                example: USD
+              tieredRates:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/components/schemas/BaseRate'
+    Capabilities:
+      type: object
+      x-tags:
+        - Onboardings
+      properties:
+        payByInstallments:
+          $ref: '#/components/schemas/ProductConfiguration'
+        lending:
+          $ref: '#/components/schemas/ProductConfiguration'
+        cbt:
+          type: array
+          description: Cross border trade (CBT) product object.
+          items:
+            type: object
+            properties:
+              channel:
+                $ref: '#/components/schemas/Channel'
+              enabled:
+                type: boolean
+                description: Defines whether the capability is enabled for the above channel.
+                example: true
+              currLocEnabled:
+                type: boolean
+                description: Shows whether the currency localization variant of CBT is enabled.
+                example: true
+              updatedAt:
+                type: string
+                description: Shows when the config was last updated.
+              errors:
+                type: string
+                description: Shows any errors encountered during the capability enablement.
+              limits:
+                type: object
+                description: Configurations for the capability.
+                properties:
+                  minimumAmount:
+                    type: object
+                    properties:
+                      amount:
+                        type: string
+                        description: Min amount.
+                        example: '1.00'
+                      currency:
+                        type: string
+                        description: Currency for min amount in the three-letter ISO 4217 currency code.
+                        example: GBP
+                  maximumAmount:
+                    type: object
+                    properties:
+                      amount:
+                        type: string
+                        description: Max amount.
+                        example: '1200.00'
+                      currency:
+                        type: string
+                        description: Currency for max amount in the three-letter ISO 4217 currency code.
+                        example: GBP
+              cbtCountries:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    tradingCountryCode:
+                      type: string
+                      description: The same country code that is used in the merchantCountry field in Create an onboarding defining the consumer market where the merchant will sell goods or services in the two-letter ISO 3166-1 alpha-2 standard format.
+                      example: AU
+                    cbtEnabled:
+                      type: boolean
+                      description: Shows whether CBT is enabled for the trading country code above.
+                      example: true
+                    cbtFee:
+                      type: string
+                      description: Returns the CBT fee in decimal format for the above country code.
+                      example: '0.0125'
+                    effectiveFrom:
+                      type: string
+                      description: Effective date and time of when the rate applies.
+                      example: '2023-07-20T19:18:50.272+00:00'
+        errors:
+          type: array
+          description: Shows any errors encountered during the capability enablement.
+    Channel:
+      type: string
+      x-stoplight:
+        id: 86b4fc45567bc
+      x-tags:
+        - Onboardings
+      description: 'Defines whether the channel for the capability is online or in-store. Accepted values [Online, In-store].'
+      example: ONLINE
+    Contract:
+      type: object
+      x-tags:
+        - Rates
+      x-stoplight:
+        id: a8ffc7d5eafb5
+      properties:
+        contractId:
+          type: string
+          description: The unique ID for the contract between Afterpay and the partner.
+          example: '785389121238'
+        effectiveFrom:
+          type: string
+          description: 'Effective date and time of when the contract applies, using the standard ISO 8601 format, returned in UTC Coordinated Universal Time).'
+          example: '2023-09-17T21:41:47.341+00:00'
+        status:
+          type: string
+          description: Contract status
+          example: APPROVED
+          enum:
+            - APPROVED
+            - REJECTED
+            - PENDING
+        countryCode:
+          type: string
+          description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the contact applies.'
+          example: US
+    CustomRate:
+      type: object
+      x-tags:
+        - Rates
+      x-stoplight:
+        id: 3aae5045d1934
+      properties:
+        customRateId:
+          type: string
+          description: The unique ID for the custom rate that was actioned for a seller.
+          example: '785389121238'
+        status:
+          type: string
+          description: Custom rate status.
+          example: APPROVED
+          enum:
+            - APPROVED
+            - PENDING
+            - REJECTED
+        customRateType:
+          type: string
+          description: Defines whether the custom rate applies to only one seller or applies to multiple sellers under the same platform or brand.
+          example: MERCHANT
+          enum:
+            - MERCHANT
+            - BRAND
+        reference:
+          type: string
+          description: Seller or brand reference to which the custom rate is being applied; this defines the unique seller or the unique platform or brand and will be requested from the partner manually before the custom rate request is created.
+          example: 'ac_advkasdvasfbaadf:US'
+        effectiveFrom:
+          type: string
+          description: Datetime this custom rate is effective from.
+          example: '2023-08-17T21:41:47.341+00:00'
+    rates-contract.created:
+      x-tags:
+        - Rates
+      type: object
+      x-stoplight:
+        id: o87cerml6yn56
+      required:
+        - contractId
+        - afterpayUserDetails
+        - status
+        - countryCode
+        - buyRates
+      title: 'Event: rates-contract.created'
+      description: |-
+        **When is this event triggered?** 
+
+        This event is created whenever a new rates contract has been created by Afterpay. Partners can review the details of the rates contract and use the Approve Contract endpoint to approve. 
+      properties:
+        contractId:
+          type: string
+          description: The unique ID for the contract between Afterpay and the partner.
+          example: '785389121238'
+        afterpayUserDetails:
+          type: object
+          required:
+            - firstName
+            - lastName
+            - email
+          description: The info of the Afterpay user who is creating Afterpay's contract request. This info can be made generic or anonymized.
+          properties:
+            firstName:
+              type: string
+              description: Given name of the user who is creating Afterpay's contract request.
+              example: John
+            lastName:
+              type: string
+              description: Surname of the user who is creating Afterpay’s contract request.
+              example: Doe
+            email:
+              type: string
+              description: email of the user.
+              example: john.doe@squareup.com
+        status:
+          type: string
+          description: 'Contract status: approved, rejected, or pending'
+          example: APPROVED
+        countryCode:
+          type: string
+          description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the contact applies.'
+          example: US
+        buyRates:
+          $ref: '#/components/schemas/BuyRates'
+    custom-rate.created:
+      x-tags:
+        - Rates
+      type: object
+      required:
+        - customRateId
+        - afterpayUserDetails
+        - status
+        - customRateType
+        - merchantId
+        - reference
+        - rateDetails
+      title: 'Event: custom-rate.created'
+      description: |-
+        **When is this event triggered?** 
+
+        This event is created whenever a new custom rate has been created by Afterpay. Partners can review the details of the custom rate and use the [Approve Custom Rate](Partner.yaml/paths/~1v1~1custom-rate~1{customRateId}~1review/post) endpoint to approve.
+      properties:
+        customRateId:
+          type: string
+          description: The unique ID for the custom rate between Afterpay and the partner.
+          example: '712123123556455'
+        afterpayUserDetails:
+          type: object
+          required:
+            - firstName
+            - lastName
+            - email
+          description: The info of the Afterpay user who is creating Afterpay's contract request. This info can be made generic or anonymized.
+          properties:
+            firstName:
+              type: string
+              description: Given name of the user who is creating Afterpay's contract request.
+              example: John
+            lastName:
+              type: string
+              description: Surname of the user who is creating Afterpay’s contract request.
+              example: Doe
+            email:
+              type: string
+              description: email of the user.
+              example: john.doe@squareup.com
+        status:
+          type: string
+          description: The de facto approval field that determines whether the rate request by Afterpay is approved or rejected by the partner.
+          example: APPROVED
+          enum:
+            - APPROVED
+            - REJECTED
+        customRateType:
+          type: string
+          description: Defines whether the custom rate applies to only one seller or applies to multiple sellers under the same platform or brand.
+          example: MERCHANT
+          enum:
+            - MERCHANT
+            - BRAND
+        merchantId:
+          type: string
+          description: Afterpay merchant id (MID); this will only be available for existing sellers; for new sellers please use the reference field.
+          example: '100405604504'
+        reference:
+          type: string
+          description: Seller or brand reference to which the custom rate is being applied; this defines the unique seller or the unique platform or brand and iswill be requested from the partner manually before the custom rate request is created.
+          example: 'ac_advkasdvasfbaadf:US'
+        rateDetails:
+          type: object
+          required:
+            - countryCode
+            - rates
+          properties:
+            countryCode:
+              type: string
+              description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market for which the rate applies.'
+              example: US
+            rates:
+              type: array
+              description: Custom buy-rate that takes effect and supersedes all default and tiered rates the partner may have passed for this seller.
+              example:
+                - variableRatePercentage: 4.5
+                  fixedRate: 0.45
+                  fixedRateCurrencyCode: USD
+                  rateType: ONGOING
+              items:
+                type: object
+                required:
+                  - variableRatePercentage
+                  - fixedRate
+                  - fixedRateCurrencyCode
+                  - rateType
+                properties:
+                  variableRatePercentage:
+                    type: number
+                    description: Variable part of the buy-rate.
+                    format: decimal
+                    example: 5
+                  fixedRate:
+                    type: number
+                    description: Fixed part of the buy-rate.
+                    format: decimal
+                    example: 0.3
+                  fixedRateCurrencyCode:
+                    type: string
+                    description: Currency of the fixed part of the buy-rate.
+                    example: USD
+                  rateType:
+                    type: string
+                    description: INTRODUCTORY for temporary promotional rate or ONGOING for steady-state rate.
+                    example: ONGOING
+                    enum:
+                      - INTRODUCTORY
+                      - ONGOING
+    Lending:
+      type: object
+      x-tags:
+        - Capabilities
+      required:
+        - channel
+        - enabled
+      properties:
+        channel:
+          $ref: '#/components/schemas/Channel'
+        enabled:
+          type: boolean
+          description: Defines whether the capability is enabled for the above channel.
+          example: true
+        configuration:
+          type: object
+          properties:
+            minimumAmount:
+              type: object
+              properties:
+                amount:
+                  type: string
+                  description: Min amount.
+                  example: '200'
+                currency:
+                  type: string
+                  description: Currency for min amount in the three-letter ISO 4217 currency code.
+                  example: USD
+            maximumAmount:
+              type: object
+              properties:
+                amount:
+                  type: string
+                  description: Max amount.
+                  example: '4000'
+                currency:
+                  type: string
+                  description: Currency for max amount in the three-letter ISO 4217 currency code.
+                  example: USD
+            rateDetails:
+              type: array
+              items:
+                type: object
+                properties:
+                  variableRatePercentage:
+                    type: string
+                    description: Variable part of the buy-rate in percentage format e.g. 5.00 for 5%.
+                    example: '5.00'
+                  fixedRate:
+                    type: string
+                    description: Fixed part of the buy-rate e.g. 0.30 for 30 cents.
+                    example: '0.30'
+                  fixedRateCurrencyCode:
+                    type: string
+                    description: Currency of the fixed part of the buy-rate in the three-letter ISO 4217 currency code.
+                    example: USD
+                  rateType:
+                    type: string
+                    description: 'Type of rate whether introductory for temporary promotional periods or ongoing for steady-state business. Accepted values [INTRODUCTORY, ONGOING].'
+                    example: ONGOING
+                  durationInMonths:
+                    type: integer
+                    description: Number of months that the introductory rate will be applied.
+                    example: 1
+                  effectiveFrom:
+                    type: string
+                    description: Effective date and time of when the rate applies.
+                    example: '2023-09-17T21:41:47.341+00:00'
+    Owner:
+      type: object
+      x-tags:
+        - Onboardings
+      required:
+        - firstName
+        - lastName
+      description: 'Personal details of the business owner. This object is optional for public companies and nonprofits if the partner chooses to pass the business type in the optional businessType field; otherwise, it''s required.'
+      properties:
+        firstName:
+          type: string
+          description: Given name of the primary owner or authorized representative of the business; optional for public companies and nonprofits.
+          example: Sam
+        lastName:
+          type: string
+          description: Surname name of the primary owner or authorized representative of the business; optional for public companies and nonprofits.
+          example: Merchant
+        dob:
+          type: string
+          format: date
+          description: Date of birth in YYYY-MM-DD format. Optional.
+          example: '2023-02-21'
+        taxId:
+          type: string
+          description: Tax id of the primary owner or authorized representative of the business; optional for public companies and nonprofits. Optional.
+          example: TaxId123
+        jobTitle:
+          type: string
+          description: Job title of the primary owner or authorized representative of the business; optional for public companies and nonprofits. Optional.
+          example: CEO
+        owns25:
+          type: boolean
+          description: Indicates if the owner owns more than 25% of the business. Optional.
+          example: true
+        significantResponsibility:
+          type: boolean
+          example: false
+        address:
+          type: object
+          properties:
+            address1:
+              type: string
+              description: Line 1 of address.
+              example: 123 Main St
+            address2:
+              type: string
+              description: Line 2 of address.
+              example: Apt 1403
+            city:
+              type: string
+              description: 'City, town or municipality.'
+              example: New York
+            state:
+              type: string
+              description: 'State, region, county, province, or territory.'
+              example: NY
+            postCode:
+              type: string
+              description: Postal code.
+              example: '10011'
+            countryCode:
+              type: string
+              description: Country code in the two-letter ISO 3166-1 alpha-2 standard format.
+              example: US
+    Business:
+      type: object
+      x-tags:
+        - Onboardings
+      required:
+        - email
+        - legalBusinessName
+        - tradingName
+        - customerSupportPhoneNumber
+        - tradingCountry
+        - merchantCategoryCode
+        - address
+      description: Business and customer support details of the merchant being onboarded.
+      properties:
+        email:
+          type: string
+          description: Customer support email that will be shown within the Afterpay native application.
+          example: merchant123@email.com
+        legalBusinessName:
+          type: string
+          description: Legal business name found in incorporation or similar documents.
+          example: Merchant Business LLC
+        tradingName:
+          type: string
+          description: Recognizable doing-business-as name.
+          example: Merchant Trading
+        businessIdentificationNumber:
+          type: string
+          description: 'Identifying tax number, such as TIN, ABN, or SSN, depending on the relevant jurisdiction.'
+          example: '1234567891'
+        businessType:
+          type: string
+          description: Type of business matching exactly the naming conventions outlined in the business type.
+          example: limited_liability_company
+        websiteUrl:
+          type: string
+          description: 'Homepage URL of the merchant; optional for brick-and-mortar stores using the in-store channel only. For online channel enabled stores, either the websiteUrl or websiteUrls fields is required.'
+          example: 'https://www.merchant.com'
+          maxLength: 255
+        websiteUrls:
+          type: array
+          description: 'List of homepage URLs of the merchant if there are multiple; optional for brick-and-mortar stores using the in-store channel only. For online channel enabled stores, either the websiteUrl or websiteUrls fields is required.'
+          example:
+            - 'https://www.merchant.com'
+            - 'https://www.merchant2.com'
+            - 'https://www.merchant3.com'
+        monthlyOnlineSalesAmount:
+          type: string
+          description: 'Monthly online sales amount of the merchant in number, optional for brick-and-mortar stores using the in-store channel only.'
+          example: '100000'
+        customerSupportUrl:
+          type: string
+          description: Customer support page URL of the merchant; optional for brick-and-mortar stores using the in-store channel only.
+          example: 'https://help.merchant.com'
+          maxLength: 255
+        customerSupportPhoneNumber:
+          type: string
+          description: 'Customer support phone number of the merchant; if not available, regular business phone number.'
+          example: '+1999999999'
+        tradingCountry:
+          type: string
+          description: 'The same country code used in the merchantCountry field, defining the consumer market where the merchant will sell goods or services.'
+          example: US
+        merchantCategoryCode:
+          type: string
+          description: A four-digit number that classifies the type of goods or services a business offers following the ISO 18245 standard.
+          example: '5826'
+        ecommercePlatform:
+          type: string
+          example: BLOCK
+        avgTimeToShip:
+          type: string
+          example: Less than 1 Week
+        selfFulfillment:
+          type: boolean
+          example: true
+        tier:
+          type: integer
+          description: 'GMV tier of the merchant that informs the buy-rate as defined in the commercial contract with the smallest, SMB volume tier equaling 1.'
+          example: 1
+        gmv:
+          type: string
+          description: Actual transaction volume in decimal format that informs the tier; we accept estimated or addressable merchant volume when actuals are not available.
+          example: '150000000'
+        gmvCurrencyCode:
+          type: string
+          description: 'Currency of the gmv volume in the three-letter ISO 4217 currency code. Note: please use currency that is defined in the commercial contract only (e.g., USD-equivalent volume for UK merchants).'
+          example: USD
+        brandReference:
+          type: string
+          description: 'Platform, brand, or parent reference id whose buy-rate applies to this unique merchant (i.e., this merchant onboarding inherits the buy-rate of its brandReference for which the custom rate is set up.)'
+          example: brand_xyz
+        address:
+          type: object
+          properties:
+            address1:
+              type: string
+              description: Line 1 of address.
+              example: 123 Main St
+            address2:
+              type: string
+              description: Line 2 of address.
+              example: Apt 1403
+            city:
+              type: string
+              description: 'City, town or municipality.'
+              example: New York
+            state:
+              type: string
+              description: 'State, region, county, province, or territory.'
+              example: NY
+            postCode:
+              type: string
+              description: Postal code.
+              example: '10011'
+            countryCode:
+              type: string
+              description: Country code in the two-letter ISO 3166-1 alpha-2 standard format.
+              example: US
+    Onboarding:
+      type: object
+      x-tags:
+        - Onboardings
+      x-stoplight:
+        id: 443bbd1126582
+      properties:
+        onboardingId:
+          type: string
+          description: The ID that can be used to update merchant's configs and get an onboarding status.
+          example: 123abcd-456efgh-1124bd
+        updatedAt:
+          type: string
+          description: Last updated timestamp of this onboarding.
+          example: '2024-02-21T09:50:36.871+00:00'
+        merchantReference:
+          type: string
+          description: Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).
+          example: merchantId123
+        parentMerchantReference:
+          type: string
+          description: Unique ID for the platform of the merchant in the partner's internal systems to index to merchantReference.
+          example: merchantPlatform
+        legalBusinessName:
+          type: string
+          description: Legal business name found in incorporation or similar documents.
+          example: merchantBusiness
+        storeName:
+          type: string
+          description: Recognizable doing-business-as name.
+          example: merchantName
+        website:
+          type: string
+          description: Homepage URL of the merchant.
+          example: 'https://www.testmerchant.com'
+        platform:
+          type: string
+          description: Platform the merchant is on.
+          example: BLOCK
+        industry:
+          type: string
+          description: A four-digit number that classifies the type of goods or services a business offers following the ISO 18245 standard.
+          example: '8299'
+        aveTimeToShip:
+          type: string
+          description: Average time to ship for this business.
+          example: Less than 1 Week
+        registeredCountry:
+          type: string
+          description: Country code in the two-letter ISO 3166-1 alpha-2 standard format defining the consumer market where the merchant will sell goods or services.
+          example: US
+        countryOfOperations:
+          type: string
+          description: The consumer market where the merchant will sell goods or services.
+          example: US
+        businessType:
+          type: string
+          description: Type of business matching exactly the naming conventions outlined in the business type section.
+          example: corporation
+        ein:
+          type: string
+          description: 'Identifying tax number such as TIN, ABN, or SSN depending on the relevant jurisdiction. Can be null.'
+        selfFulfillment:
+          type: boolean
+          description: Indicates if the merchant fulfills orders themselves.
+          example: true
+        address1:
+          type: string
+          description: Business address 1 of the merchant.
+          example: 123 Main St
+        address2:
+          type: string
+          description: 'Business address 2 of the merchant, if applicable. Can be null.'
+        city:
+          type: string
+          description: City of the business address of the merchant.
+          example: London
+        state:
+          type: string
+          description: State or province of the business address of the merchant.
+          example: CA
+        postCode:
+          type: string
+          description: Postal code of the business address of the merchant.
+          example: '12345'
+        email:
+          type: string
+          description: Customer support email that will be shown within the Afterpay native application.
+          example: youremail@testmerchant.com
+        settlementContractId:
+          type: string
+          description: Defines the country and the banking entity for the partner's online channel for the benefit of the merchant.
+          example: 1a2b3c4d5e12xy34z
+        owners:
+          type: array
+          items:
+            type: object
+            required:
+              - firstName
+              - lastName
+            description: 'Personal details of the business owner. This object is optional for public companies and nonprofits if the partner chooses to pass the business type in the optional businessType field; otherwise, it''s required.'
+            properties:
+              firstName:
+                type: string
+                description: Given name of the primary owner or authorized representative of the business; optional for public companies and nonprofits.
+                example: Sam
+              lastName:
+                type: string
+                description: Surname name of the primary owner or authorized representative of the business; optional for public companies and nonprofits.
+                example: Merchant
+              dob:
+                type: string
+                format: date
+                description: Date of birth in YYYY-MM-DD format. Optional.
+                example: '2023-02-21'
+              taxId:
+                type: string
+                description: Tax id of the primary owner or authorized representative of the business; optional for public companies and nonprofits. Optional.
+                example: TaxId123
+              jobTitle:
+                type: string
+                description: Job title of the primary owner or authorized representative of the business; optional for public companies and nonprofits. Optional.
+                example: CEO
+              owns25:
+                type: boolean
+                description: Indicates if the owner owns more than 25% of the business. Optional.
+                example: true
+              significantResponsibility:
+                type: boolean
+                example: false
+              address1:
+                type: string
+                description: Line 1 of address.
+                example: 123 Main St
+              address2:
+                type: string
+                description: Line 2 of address.
+                example: Apt 1403
+              city:
+                type: string
+                description: 'City, town or municipality.'
+                example: New York
+              state:
+                type: string
+                description: 'State, region, county, province, or territory.'
+                example: NY
+              postCode:
+                type: string
+                description: Postal code.
+                example: '10011'
+              countryCode:
+                type: string
+                description: Country code in the two-letter ISO 3166-1 alpha-2 standard format.
+                example: US
+    PostOnboardingResponse:
+      type: object
+      x-tags:
+        - Onboardings
+      properties:
+        onboardingId:
+          type: string
+          description: The ID that can be used to update merchant's configs and get an onboarding status.
+          example: 123abcd-456efgh-1124bd
+        timestamp:
+          type: string
+          description: Timestamp of the response.
+          example: '2024-02-21 09:00:14.016'
+        merchantReference:
+          type: string
+          description: Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).
+          example: merchantId123
+        parentMerchantReference:
+          type: string
+          description: Unique ID for the platform of the merchant in the partner's internal systems to index to merchantReference.
+          example: merchantPlatform
+        status:
+          type: string
+          description: Onboarding status.
+          example: APPROVED
+    ProductConfiguration:
+      type: array
+      x-tags:
+        - Capabilities
+      description: Configurations for the capability.
+      items:
+        type: object
+        properties:
+          channel:
+            $ref: '#/components/schemas/Channel'
+          enabled:
+            type: boolean
+            description: Defines whether the capability is enabled for the above channel.
+            example: true
+          configuration:
+            type: object
+            properties:
+              minimumAmount:
+                type: object
+                properties:
+                  amount:
+                    type: string
+                    description: Min amount.
+                    example: '200'
+                  currency:
+                    type: string
+                    description: Currency for min amount in the three-letter ISO 4217 currency code.
+                    example: USD
+              maximumAmount:
+                type: object
+                properties:
+                  amount:
+                    type: string
+                    description: Max amount.
+                    example: '4000'
+                  currency:
+                    type: string
+                    description: Currency for max amount in the three-letter ISO 4217 currency code.
+                    example: USD
+              rateDetails:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    variableRatePercentage:
+                      type: string
+                      description: 'Variable part of the buy-rate in percentage format e.g., 5.00 for 5%.'
+                      example: '5.00'
+                    fixedRate:
+                      type: string
+                      description: 'Fixed part of the buy-rate e.g., 0.30 for 30 cents.'
+                      example: '0.30'
+                    fixedRateCurrencyCode:
+                      type: string
+                      description: Currency of the fixed part of the buy-rate in the three-letter ISO 4217 currency code.
+                      example: USD
+                    rateType:
+                      type: string
+                      description: Type of rate whether introductory for temporary promotional periods or ongoing for steady-state business.
+                      example: ONGOING
+                    durationInMonths:
+                      type: integer
+                      description: Number of months that the introductory rate will be applied.
+                      example: 1
+                    effectiveFrom:
+                      type: string
+                      description: Effective date and time of when the rate applies.
+                      example: '2023-09-17T21:41:47.341+00:00'
+    OnboardingPostPut:
+      type: object
+      x-tags:
+        - Onboardings
+      x-stoplight:
+        id: e515db2259997
+      required:
+        - merchantCountry
+        - merchantReference
+        - parameters
+      properties:
+        merchantCountry:
+          type: string
+          description: 'Country code in the two-letter ISO 3166-1 alpha-2 standard format, defining the consumer market where the merchant will sell goods or services.'
+          example: US
+        merchantReference:
+          type: string
+          description: Unique ID for the merchant in the partner's internal systems to index to Afterpay's Merchant ID (MID).
+          example: merchantId1234
+        parentMerchantReference:
+          type: string
+          description: Unique ID for the platform of the merchant in the partner's internal systems to index to merchantReference.
+          example: merchantPlatform
+        parameters:
+          type: object
+          description: 'Settlement contract, business, and channel details.'
+          required:
+            - settlementContractId
+            - business
+          properties:
+            settlementContractId:
+              type: string
+              description: Defines the country and banking entity for the partner's online channel.
+              example: 0xt5txyloqru4vx5XuQ88W
+            instoreCardsettlementContractId:
+              type: string
+              description: Defines the country and banking entity for the partner's in-store channel. Optional.
+              example: 0xt5txyloqru4vx5XuQ88W
+            channels:
+              type: object
+              description: 'Channel fields define whether the merchant sells online, in-store, or both. If the channel object is not passed, we automatically assume the onboarding is for the online channel only. If either is provided, however, we require both fields to be specified explicitly. Optional, but both `online` and `instoreCard` are required if this object is present.'
+              properties:
+                online:
+                  type: boolean
+                  description: Determines whether the online channel is enabled.
+                  example: true
+                instoreCard:
+                  type: boolean
+                  description: Determines whether the in-store card channel is enabled.
+                  example: false
+            owners:
+              type: array
+              items:
+                $ref: '#/components/schemas/Owner'
+            business:
+              $ref: '#/components/schemas/Business'
+    BaseRate:
+      type: object
+      x-tags:
+        - Rates
+      x-stoplight:
+        id: f5ced15ffff00
+      required:
+        - variableRatePercentage
+        - fixedRate
+        - fixedRateCurrencyCode
+        - rateType
+      properties:
+        variableRatePercentage:
+          type: string
+          description: Variable part of the buy-rate in percentage format e.g. 5.00 for 5%.
+          example: '5.00'
+        fixedRate:
+          type: string
+          description: Fixed part of the buy-rate e.g. 0.30 for 30 cents.
+          example: '0.30'
+        fixedRateCurrencyCode:
+          type: string
+          description: Currency of the fixed part of the buy-rate in the three-letter ISO 4217 currency code.
+          example: USD
+        rateType:
+          type: string
+          description: Type of rate whether introductory for temporary promotional periods or ongoing for steady-state business.
+          enum:
+            - INTRODUCTORY
+            - ONGOING
+          example: ONGOING
+        durationInMonths:
+          type: integer
+          description: Number of months that the introductory rate will be applied.
+          example: 3
+    RateObjDuration:
+      type: object
+      x-tags:
+        - Rates
+      x-stoplight:
+        id: 896e5812d1db3
+      required:
+        - variableRatePercentage
+        - fixedRate
+        - fixedRateCurrencyCode
+        - rateType
+      properties:
+        variableRatePercentage:
+          type: string
+          description: Variable part of the buy-rate in percentage format e.g. 5.00 for 5%.
+          example: '5.00'
+        fixedRate:
+          type: string
+          description: Fixed part of the buy-rate e.g. 0.30 for 30 cents.
+          example: '0.30'
+        fixedRateCurrencyCode:
+          type: string
+          description: Currency of the fixed part of the buy-rate in the three-letter ISO 4217 currency code.
+          example: USD
+        rateType:
+          type: string
+          description: Type of rate whether introductory for temporary promotional periods or ongoing for steady-state business.
+          enum:
+            - INTRODUCTORY
+            - ONGOING
+          example: ONGOING
+        durationInMonths:
+          type: integer
+          description: Number of months that the introductory rate will be applied.
+          example: 1
+    RateObjDurationEffectiveFrom:
+      type: object
+      x-tags:
+        - Rates
+      x-stoplight:
+        id: 96b121cc22a22
+      required:
+        - variableRatePercentage
+        - fixedRate
+        - fixedRateCurrencyCode
+        - rateType
+      properties:
+        variableRatePercentage:
+          type: string
+          description: Variable part of the buy-rate in percentage format e.g. 5.00 for 5%.
+          example: '5.00'
+        fixedRate:
+          type: string
+          description: Fixed part of the buy-rate e.g. 0.30 for 30 cents.
+          example: '0.30'
+        fixedRateCurrencyCode:
+          type: string
+          description: Currency of the fixed part of the buy-rate in the three-letter ISO 4217 currency code.
+          example: USD
+        rateType:
+          type: string
+          description: Type of rate whether introductory for temporary promotional periods or ongoing for steady-state business.
+          enum:
+            - INTRODUCTORY
+            - ONGOING
+          example: ONGOING
+        durationInMonths:
+          type: integer
+          description: Number of months that the introductory rate will be applied.
+          example: 1
+        effectiveFrom:
+          type: string
+          description: Effective date and time of when the rate applies.
+          example: '2023-09-17T21:41:47.341+00:00'
+    User:
+      type: object
+      x-tags:
+        - Rates
+      x-stoplight:
+        id: 254c596970a7c
+      required:
+        - firstName
+        - lastName
+        - email
+      properties:
+        firstName:
+          type: string
+          description: Given name of the user who is actioning Afterpay's contract request.
+          example: John
+        lastName:
+          type: string
+          description: Surname of the user who is actioning Afterpay's contract request.
+          example: PSP
+        email:
+          type: string
+          description: Email of the user.
+          example: john.psp@psp.com
+        adminIdentifier:
+          type: string
+          description: Optional identifier for the admin..
+          example: 1234Admin
+          nullable: true
+    400Response:
+      type: object
+      x-stoplight:
+        id: d88ee127804c4
+      properties:
+        httpStatus:
+          type: integer
+          example: 400
+        errors:
+          type: object
+          description: A human-readable message which provides more details about the error.
+    400Response2:
+      type: object
+      x-stoplight:
+        id: 9af717f7e0ef5
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the response.
+          example: '2024-02-21T10:14:07.656+00:00'
+        status:
+          type: integer
+          description: The HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Name of the error that occurred.
+          example: Unauthorized
+        message:
+          type: string
+          description: A human-readable message which provides more details about the error.
+          example: HMAC verification failed
+        path:
+          type: string
+          description: The attempted endpoint.
+          example: /v1/onboardings/123abc
+    401Response:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the response.
+          example: '2024-02-21T10:14:07.656+00:00'
+        status:
+          type: integer
+          description: The HTTP status code.
+          example: 401
+        error:
+          type: string
+          description: Name of the error that occurred.
+          example: Unauthorized
+        message:
+          type: string
+          description: A human-readable message which provides more details about the error.
+          example: HMAC verification failed
+        path:
+          type: string
+          description: The attempted endpoint.
+          example: /v1/onboardings/123abc
+    409Response:
+      type: object
+      x-stoplight:
+        id: 7ce9d312ab4fb
+      properties:
+        httpStatus:
+          type: integer
+          description: The HTTP status code.
+          example: 409
+        errorMessage:
+          type: string
+          description: A human-readable message which provides more details about the error.
+          example: CreateOnboarding failed. Onboarding already exists with merchant reference merchantId123.
+    404Response:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: 'Timestamp of the response, indicating when the error occurred.'
+          example: '2024-02-21T10:12:52.018+00:00'
+        status:
+          type: integer
+          description: 'The HTTP status code, specifically indicating a 404 error in this case.'
+          example: 404
+        error:
+          type: string
+          description: 'A short description of the error, typically "Not Found" for a 404 response.'
+          example: Not Found
+        message:
+          type: string
+          description: A human-readable message providing more details about the error.
+          example: Onboarding Not found
+        path:
+          type: string
+          description: The attempted endpoint path that resulted in the 404 error.
+          example: /v1/onboardings
+    503Response:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the response.
+          example: '2024-02-21T10:14:07.656+00:00'
+        status:
+          type: integer
+          description: The HTTP status code.
+          example: 503
+        error:
+          type: string
+          description: Name of the error that occurred.
+          example: Service unavailable.
+        message:
+          type: string
+          description: A human-readable message which provides more details about the error.
+          example: The service is currently unavailable.
+        path:
+          type: string
+          description: The attempted endpoint.
+          example: /v1/onboardings/123abc
+  securitySchemes: {}

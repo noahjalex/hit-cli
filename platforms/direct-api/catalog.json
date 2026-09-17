@@ -1,0 +1,2648 @@
+{
+  "platform": "direct-api",
+  "operations": [
+    {
+      "group": "billing-agreements",
+      "command": "create-billing-agreement",
+      "operationId": "create-billing-agreement",
+      "method": "POST",
+      "path": "/v2/billing-agreements",
+      "summary": "Create Billing Agreement",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/CreateAgreementRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementResponse.yaml"
+          }
+        },
+        "403": {},
+        "412": {},
+        "415": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/create-billing-agreement.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "alias-billing-agreement",
+      "operationId": "alias-billing-agreement",
+      "method": "POST",
+      "path": "/v2/billing-agreements/alias",
+      "summary": "Create Billing Agreement Alias",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/BillingAgreementAliasRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementAliasResponse.yaml"
+          }
+        },
+        "403": {},
+        "415": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/alias-billing-agreement.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "start-billing-agreement-approval",
+      "operationId": "start-billing-agreement-approval",
+      "method": "POST",
+      "path": "/v2/billing-agreements/approvals",
+      "summary": "Start Billing Agreement Approval Process",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/BillingAgreementApprovalRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementApprovalResponse.yaml"
+          }
+        },
+        "401": {},
+        "403": {},
+        "415": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/start-billing-agreement-approval.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "cancel-billing-agreement-alt",
+      "operationId": "cancel-billing-agreement-alt",
+      "method": "PUT",
+      "path": "/v2/billing-agreements/cancel",
+      "summary": "Cancel Billing Agreement (Alternative)",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/CancelBillingAgreementRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementResponse.yaml"
+          }
+        },
+        "403": {},
+        "404": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/cancel-billing-agreement-alt.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "retrieve-billing-agreement-offers",
+      "operationId": "retrieve-billing-agreement-offers",
+      "method": "POST",
+      "path": "/v2/billing-agreements/offers",
+      "summary": "Retrieve Billing Agreement Offers",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/OffersRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/OffersResponse.yaml"
+          }
+        },
+        "401": {},
+        "403": {},
+        "422": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/retrieve-billing-agreement-offers.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "retrieve-billing-agreement",
+      "operationId": "retrieve-billing-agreement",
+      "method": "POST",
+      "path": "/v2/billing-agreements/retrieve",
+      "summary": "Retrieve Billing Agreement",
+      "parameters": [],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/GetBillingAgreementRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementResponse.yaml"
+          }
+        },
+        "403": {},
+        "404": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/retrieve-billing-agreement.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "start-billing-agreement-link",
+      "operationId": "start-billing-agreement-link",
+      "method": "POST",
+      "path": "/v2/billing-agreements/start",
+      "summary": "Start Billing Agreement Link Flow",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/LinkStartRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/LinkStartResponse.yaml"
+          }
+        },
+        "404": {},
+        "412": {},
+        "429": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/start-billing-agreement-link.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "get-billing-agreement",
+      "operationId": "get-billing-agreement",
+      "method": "GET",
+      "path": "/v2/billing-agreements/{token}",
+      "summary": "Get Billing Agreement Details",
+      "parameters": [
+        {
+          "name": "token",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The unique identifier token of the billing agreement to retrieve"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementResponse.yaml"
+          }
+        },
+        "403": {},
+        "404": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "cancel-billing-agreement",
+      "operationId": "cancel-billing-agreement",
+      "method": "DELETE",
+      "path": "/v2/billing-agreements/{token}",
+      "summary": "Cancel Billing Agreement",
+      "parameters": [
+        {
+          "name": "token",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The unique identifier token of the billing agreement to cancel"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/BillingAgreementResponse.yaml"
+          }
+        },
+        "403": {},
+        "404": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "capture-full-recurring-payment",
+      "operationId": "capture-full-recurring-payment",
+      "method": "POST",
+      "path": "/v2/recurring-payments",
+      "summary": "Capture Full Recurring Payment",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/RecurringPaymentRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        },
+        "402": {},
+        "415": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/capture-full-recurring-payment.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "billing-agreements",
+      "command": "auth",
+      "operationId": "auth",
+      "method": "POST",
+      "path": "/v2/recurring-payments/auth",
+      "summary": "Authorize Recurring Payment",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/RecurringPaymentRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/PaymentAuth.yaml"
+          }
+        },
+        "402": {},
+        "412": {},
+        "415": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/billing-agreements/auth.json",
+      "source": "openapi/reference/Billing-Agreements.v2.yaml"
+    },
+    {
+      "group": "checkouts",
+      "command": "create-checkout-1",
+      "operationId": "create-checkout-1",
+      "method": "POST",
+      "path": "/v2/checkouts",
+      "summary": "Create Checkout",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "See our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "#/components/schemas/Checkout-Request"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "#/components/schemas/Checkout-Response"
+          }
+        },
+        "400": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/checkouts/create-checkout-1.json",
+      "source": "openapi/reference/Checkouts.v2.yaml"
+    },
+    {
+      "group": "checkouts",
+      "command": "get-checkout",
+      "operationId": "get-checkout",
+      "method": "GET",
+      "path": "/v2/checkouts/{token}",
+      "summary": "Get Checkout",
+      "parameters": [
+        {
+          "name": "token",
+          "in": "path",
+          "description": "The token of the checkout to be retrieved.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Checkout-Response",
+                "x-stoplight": {
+                  "id": "n4c21yj8v9lbh"
+                }
+              },
+              {
+                "$ref": "#/components/schemas/Checkout-Request",
+                "x-stoplight": {
+                  "id": "1g11qfm84x3zc"
+                }
+              }
+            ]
+          }
+        },
+        "404": {},
+        "412": {},
+        "default": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Checkouts.v2.yaml"
+    },
+    {
+      "group": "configuration",
+      "command": "get-configuration",
+      "operationId": "get-configuration",
+      "method": "GET",
+      "path": "/v2/configuration",
+      "summary": "Get Configuration",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User-Agent](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "include",
+          "in": "query",
+          "required": false,
+          "description": "Repeat this query parameter to include optional configuration fields in the response. The endpoint always returns `minimumAmount` and `maximumAmount`.\n\nSupported values:\n- `publicid`: include `publicId`, the merchant public identifier (MPID) when one exists.\n- `consumerlending`: include `consumerLending`, which indicates whether consumer lending is enabled and, when enabled, the eligible minimum and maximum order amounts.\n- `paybyinstallment`: include `payByInstallment`, the configured pay by installment minimum and maximum eligible order amounts.",
+          "style": "form",
+          "explode": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "examples": {
+            "optionalFields": {
+              "value": [
+                "publicid",
+                "consumerlending",
+                "paybyinstallment"
+              ]
+            }
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/Merchant-limit"
+          }
+        },
+        "401": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "errorCode": {
+                "type": "string"
+              },
+              "errorId": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "httpStatusCode": {
+                "type": "integer"
+              }
+            },
+            "x-examples": {
+              "Example 1": {
+                "errorCode": "unauthorized",
+                "errorId": "6024ab212498442",
+                "message": "Credentials are required to access this resource.",
+                "httpStatusCode": 401
+              }
+            }
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Configuration.v2.yaml"
+    },
+    {
+      "group": "configuration",
+      "command": "get-configuration-mappings",
+      "operationId": "get-configuration-mappings",
+      "method": "GET",
+      "path": "/v2/configuration/mappings",
+      "summary": "Get Configuration Mappings",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User-Agent](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "description": "Accept",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "#/components/schemas/ConfigurationMappings"
+          }
+        },
+        "401": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "errorCode": {
+                "type": "string",
+                "example": "unauthenticated"
+              },
+              "errorId": {
+                "type": "string",
+                "example": "6024ab212498442"
+              },
+              "message": {
+                "type": "string",
+                "example": "Invalid Merchant API credentials were passed in the Authorization header."
+              },
+              "httpStatusCode": {
+                "type": "integer",
+                "example": 401
+              }
+            }
+          }
+        },
+        "403": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "errorCode": {
+                "type": "string",
+                "example": "unauthorized"
+              },
+              "errorId": {
+                "type": "string",
+                "example": "6024ab212498442"
+              },
+              "message": {
+                "type": "string",
+                "example": "The request was forbidden"
+              },
+              "httpStatusCode": {
+                "type": "integer",
+                "example": 403
+              }
+            }
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Configuration.v2.yaml"
+    },
+    {
+      "group": "disputes",
+      "command": "retrieve-dispute",
+      "operationId": "retrieve-dispute",
+      "method": "GET",
+      "path": "/v2/disputes",
+      "summary": "Retrieve Dispute",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyCashAppAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "order",
+          "in": "query",
+          "description": "Payment or Order token using which you can filter the list.",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "merchant",
+          "in": "query",
+          "description": "Merchant token using which you can filter the list.",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "description": "Dispute status using which you can filter the list.",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "openedAfter",
+          "in": "query",
+          "description": "Filter disputes that were created on or after this timestamp (inclusive).",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "openedBefore",
+          "in": "query",
+          "description": "Filter disputes that were created on or before this timestamp (inclusive).",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "Offset for the search results.",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "example": 0
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of records that you want returned from this request.",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "example": 10
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "x-stoplight": {
+                  "id": "18hmv9u9oglh4"
+                },
+                "description": "An array of dispute objects that match the filter criteria in the request.",
+                "items": {
+                  "$ref": "#/components/schemas/dispute",
+                  "x-stoplight": {
+                    "id": "s62g5idyizr80"
+                  }
+                }
+              },
+              "offset": {
+                "type": "integer",
+                "x-stoplight": {
+                  "id": "9exsbfbps9h6n"
+                },
+                "example": 0
+              },
+              "limit": {
+                "type": "integer",
+                "x-stoplight": {
+                  "id": "i7jz0x27o5piw"
+                },
+                "example": 1
+              },
+              "total": {
+                "type": "integer",
+                "x-stoplight": {
+                  "id": "483sh73byzkiz"
+                },
+                "example": 1
+              }
+            }
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Disputes.v2.yaml"
+    },
+    {
+      "group": "disputes",
+      "command": "receive-dispute",
+      "operationId": "receive-dispute",
+      "method": "GET",
+      "path": "/v2/disputes/{dispute_id}",
+      "summary": "Receive Dispute",
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "dispute_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "description": "application/json"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "2XX": {
+          "application/json": {
+            "$ref": "#/components/schemas/dispute"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Disputes.v2.yaml"
+    },
+    {
+      "group": "disputes",
+      "command": "respond-to-dispute",
+      "operationId": "respond-to-dispute",
+      "method": "POST",
+      "path": "/v2/disputes/{dispute_id}",
+      "summary": "Respond to Dispute",
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "dispute_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "User-Agent",
+          "description": "See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "Accept",
+          "description": "application/json"
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "Content-Type",
+          "description": "application/json"
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "A unique ID given to a dispute."
+            },
+            "productDescription": {
+              "type": "string",
+              "description": "A description of the product or service and any relevant details on how this was presented to the customer at the time of purchase.",
+              "maxLength": 5000
+            },
+            "refundPolicy": {
+              "type": "string",
+              "description": "Token of the file upload. The merchant's refund policy, as shown or provided to the customer.",
+              "format": "binary"
+            },
+            "refundPolicyDisclosure": {
+              "type": "string",
+              "description": "An explanation of how and when the customer was shown or provided with the merchant's refund policy prior to purchase.",
+              "maxLength": 5000
+            },
+            "refundRefusalExplanation": {
+              "type": "string",
+              "description": "The merchant's explanation for why the customer is not entitled to a refund.",
+              "maxLength": 5000
+            },
+            "shippingDocumentation": {
+              "type": "string",
+              "description": "Token of the file upload. A shipping label or receipt for the disputed payment.",
+              "format": "binary"
+            },
+            "shippingAddress": {
+              "type": "string",
+              "description": "The address to which a physical product was shipped.",
+              "maxLength": 5000
+            },
+            "shippingDate": {
+              "type": "string",
+              "description": "In cases of physical products, the date that a physical product began its route to the shipping address in a clear human-readable format. This date should be prior to the date of the dispute.",
+              "maxLength": 5000
+            },
+            "shippingCarrier": {
+              "type": "string",
+              "description": "In cases of physical products, the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, separate them with commas.",
+              "maxLength": 5000
+            },
+            "shippingTrackingNumber": {
+              "type": "string",
+              "description": "The tracking number for a physical product, obtained from the delivery service.",
+              "maxLength": 5000
+            },
+            "uncategorizedFile": {
+              "type": "string",
+              "description": "Token of the file upload. Additional file that's not in any of the categories above.",
+              "format": "binary"
+            },
+            "uncategorizedText": {
+              "type": "string",
+              "description": "Any additional text deemed relevant by the merchant.",
+              "maxLength": 5000
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "2XX": {
+          "application/json": {
+            "$ref": "#/components/schemas/dispute"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/disputes/respond-to-dispute.json",
+      "source": "openapi/reference/Disputes.v2.yaml"
+    },
+    {
+      "group": "disputes",
+      "command": "accept-dispute",
+      "operationId": "accept-dispute",
+      "method": "GET",
+      "path": "/v2/disputes/{dispute_id}/accept",
+      "summary": "Accept Dispute",
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "dispute_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "query"
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "User-Agent",
+          "description": "See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "Accept",
+          "description": "application/json"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "2XX": {
+          "application/json": {
+            "$ref": "#/components/schemas/dispute"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Disputes.v2.yaml"
+    },
+    {
+      "group": "disputes",
+      "command": "upload-file",
+      "operationId": "upload-file",
+      "method": "POST",
+      "path": "/v2/disputes/files",
+      "summary": "Upload File",
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "User-Agent",
+          "description": "See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "Accept",
+          "description": "application/json"
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "Content-Type",
+          "description": "application/json"
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "required": [
+            "file",
+            "fileType"
+          ],
+          "properties": {
+            "file": {
+              "type": "File",
+              "description": "The file you want to upload."
+            },
+            "fileType": {
+              "type": "string",
+              "description": "The type of file. Only `dispute_evidence` is supported."
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "2XX": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "x-stoplight": {
+                  "id": "wk3a33q9j5xy0"
+                },
+                "description": "The ID token of the file.",
+                "example": "fi_7wvZBQqWzoPGLxvaMkpTjX"
+              },
+              "createdAt": {
+                "type": "string",
+                "x-stoplight": {
+                  "id": "4h383wz4vkx9t"
+                },
+                "format": "date-time",
+                "example": "2023-08-18T02:05:23.121893",
+                "description": "The timestamp indicating when the file was uploaded."
+              },
+              "expiresAt": {
+                "type": "string",
+                "x-stoplight": {
+                  "id": "z81q95skc9x3n"
+                },
+                "format": "date-time",
+                "example": "2023-08-18T02:05:23.121893",
+                "description": "The timestamp indicating when the uploaded file expires. "
+              }
+            }
+          }
+        }
+      },
+      "bodyTemplate": "bodies/disputes/upload-file.json",
+      "source": "openapi/reference/Disputes.v2.yaml"
+    },
+    {
+      "group": "disputes",
+      "command": "retrieve-file",
+      "operationId": "retrieve-file",
+      "method": "GET",
+      "path": "/v2/disputes/files/{id}",
+      "summary": "Retrieve file",
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "User-Agent",
+          "description": "See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "header",
+          "name": "Accept",
+          "description": "application/json"
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "in": "query",
+          "name": "id",
+          "required": true,
+          "description": "ID of the file to be retrieved."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "401": {},
+        "404": {},
+        "412": {},
+        "413": {},
+        "415": {},
+        "422": {},
+        "429": {},
+        "2XX": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "x-stoplight": {
+                  "id": "nldvvkifpkl8n"
+                },
+                "description": "The link of the file to be retrieved.",
+                "example": "https://dispute-attachment.s3.amazonaws.com/fi_7GciehSJnhRdUF9acxsB63"
+              },
+              "expiresAt": {
+                "type": "string",
+                "x-stoplight": {
+                  "id": "18kt5tmg67ivc"
+                },
+                "format": "date-time",
+                "example": "2023-08-18T02:05:23.121893",
+                "description": "The timestamp indicating the expiration of the link."
+              }
+            }
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Disputes.v2.yaml"
+    },
+    {
+      "group": "grants",
+      "command": "start-grant-approval",
+      "operationId": "start-grant-approval",
+      "method": "POST",
+      "path": "/v2/grants/approvals",
+      "summary": "Create Grant Approval",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/GrantApprovalRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/GrantApprovalResponse.yaml"
+          }
+        },
+        "401": {},
+        "403": {},
+        "415": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/grants/start-grant-approval.json",
+      "source": "openapi/reference/Grants.v2.yaml"
+    },
+    {
+      "group": "grants",
+      "command": "create-grant",
+      "operationId": "create-grant",
+      "method": "POST",
+      "path": "/v2/grants",
+      "summary": "Create Grant",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/GrantCreateRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/GrantResponse.yaml"
+          }
+        },
+        "403": {},
+        "412": {},
+        "415": {}
+      },
+      "bodyTemplate": "bodies/grants/create-grant.json",
+      "source": "openapi/reference/Grants.v2.yaml"
+    },
+    {
+      "group": "grants",
+      "command": "get-grant",
+      "operationId": "get-grant",
+      "method": "GET",
+      "path": "/v2/grants/{grantId}",
+      "summary": "Retrieve Grant",
+      "parameters": [
+        {
+          "name": "grantId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "ID of the grant to retrieve."
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/GrantResponse.yaml"
+          }
+        },
+        "403": {},
+        "404": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Grants.v2.yaml"
+    },
+    {
+      "group": "grants",
+      "command": "revoke-grant",
+      "operationId": "revoke-grant",
+      "method": "POST",
+      "path": "/v2/grants/{grantId}/revoke",
+      "summary": "Revoke Grant",
+      "parameters": [
+        {
+          "name": "grantId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The unique identifier id of the grant to revoke"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/GrantResponse.yaml"
+          }
+        },
+        "403": {},
+        "404": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Grants.v2.yaml"
+    },
+    {
+      "group": "grants",
+      "command": "alias-grant",
+      "operationId": "alias-grant",
+      "method": "POST",
+      "path": "/v2/grants/alias",
+      "summary": "Create Grant Alias",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/GrantAliasRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/GrantAliasResponse.yaml"
+          }
+        },
+        "403": {},
+        "415": {}
+      },
+      "bodyTemplate": "bodies/grants/alias-grant.json",
+      "source": "openapi/reference/Grants.v2.yaml"
+    },
+    {
+      "group": "grants",
+      "command": "start-billing-agreement-link",
+      "operationId": "start-billing-agreement-link",
+      "method": "POST",
+      "path": "/v2/grants/start",
+      "summary": "Start Grant Link Flow",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/GrantStartRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/GrantStartResponse.yaml"
+          }
+        },
+        "404": {},
+        "412": {},
+        "429": {}
+      },
+      "bodyTemplate": "bodies/grants/start-billing-agreement-link.json",
+      "source": "openapi/reference/Grants.v2.yaml"
+    },
+    {
+      "group": "orders",
+      "command": "create-grant",
+      "operationId": "create-grant",
+      "method": "POST",
+      "path": "/v2/orders",
+      "summary": "Create Order",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/OrderRequest.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/CreateOrderResponse.yaml"
+          }
+        },
+        "415": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/orders/create-grant.json",
+      "source": "openapi/reference/Orders.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "list-payments",
+      "operationId": "list-payments",
+      "method": "GET",
+      "path": "/v2/payments",
+      "summary": "List Payments",
+      "parameters": [
+        {
+          "name": "toCreatedDate",
+          "in": "query",
+          "description": "An inclusive end date and time to search, in [ISO 8601](http://www.iso.org/iso/home/standards/iso8601.htm) format.",
+          "schema": {
+            "type": "string",
+            "default": "2020-12-30"
+          }
+        },
+        {
+          "name": "fromCreatedDate",
+          "in": "query",
+          "description": "An inclusive start date and time to search, in [ISO 8601](http://www.iso.org/iso/home/standards/iso8601.htm) format.",
+          "schema": {
+            "type": "string",
+            "default": "2020-01-01"
+          }
+        },
+        {
+          "name": "tokens",
+          "in": "query",
+          "description": "One or more order tokens to search for.",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "10"
+            ]
+          }
+        },
+        {
+          "name": "includeNextLink",
+          "in": "query",
+          "description": "Will return a modified pagination object which includes a url to return the next page. The default value is false.",
+          "schema": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        {
+          "name": "ids",
+          "in": "query",
+          "description": "One or more Afterpay Order IDs to search for.",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "0"
+            ]
+          }
+        },
+        {
+          "name": "merchantReferences",
+          "in": "query",
+          "description": "One or more Merchant Reference IDs to search for.",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "0"
+            ]
+          }
+        },
+        {
+          "name": "statuses",
+          "in": "query",
+          "description": "One or more Afterpay Order Statuses to search for. Possible values include \"APPROVED\" and \"DECLINED\".",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "Approved"
+            ]
+          }
+        },
+        {
+          "name": "orderBy",
+          "in": "query",
+          "description": "A field to order results by. If provided, must be one of \"createdAt\", \"id\", \"totalAmount\", \"merchantReference\" or \"email\".",
+          "schema": {
+            "type": "string",
+            "default": "createdAt"
+          }
+        },
+        {
+          "name": "ascending",
+          "in": "query",
+          "description": "`true` to order results in ascending order, or `false` for descending order.",
+          "schema": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "type": "object",
+            "properties": {
+              "totalResults": {
+                "type": "integer",
+                "description": "Total number of results",
+                "example": 445
+              },
+              "offset": {
+                "type": "integer",
+                "description": "The offer of the pagination",
+                "example": 3
+              },
+              "limit": {
+                "type": "integer",
+                "description": "The number of payments to include in the results",
+                "example": 1
+              },
+              "results": {
+                "type": "array",
+                "items": {
+                  "$ref": "../models/Payment.yaml"
+                }
+              }
+            }
+          }
+        },
+        "422": {},
+        "500": {},
+        "default": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "auth",
+      "operationId": "auth",
+      "method": "POST",
+      "path": "/v2/payments/auth",
+      "summary": "Auth",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "#/components/schemas/AuthorizePayment",
+          "x-examples": {
+            "Example 1": {
+              "requestid": "d22f5305-05f3-48a0-9131-a4e6e5f58b9a",
+              "token": "string",
+              "merchantReference": "order-12345",
+              "amount": {
+                "amount": "100.00",
+                "currency": "AUD"
+              }
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/PaymentAuth.yaml"
+          }
+        },
+        "402": {},
+        "412": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/payments/auth.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "capture-full-payment",
+      "operationId": "capture-full-payment",
+      "method": "POST",
+      "path": "/v2/payments/capture",
+      "summary": "Capture Full Payment",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details."
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "required": [
+            "token"
+          ],
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "The token returned in the Create Checkout request."
+            },
+            "merchantReference": {
+              "type": "string",
+              "description": "The merchant’s order id/reference that this payment corresponds to. This will update any value previously provided in the Create Checkout request."
+            },
+            "amount": {
+              "$ref": "../models/Money.yaml",
+              "x-stoplight": {
+                "id": "40dejknwcq66u"
+              },
+              "description": "**Required for express checkout only.** Amount to be checked against the value in the create checkout request. If the amounts do not match, then the request is rejected and an error specific to this scenario is returned. "
+            },
+            "isCheckoutAdjusted": {
+              "type": "boolean",
+              "x-stoplight": {
+                "id": "bna9psrb8gaa9"
+              },
+              "description": "**Express checkout only.** The isCheckoutAdjusted field can be used to allow the order amount to be changed after the checkout flow. "
+            },
+            "paymentScheduleChecksum": {
+              "type": "string",
+              "x-stoplight": {
+                "id": "w8v4tju4pswwc"
+              },
+              "description": "**Express checkout only.** A unique value representing the payment schedule that must be provided when there have been changes since the initial order creation (retrieved from checkout widget). "
+            },
+            "items": {
+              "$ref": "../models/Item.yaml",
+              "x-stoplight": {
+                "id": "mfg6eceoc0szw"
+              },
+              "description": "**Express checkout only.** An array of order items that have been updated. Provide if it has changed since the initial order creation. "
+            },
+            "shipping": {
+              "$ref": "../models/Contact.yaml",
+              "x-stoplight": {
+                "id": "m64pvazmb16rf"
+              },
+              "description": "**Express checkout only.** The shipping address if it has changed since the initial order creation."
+            },
+            "enrichments": {
+              "$ref": "#/components/schemas/Enrichments"
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        },
+        "402": {},
+        "412": {},
+        "422": {},
+        "default": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        }
+      },
+      "bodyTemplate": "bodies/payments/capture-full-payment.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "get-payment-by-order-id",
+      "operationId": "get-payment-by-order-id",
+      "method": "GET",
+      "path": "/v2/payments/{orderId}",
+      "summary": "Get Payment By Order ID",
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "description": "The unique ID of the Afterpay Order, for which a Payment event has been completed.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        },
+        "404": {},
+        "default": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "update-payment-by-order-id",
+      "operationId": "update-payment-by-order-id",
+      "method": "PUT",
+      "path": "/v2/payments/{orderId}",
+      "summary": "Update Payment by Order ID",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          }
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "orderId",
+          "in": "path",
+          "description": "The Order ID to update",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "required": [
+            "merchantReference"
+          ],
+          "properties": {
+            "merchantReference": {
+              "type": "string",
+              "description": "The merchant’s new order id to replace with",
+              "default": "new_merchant_order_id_1234"
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The unique Afterpay (merchant payment) payment Id"
+              },
+              "token": {
+                "type": "string",
+                "description": "Checkout token to be used to complete consumer checkout and payment."
+              },
+              "status": {
+                "type": "string",
+                "description": "\\\"APPROVED\" (update is only valid for successful orders)"
+              },
+              "created": {
+                "type": "string (ISO-8601)",
+                "description": "The payment creation time (ISO 8601 UTC/Zulu time)."
+              },
+              "originalAmount": {
+                "type": "object",
+                "description": "Total amount for the order. See Money."
+              },
+              "openToCaptureAmount": {
+                "type": "object",
+                "description": "Total amount that can be captured for order. See Money."
+              },
+              "paymentState": {
+                "type": "string",
+                "description": "Available states: \"AUTH_APPROVED\", \"CAPTURED\", \"VOIDED\", \"EXPIRED\", \"AUTH_DECLINED\", \"PARTIALLY_CAPTURED\", \"CAPTURE_DECLINED\"\""
+              },
+              "merchantReference": {
+                "type": "string | The merchant’s order id/reference that this payment corresponds to. |"
+              },
+              "refunds": {
+                "type": "object",
+                "description": "The refund details for merchant's order. See Refund."
+              },
+              "orderDetails": {
+                "type": "object",
+                "description": "The order bound to the payment. See Order Details."
+              },
+              "events": {
+                "type": "object",
+                "description": "Event list for for merchant's order. See Events."
+              }
+            }
+          }
+        },
+        "404": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/payments/update-payment-by-order-id.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "capture-payment",
+      "operationId": "capture-payment",
+      "method": "POST",
+      "path": "/v2/payments/{orderId}/capture",
+      "summary": "Capture Payment",
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "orderId",
+          "in": "path",
+          "description": "The unique ID of the Afterpay Order, returned as the `id` property of the Auth response.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "#/components/schemas/CapturePayment"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        },
+        "404": {},
+        "410": {},
+        "412": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/payments/capture-payment.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "update-shipping-courier",
+      "operationId": "update-shipping-courier",
+      "method": "PUT",
+      "path": "/v2/payments/{orderId}/courier",
+      "summary": "Update Shipping Courier",
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "orderId",
+          "in": "path",
+          "required": true,
+          "description": "The Afterpay Order ID"
+        },
+        {
+          "name": "orderId",
+          "in": "path",
+          "description": "The unique Afterpay Order ID to update.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "application/json"
+            ]
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "application/json"
+            ]
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/Shipping-Courier.yaml"
+        }
+      },
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        },
+        "412": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/payments/update-shipping-courier.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "create-refund",
+      "operationId": "create-refund",
+      "method": "POST",
+      "path": "/v2/payments/{orderId}/refund",
+      "summary": "Create Refund",
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "description": "The unique Afterpay Order ID to apply the refund to.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "$ref": "../models/CreateRefund.yaml"
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/Refund.yaml"
+          }
+        },
+        "412": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/payments/create-refund.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "void-payment",
+      "operationId": "void-payment",
+      "method": "POST",
+      "path": "/v2/payments/{orderId}/void",
+      "summary": "Void",
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "description": "The unique ID of the Afterpay Order, returned as the `id` property of the Auth response.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "Content-Type",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {
+        "application/json": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "$ref": "../models/Money.yaml",
+              "description": "The amount to void. Must be less than or equal to the open to capture amount."
+            },
+            "requestId": {
+              "type": "string",
+              "description": "A unique request ID, required for safe retries. It is recommended that the merchant generate a UUID for each unique void."
+            },
+            "reason": {
+              "type": "string",
+              "description": "Can be passed in void requests to conditionally modify wording of the corresponding consumer refund email. This can be set to 1 of 3 values, `cancelledItems`, `amountAdjustment` or `null`"
+            }
+          }
+        }
+      },
+      "responseContent": {
+        "201": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml",
+            "x-examples": {
+              "Example 1": {
+                "amount": {
+                  "amount": "100.00",
+                  "currency": "USD"
+                },
+                "requestId": "your_unique_request_id",
+                "reason": "cancelledItems"
+              }
+            }
+          }
+        },
+        "404": {},
+        "422": {},
+        "default": {}
+      },
+      "bodyTemplate": "bodies/payments/void-payment.json",
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "get-payment-by-token",
+      "operationId": "get-payment-by-token",
+      "method": "GET",
+      "path": "/v2/payments/token:{token}",
+      "summary": "Get Payment By Token",
+      "parameters": [
+        {
+          "name": "token",
+          "in": "path",
+          "description": "Order token that was used to complete payment.",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        },
+        "404": {},
+        "default": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "reverse-payment-by-token",
+      "operationId": "reverse-payment-by-token",
+      "method": "POST",
+      "path": "/v2/payments/token:{token}/reversal",
+      "summary": "Reverse Payment By Token",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          }
+        },
+        {
+          "name": "token",
+          "in": "path",
+          "description": "The token of the checkout to be reversed (voided).",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "204": {},
+        "402": {},
+        "412": {},
+        "default": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "payments",
+      "command": "void-by-checkout-token",
+      "operationId": "void-by-checkout-token",
+      "method": "POST",
+      "path": "/v2/payments/token:{token}/void",
+      "summary": "Void By Checkout Token",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "View our <a href=\"https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header\" target = \"_blank\">User Agent</a> page for formatting details"
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "token",
+          "in": "path",
+          "required": true,
+          "description": "The unique token returned from initiating a Checkout"
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "application/json": {
+            "$ref": "../models/Payment.yaml"
+          }
+        }
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Payments.v2.yaml"
+    },
+    {
+      "group": "service-status",
+      "command": "ping",
+      "operationId": "ping",
+      "method": "GET",
+      "path": "/ping",
+      "summary": "Ping",
+      "parameters": [
+        {
+          "name": "User-Agent",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com"
+          }
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "schema": {
+            "type": "string",
+            "default": "text/plain"
+          }
+        }
+      ],
+      "requestContent": {},
+      "responseContent": {
+        "200": {
+          "text/plain": {
+            "type": "string",
+            "example": "pong",
+            "readOnly": true
+          }
+        },
+        "405": {},
+        "default": {}
+      },
+      "bodyTemplate": null,
+      "source": "openapi/reference/Service-Status.v2.yaml"
+    }
+  ]
+}

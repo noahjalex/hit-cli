@@ -1,0 +1,15 @@
+title: GrantAliasRequest
+type: object
+required:
+  - token
+properties:
+  token:
+    type: string
+    description: Token of the grant to create an alias for
+    example: "005.2fkv5o963b132z8ppa34srlh60987y87d55re237wsg9tr4q2"
+  duration:
+    type: string
+    format: duration
+    description: Duration of the grant in ISO-8601 period format
+    nullable: true
+    example: "PT15M"

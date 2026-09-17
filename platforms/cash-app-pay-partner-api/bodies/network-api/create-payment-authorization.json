@@ -1,0 +1,11 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "authorization": {
+    "amount": 100,
+    "currency": "USD",
+    "reference_id": "abcde",
+    "metadata": {
+      "my-meta": "meta-value"
+    }
+  }
+}

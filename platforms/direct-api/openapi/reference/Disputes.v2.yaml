@@ -1,0 +1,682 @@
+openapi: 3.1.0
+x-stoplight:
+  id: 4z267qdyzitwo
+info:
+  title: Online API
+  version: v2
+  description: |-
+    **Connection Timeouts**
+    | Timeout | Time (Seconds) |
+    |---------|----------------|
+    | Open    | 10             |
+    | Read    | 20             |
+servers:
+  - url: 'https://global-api-sandbox.afterpay.com'
+    description: Sandbox
+  - description: Production
+    url: 'https://global-api.afterpay.com'
+components:
+  securitySchemes:
+    sec0:
+      type: http
+      scheme: basic
+  schemas:
+    dispute:
+      title: dispute
+      x-stoplight:
+        id: qh5m659wahvm0
+      type: object
+      description: Dispute object
+      x-internal: false
+      required:
+        - id
+        - order
+        - amount
+        - reason
+        - status
+        - open
+        - responseDueBy
+        - createdAt
+        - openingNote
+        - closingReason
+        - merchantOrderId
+        - transactionDate
+        - settlementAmount
+      properties:
+        id:
+          type: string
+          x-stoplight:
+            id: ojslrpgqr228p
+          description: Dispute identifier
+          example: dp_N64jYg4RC4ZBUsXjLzE3W5
+        order:
+          type: string
+          x-stoplight:
+            id: 0qzzit22ui302
+          description: The token of the order that the dispute is for.
+          example: '123456789'
+        amount:
+          type: string
+          x-stoplight:
+            id: bhya0bmemrs4f
+          description: The amount of the dispute
+          example: '48.46'
+        reason:
+          x-stoplight:
+            id: lm3xoayaqazd7
+          description: The reason for the dispute.
+          example: fraudulent
+          enum:
+            - product_not_received
+            - product_unacceptable
+            - credit_not_processed
+            - order_canceled
+            - duplicate
+            - incorrect_amount
+            - paid_by_other_means
+            - fraudulent
+            - fraudulent_merchant
+        status:
+          x-stoplight:
+            id: 732vtkpe0cfei
+          description: The current state of the dispute. Values depend on how the dispute state machine is modeled.
+          example: under_review
+          enum:
+            - needs_response
+            - under_review
+            - won
+            - lost
+            - merchant_refunded
+            - merchant_voided
+        open:
+          type: boolean
+          x-stoplight:
+            id: dz8j5dhz6vys2
+          description: '`True` if a final decision on the dispute hasn''t been made yet.'
+          default: true
+        responseDueBy:
+          type: string
+          x-stoplight:
+            id: j9d2lpqee2edv
+          description: 'Deadline by which the merchant must respond to the dispute. (Epoch timestamp in seconds, timezone UTC +0.00)'
+          example: '1691884800'
+        createdAt:
+          type: string
+          x-stoplight:
+            id: r2sdl5xy1cx7a
+          description: 'A timestamp indicating when the dispute was created. (Epoch timestamp in seconds, timezone UTC +0.00)'
+          example: '1691880800'
+        openingNote:
+          type: string
+          x-stoplight:
+            id: nlaapden3k8md
+          description: 'Text from the customer describing why the dispute was opened or the reason for the complaint. While dispute category codes are helpful at informing what a merchant should present, it doesn’t provide reasoning behind the customer’s complaint. In some cases, this can help merchants troubleshoot the dispute directly with their customers.'
+          example: Customer has no knowledge of the payment
+        openingNoteAttachments:
+          type: array
+          items:
+            type: string
+          x-stoplight:
+            id: gttbcllzvebg6
+          description: Attachments to supplement the `openingNote` if the customer provided photos or screenshots as part of their dispute description.
+          example: ["fi_48vmw3sXdVqvtJGXbgKbAZ"]
+        updatedAt:
+          type: string
+          x-stoplight:
+            id: 7gd9dnfowdqk7
+          description: 'Timestamp when the dispute was updated. (Epoch timestamp in seconds, timezone UTC +0.00)'
+          example: '1691884000'
+        closingReason:
+          x-stoplight:
+            id: lh3jhjxmhhrc0
+          description: A reason indicating how the final decision on the dispute was reached. Recommended possible values listed in Closing Reasons.
+          enum:
+            - merchant_accepted
+            - evidence_accepted
+            - evidence_rejected
+            - deadline_expired
+            - customer_cancelled
+          example: merchant_accepted
+        closingNote:
+          type: string
+          x-stoplight:
+            id: lqdy1xe7qwgdl
+          description: Text describing in detail how the final decision on the dispute was reached. This supplements the `closingReason`.
+          example: Merchant accepted the dispute
+        merchantOrderId:
+          type: string
+          x-stoplight:
+            id: t8hi6xd3jh7v0
+          description: The identifier for the transaction on the merchant side.
+          example: order54321
+        transactionDate:
+          type: string
+          x-stoplight:
+            id: ymoomd0l3yrue
+          description: 'The timestamp of the order created by the customer. (Epoch timestamp in seconds, timezone UTC +0.00)'
+          example: '1691882800'
+        settlementAmount:
+          type: string
+          x-stoplight:
+            id: xnxatfkvqxhqu
+          description: The settlementAmount for audit usage.
+          example: '48.46'
+        meta:
+          $ref: '#/components/schemas/meta'
+          x-stoplight:
+            id: u1vgfxzg0ktam
+          description: The extra information for merchants to match payment.
+    meta:
+      title: meta
+      x-stoplight:
+        id: xctnvzwufz3mf
+      type: object
+      required:
+        - transactionAmount
+        - orderType
+      properties:
+        transactionAmount:
+          type: string
+          x-stoplight:
+            id: nj613v53skxwp
+          description: The transaction amount for the order.
+          example: '48.46'
+        network:
+          type: string
+          x-stoplight:
+            id: uyvg5yxdmxcal
+          description: 'The payment network used by the customer. (For example, `Visa` or `MasterCard`)'
+          example: Visa
+        networkReferenceId:
+          type: string
+          x-stoplight:
+            id: jpwiyjvuo0s66
+          description: The identifier for the payment.
+        orderType:
+          type: string
+          x-stoplight:
+            id: feoe8qv9s12dl
+          description: The type of order. `ONLINE` or `INSTORE`
+          example: ONLINE
+      x-internal: false
+    evidence:
+      type: object
+      properties:
+        productDescription:
+          type: string
+          description: A description of the product or service and any relevant details on how this was presented to the customer at the time of purchase.
+          maxLength: 5000
+        refundPolicy:
+          type: string
+          description: 'Token of the file upload. The merchant’s refund policy, as shown or provided to the customer.'
+          format: binary
+        refundPolicyDisclosure:
+          type: string
+          description: An explanation of how and when the customer was shown or provided with the merchant’s refund policy prior to purchase.
+          maxLength: 5000
+        refundRefusalExplanation:
+          type: string
+          description: The merchant’s explanation for why the customer is not entitled to a refund.
+          maxLength: 5000
+        shippingDocumentation:
+          type: string
+          description: Token of the file upload. A shipping label or receipt for the disputed payment.
+          format: binary
+        shippingAddress:
+          type: string
+          description: The address to which a physical product was shipped.
+          maxLength: 5000
+        shippingDate:
+          type: string
+          description: 'In cases of physical products, the date that a physical product began its route to the shipping address in a clear human-readable format. This date should be prior to the date of the dispute.'
+          maxLength: 5000
+        shippingCarrier:
+          type: string
+          description: 'In cases of physical products, the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, separate them with commas.'
+          maxLength: 5000
+        shippingTrackingNumber:
+          type: string
+          description: 'The tracking number for a physical product, obtained from the delivery service.'
+          maxLength: 5000
+        uncategorizedFile:
+          type: string
+          description: Token of the file upload. Additional file that’s not in any of the categories above.
+          format: binary
+        uncategorizedText:
+          type: string
+          description: Any additional text deemed relevant by the merchant.
+          maxLength: 5000
+      x-internal: false
+  requestBodies: {}
+  responses: {}
+  parameters: {}
+  examples: {}
+security:
+  - sec0: []
+paths:
+  /v2/disputes:
+    get:
+      summary: Retrieve Dispute
+      description: |
+        List disputes within a date range based on certain criteria. This endpoint can be used for debugging or synchronizing the disputes from Afterpay if/when you are unable to use the webhook method.
+      operationId: retrieve-dispute
+      parameters:
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyCashAppAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+        - name: order
+          in: query
+          description: Payment or Order token using which you can filter the list.
+          required: false
+          schema:
+            type: integer
+        - name: merchant
+          in: query
+          description: Merchant token using which you can filter the list.
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Dispute status using which you can filter the list.
+          required: false
+          schema:
+            type: string
+        - name: openedAfter
+          in: query
+          description: Filter disputes that were created on or after this timestamp (inclusive).
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: openedBefore
+          in: query
+          description: Filter disputes that were created on or before this timestamp (inclusive).
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: offset
+          in: query
+          description: Offset for the search results.
+          required: false
+          schema:
+            type: integer
+          example: 0
+        - name: limit
+          in: query
+          description: The maximum number of records that you want returned from this request.
+          required: false
+          schema:
+            type: integer
+          example: 10
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    x-stoplight:
+                      id: 18hmv9u9oglh4
+                    description: An array of dispute objects that match the filter criteria in the request.
+                    items:
+                      $ref: '#/components/schemas/dispute'
+                      x-stoplight:
+                        id: s62g5idyizr80
+                  offset:
+                    type: integer
+                    x-stoplight:
+                      id: 9exsbfbps9h6n
+                    example: 0
+                  limit:
+                    type: integer
+                    x-stoplight:
+                      id: i7jz0x27o5piw
+                    example: 1
+                  total:
+                    type: integer
+                    x-stoplight:
+                      id: 483sh73byzkiz
+                    example: 1
+      x-stoplight:
+        id: mzzgzqaa3cstq
+      requestBody:
+        content: {}
+      x-internal: false
+  '/v2/disputes/{dispute_id}':
+    get:
+      summary: Receive Dispute
+      x-stoplight:
+        id: 566a6ea33769f
+      description: Get detailed information about a dispute.
+      operationId: receive-dispute
+      parameters:
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+          description: 'See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+          description: application/json
+      requestBody:
+        content: {}
+        description: ''
+      responses:
+        2XX:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dispute'
+      x-internal: false
+    parameters:
+      - schema:
+          type: string
+        name: dispute_id
+        in: path
+        required: true
+    post:
+      summary: Respond to Dispute
+      tags: []
+      responses:
+        2XX:
+          description: 'When successful, returns the updated dispute object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dispute'
+      operationId: respond-to-dispute
+      x-stoplight:
+        id: 0uhjjf05k4u4q
+      x-internal: false
+      description: |-
+        The Respond to the Dispute endpoint allows a merchant to submit evidence for the dispute. This is only allowed if the dispute is the state `needs_response`.
+
+        Evidence fields are submitted directly in the request body alongside the dispute `id`. At least one evidence field must be provided.
+
+        Merchants only have one opportunity to submit evidence. Once a 200 response is received, this information cannot be updated or changed.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: User-Agent
+          description: 'See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details'
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: Accept
+          description: application/json
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: A unique ID given to a dispute.
+                productDescription:
+                  type: string
+                  description: A description of the product or service and any relevant details on how this was presented to the customer at the time of purchase.
+                  maxLength: 5000
+                refundPolicy:
+                  type: string
+                  description: 'Token of the file upload. The merchant''s refund policy, as shown or provided to the customer.'
+                  format: binary
+                refundPolicyDisclosure:
+                  type: string
+                  description: An explanation of how and when the customer was shown or provided with the merchant's refund policy prior to purchase.
+                  maxLength: 5000
+                refundRefusalExplanation:
+                  type: string
+                  description: The merchant's explanation for why the customer is not entitled to a refund.
+                  maxLength: 5000
+                shippingDocumentation:
+                  type: string
+                  description: Token of the file upload. A shipping label or receipt for the disputed payment.
+                  format: binary
+                shippingAddress:
+                  type: string
+                  description: The address to which a physical product was shipped.
+                  maxLength: 5000
+                shippingDate:
+                  type: string
+                  description: 'In cases of physical products, the date that a physical product began its route to the shipping address in a clear human-readable format. This date should be prior to the date of the dispute.'
+                  maxLength: 5000
+                shippingCarrier:
+                  type: string
+                  description: 'In cases of physical products, the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, separate them with commas.'
+                  maxLength: 5000
+                shippingTrackingNumber:
+                  type: string
+                  description: 'The tracking number for a physical product, obtained from the delivery service.'
+                  maxLength: 5000
+                uncategorizedFile:
+                  type: string
+                  description: Token of the file upload. Additional file that's not in any of the categories above.
+                  format: binary
+                uncategorizedText:
+                  type: string
+                  description: Any additional text deemed relevant by the merchant.
+                  maxLength: 5000
+            examples:
+              Submit shipping evidence:
+                value:
+                  productDescription: "Women's running shoes, size 8, ordered on 2023-08-01"
+                  shippingAddress: "123 Main St, Melbourne VIC 3000, AU"
+                  shippingDate: "2023-08-02"
+                  shippingCarrier: "Australia Post"
+                  shippingTrackingNumber: "AP123456789AU"
+                  shippingDocumentation: "fi_7wvZBQqWzoPGLxvaMkpTjX"
+              Submit refund policy evidence:
+                value:
+                  productDescription: "12-month digital subscription plan"
+                  refundPolicy: "fi_48vmw3sXdVqvtJGXbgKbAZ"
+                  refundPolicyDisclosure: "Refund policy was displayed on the checkout page and included in the order confirmation email sent on 2023-07-15."
+                  refundRefusalExplanation: "The customer used the service for 3 months before filing the dispute. Per our policy, digital subscriptions are non-refundable after 14 days."
+              Submit uncategorized evidence:
+                value:
+                  uncategorizedText: "Customer confirmed receipt of the item via email on 2023-08-10. Attaching the email screenshot."
+                  uncategorizedFile: "fi_9xKmPqRsTuVwXyZaBcDeFg"
+  '/v2/disputes/{dispute_id}/accept':
+    get:
+      summary: Accept Dispute
+      responses:
+        2XX:
+          description: 'If successful, returns the updated dispute object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dispute'
+      operationId: accept-dispute
+      x-stoplight:
+        id: z4xskmvl4762w
+      requestBody:
+        content: {}
+      parameters:
+        - schema:
+            type: string
+          in: query
+        - schema:
+            type: string
+          in: header
+          name: User-Agent
+          description: 'See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details'
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: Accept
+          description: application/json
+      x-internal: false
+      description: |-
+        Merchants can call this endpoint to accept a dispute case. The endpoint only works if the dispute is in a non-terminal state (the status is not `won` or `lost`).
+
+        > **Note:** Calling the API changes the dispute status to lost.
+    parameters:
+      - schema:
+          type: string
+        name: dispute_id
+        in: path
+        required: true
+  /v2/disputes/files:
+    post:
+      summary: Upload File
+      tags: []
+      responses:
+        2XX:
+          description: Indicates a successful file upload.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    x-stoplight:
+                      id: wk3a33q9j5xy0
+                    description: The ID token of the file.
+                    example: fi_7wvZBQqWzoPGLxvaMkpTjX
+                  createdAt:
+                    type: string
+                    x-stoplight:
+                      id: 4h383wz4vkx9t
+                    format: date-time
+                    example: '2023-08-18T02:05:23.121893'
+                    description: The timestamp indicating when the file was uploaded.
+                  expiresAt:
+                    type: string
+                    x-stoplight:
+                      id: z81q95skc9x3n
+                    format: date-time
+                    example: '2023-08-18T02:05:23.121893'
+                    description: 'The timestamp indicating when the uploaded file expires. '
+      operationId: upload-file
+      x-stoplight:
+        id: y43dv6zvuvjon
+      description: Use this endpoint to upload files for disputes.
+      x-internal: false
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: User-Agent
+          description: 'See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details'
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: Accept
+          description: application/json
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - file
+                - fileType
+              properties:
+                file:
+                  type: File
+                  description: The file you want to upload.
+                fileType:
+                  type: string
+                  description: The type of file. Only `dispute_evidence` is supported.
+  '/v2/disputes/files/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Retrieve file
+      tags: []
+      responses:
+        '401':
+          description: Unauthorized. Invalid merchant credentials.
+        '404':
+          description: Not Found. The corresponding entity can't be found for the merchant.
+        '412':
+          description: 'Precondition Failed. Invalid action for the dispute case, or the refund amount is larger than the refundable amount.'
+        '413':
+          description: Request Entity Too Large. The uploaded file is too large. It must be less than 10 MB.
+        '415':
+          description: 'Unsupported Media Type. Afterpay does not support the filetype of the uploaded file. It must be: GIF, PDF, JPEG, or PNG.'
+        '422':
+          description: Unprocessable Entity. Invalid parameter in the Dispute API request.
+        '429':
+          description: 'Too Many Requests. Too many requests in a short period of time, retry later.'
+        2XX:
+          description: Indicates that the file has been retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    x-stoplight:
+                      id: nldvvkifpkl8n
+                    description: The link of the file to be retrieved.
+                    example: 'https://dispute-attachment.s3.amazonaws.com/fi_7GciehSJnhRdUF9acxsB63'
+                  expiresAt:
+                    type: string
+                    x-stoplight:
+                      id: 18kt5tmg67ivc
+                    format: date-time
+                    example: '2023-08-18T02:05:23.121893'
+                    description: The timestamp indicating the expiration of the link.
+      operationId: retrieve-file
+      x-stoplight:
+        id: 3szo4xaqjvaqg
+      description: Use this endpoint to retrieve files for disputes.
+      x-internal: false
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: User-Agent
+          description: 'See our [User Agent Header](https://developers.cash.app/docs/merchant/api-development/api-calls-payment-flows/user-agent-header) page for formatting details'
+          required: true
+        - schema:
+            type: string
+          in: header
+          name: Accept
+          description: application/json
+        - schema:
+            type: string
+          in: query
+          name: id
+          required: true
+          description: ID of the file to be retrieved.

@@ -46,6 +46,8 @@ This command will generate the corresponding `.hit/config.json` file in the curr
 
 ## Usage
 
+The repository includes generated command catalogs for every operation in the Afterpay Direct API, Afterpay Agency API, and Cash App Pay Partner API public OpenAPI specs. See [`platforms/README.md`](platforms/README.md).
+
 The contents of the config define what commands are available to run.
 
 For example, if the config looks something like:
@@ -435,6 +437,17 @@ This is useful for piping into `jq` or other tools:
 ```bash
 hit run list-users --json | jq '.body | fromjson | .[] | .name'
 ```
+
+### Additional Query Parameters and Headers
+
+Use repeatable `--query` and `--header` options for values that are not part of a configured command:
+
+```bash
+hit run payments list --query limit=50 --query status=APPROVED
+hit run payments create --header 'Idempotency-Key:request-123'
+```
+
+Query values are URL-encoded. Header and query options are applied before request signing.
 
 ### Inspecting the response of an API call
 

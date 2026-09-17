@@ -1,0 +1,14 @@
+{
+  "id": "<id>",
+  "productDescription": "<productDescription>",
+  "refundPolicy": "<refundPolicy>",
+  "refundPolicyDisclosure": "<refundPolicyDisclosure>",
+  "refundRefusalExplanation": "<refundRefusalExplanation>",
+  "shippingDocumentation": "<shippingDocumentation>",
+  "shippingAddress": "<shippingAddress>",
+  "shippingDate": "<shippingDate>",
+  "shippingCarrier": "<shippingCarrier>",
+  "shippingTrackingNumber": "<shippingTrackingNumber>",
+  "uncategorizedFile": "<uncategorizedFile>",
+  "uncategorizedText": "<uncategorizedText>"
+}

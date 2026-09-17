@@ -1,0 +1,9 @@
+type: object
+description: Request to retrieve a billing agreement by token
+required:
+  - token
+properties:
+  token:
+    type: string
+    description: The billing agreement token to retrieve
+    example: "ba_jkl012mno345"

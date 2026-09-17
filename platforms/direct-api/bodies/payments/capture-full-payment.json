@@ -1,0 +1,44 @@
+{
+  "token": "<token>",
+  "merchantReference": "<merchantReference>",
+  "amount": {
+    "amount": "100.00",
+    "currency": "AUD"
+  },
+  "isCheckoutAdjusted": false,
+  "paymentScheduleChecksum": "<paymentScheduleChecksum>",
+  "items": {
+    "name": "Blue Carabiner",
+    "sku": "<sku>",
+    "pageUrl": "https://merchant.example.com/carabiner-354193.html",
+    "imageUrl": "https://merchant.example.com/carabiner-7378-391453-1.jpg",
+    "quantity": 1,
+    "price": {
+      "amount": "100.00",
+      "currency": "AUD"
+    },
+    "categories": [
+      [
+        "<categories>"
+      ]
+    ],
+    "estimatedShipmentDate": "2023-08-01",
+    "preorder": false
+  },
+  "shipping": {
+    "name": "Joe Consumer",
+    "line1": "Level 8",
+    "line2": "390 Collins Street",
+    "area1": "Melbourne",
+    "area2": "<area2>",
+    "region": "VIC",
+    "postcode": "3000",
+    "countryCode": "AU",
+    "phoneNumber": "0400 000 000"
+  },
+  "enrichments": {
+    "initiation": {
+      "actor": "MERCHANT"
+    }
+  }
+}

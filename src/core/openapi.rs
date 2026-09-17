@@ -190,6 +190,7 @@ fn create_command_for_operation(
         body,
         postscript: None,
         headers: HashMap::new(),
+        auth: None,
     }
 }
 

@@ -1,0 +1,28 @@
+{
+  "idempotency_key": "e345c3fb-1caa-46fd-b0d3-aa6c7b00ab19",
+  "merchant": {
+    "name": "<name>",
+    "brand_id": "<brand_id>",
+    "country": "US",
+    "currency": "USD",
+    "category": "5432",
+    "reference_id": "external-id",
+    "address": {
+      "address_line_1": "1215 4th Ave",
+      "address_line_2": "Suite 2300",
+      "locality": "Seattle",
+      "country": "US",
+      "postal_code": "98161-1001",
+      "administrative_district_level_1": "Washington"
+    },
+    "site_url": "https://example.com",
+    "metadata": {
+      "my-meta": "meta-value"
+    },
+    "default_fee_plans": {
+      "in_app_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+      "in_person_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me",
+      "online_fee_plan_id": "FEE_kewjsmjt35t8qhzyjeqcst5me"
+    }
+  }
+}

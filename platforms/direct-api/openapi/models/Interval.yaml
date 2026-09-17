@@ -1,0 +1,23 @@
+title: Interval
+type: object
+description: Defines a recurring billing interval
+x-tags:
+  - component
+properties:
+  interval:
+    type: string
+    enum:
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+    description: The unit of time for the recurring billing
+    example: "MONTH"
+  frequency:
+    type: integer
+    description: How many intervals between billings
+    minimum: 1
+    example: 1
+required:
+  - interval
+  - frequency

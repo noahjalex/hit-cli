@@ -1,0 +1,14 @@
+type: object
+description: Request to start a billing agreement link flow
+required:
+  - alias
+  - requestId
+properties:
+  alias:
+    type: string
+    description: Email or phone number associated with the consumer's afterpay account
+    example: "my-afterpay-email@gmail.com"
+  requestId:
+    type: string
+    description: A unique identifier for this request
+    example: "123e4567-e89b-12d3-a456-426614174000"

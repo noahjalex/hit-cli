@@ -1,0 +1,67 @@
+openapi: 3.1.0
+info:
+  title: Online API
+  version: v2
+servers:
+  - url: 'https://global-api-sandbox.afterpay.com'
+    description: Sandbox
+  - description: Production
+    url: 'https://global-api.afterpay.com'
+components:
+  securitySchemes:
+    sec0:
+      type: http
+      scheme: basic
+security:
+  - sec0: []
+paths:
+  /v2/orders:
+    post:
+      summary: Create Order
+      description: |
+        This is the first step in the on file grant purchase process. Use the token in the response to initiate the payment
+      operationId: create-grant
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+            default: application/json
+        - name: User-Agent
+          in: header
+          required: true
+          schema:
+            type: string
+            example: 'MyAfterpayModule/1.0.0 (E-Commerce Platform Name/1.0.0; PHP/7.0.0; Merchant/60032000) https://merchant.example.com'
+          description: 'View our [User Agent Header](https://afterpay.docs.buildwithfern.com/afterpay-online-developer/v-1/api-reference/online-api/request-headers/user-agent-request-header) page for formatting details.'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../models/OrderRequest.yaml
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../models/CreateOrderResponse.yaml
+        '415':
+          description: Unsupported Media Type
+        '422':
+          description: |
+            | errorCode | Description |
+            | --- | --- |
+            | invalid_object             | One or more required fields were missing or invalid.                     |
+            | unsupported_payment_type   | The amount is outside of the merchant's payment limits, as returned by Get Configuration. |
+            | unsupported_currency       | The amount is outside of the merchant's payment limits, as returned by Get Configuration. |
+        default:
+          description: See additional PUT/POST Errors applicable to all POST endpoints.
+x-internal: false

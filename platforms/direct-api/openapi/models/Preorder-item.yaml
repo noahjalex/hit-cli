@@ -1,0 +1,90 @@
+title: Item
+x-stoplight:
+  id: rah4f3ts4grf2
+type: object
+examples:
+  - name: Pre-order Item
+    quantity: 1
+    price:
+      amount: '29.95'
+      currency: AUD
+    sku: SKU-PREORDER-123456789
+    preorder: true
+  - name: Pre-order Item
+    quantity: 1
+    price:
+      amount: '29.95'
+      currency: AUD
+    sku: SKU-PREORDER-123456789
+    preorder: false
+description: |
+  This data model is used for storing crucial product details. The `name` field denotes the name of the product, while `sku` holds the Stock Keeping Unit identifier. The `quantity` key indicates the number of units of the item.
+
+
+
+  > If you anticipate that this item won't be fulfilled immediately and needs to be flagged as a preorder during checkout, make sure to enable the "preorder" option by setting `preorder` to true
+  >
+x-internal: true
+properties:
+  name:
+    type: string
+    x-stoplight:
+      id: sksqi1bccsrlp
+    maxLength: 255
+    example: Blue Carabiner
+  sku:
+    type: string
+    x-stoplight:
+      id: idzg69ldowbvb
+  pageUrl:
+    type: string
+    x-stoplight:
+      id: ow3cwb05pwz7z
+    example: 'https://merchant.example.com/carabiner-354193.html'
+    maxLength: 2048
+  imageUrl:
+    type: string
+    x-stoplight:
+      id: vonh3inf19l3n
+    example: 'https://merchant.example.com/carabiner-7378-391453-1.jpg'
+    maxLength: 2048
+  quantity:
+    type: integer
+    x-stoplight:
+      id: 81ieadmvfblha
+    format: int32
+    example: 1
+  price:
+    $ref: ./Money.yaml
+    x-stoplight:
+      id: 7sjns0trp27jc
+  categories:
+    type: array
+    x-stoplight:
+      id: qm1185e8w9t8o
+    items:
+      x-stoplight:
+        id: aw1npbh4qf3jg
+      type: array
+      items:
+        x-stoplight:
+          id: 3jt971x4d0o67
+        type: string
+        example: '[     [       "Sporting Goods",       "Climbing Equipment",       "Climbing",       "Climbing Carabiners"     ], ["Sale", "Climbing"]]'
+  estimatedShipmentDate:
+    type: string
+    x-stoplight:
+      id: z4sz9w4085169
+    format: date
+    example: '2023-08-01'
+  preorder:
+    type: boolean
+    x-stoplight:
+      id: vehmjryn23kyz
+required:
+  - name
+  - quantity
+  - price
+  - preorder
+x-tags:
+  - request-object

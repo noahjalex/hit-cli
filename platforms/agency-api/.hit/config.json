@@ -1,0 +1,208 @@
+{
+  "envs": {
+    "runtime": {}
+  },
+  "commands": {
+    "partner": {
+      "get-onboarding-by-merchant-reference": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings?merchantReference=:merchantReference",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "create-onboarding": {
+        "method": "POST",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-onboarding-by-id": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "update-onboarding": {
+        "method": "PUT",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-onboarding-status": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId/activations",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-capabilities": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId/capabilities",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "update-pm-capabilities": {
+        "method": "PUT",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId/capabilities/lending",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "configure-cbt": {
+        "method": "PUT",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId/capabilities/cbt",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-settlement-batches": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/settlement/batches",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-settlement-batches-by-date": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/settlement/batches/date/:YYYY-MM-DD",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-settlement-batch-files": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/settlement/batch?ids=:ids",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "review-contract": {
+        "method": "POST",
+        "url": "{{AGENCY_BASE_URL}}/v1/rates-contract/:contractId/review",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "review-custom-rate": {
+        "method": "POST",
+        "url": "{{AGENCY_BASE_URL}}/v1/custom-rate/:customRateId/review",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "update-rate": {
+        "method": "PUT",
+        "url": "{{AGENCY_BASE_URL}}/v1/onboardings/:onboardingId/capabilities/buy-rate",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-contract": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/contract/:contractId",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      },
+      "get-custom-rate": {
+        "method": "GET",
+        "url": "{{AGENCY_BASE_URL}}/v1/custom-rate/:customRateId",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "auth": {
+          "type": "agency",
+          "api_key_env": "AGENCY_API_KEY",
+          "secret_env": "AGENCY_SHARED_SECRET"
+        }
+      }
+    }
+  }
+}

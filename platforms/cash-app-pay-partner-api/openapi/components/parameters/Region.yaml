@@ -1,0 +1,7 @@
+name: X-Region
+in: header
+required: true
+schema:
+  type: string
+  example: PDX
+description: The IATA airport code from the list of accepted regions that is closest to the area your server(s) is operating in.
