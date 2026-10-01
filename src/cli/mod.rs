@@ -59,7 +59,9 @@ fn formulate_command(
                 subcommand
             }
             ConfigCommandType::NestedCommand(ref nested_commands) => formulate_command(
-                Command::new(key).arg_required_else_help(true),
+                Command::new(key)
+                    .arg_required_else_help(true)
+                    .subcommand_required(true),
                 nested_commands,
             ),
         };
@@ -113,6 +115,7 @@ fn obtain_run_command_from_matches<'a>(
 fn get_run_command(config: &Config) -> Command {
     let mut command = Command::new("run")
         .arg_required_else_help(true)
+        .subcommand_required(true)
         .arg(
             Arg::new(GLOBAL_ARG_EDIT_BODY)
                 .long("edit-body")
