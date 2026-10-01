@@ -28,6 +28,32 @@ fn test_failure_when_env_not_recognized(hit_setup: SetupFixture) -> () {
 }
 
 #[rstest]
+fn test_missing_nested_run_command_is_reported_without_panic(
+    temp_dir: TempDir,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let setup = setup_with_mock(
+        temp_dir,
+        "https://api.example.com",
+        serde_json::json!({
+            "recurring-payments": {
+                "authorize": {
+                    "method": "POST",
+                    "url": "{{API_URL}}/recurring-payments"
+                }
+            }
+        }),
+    );
+
+    let mut cmd = get_hit_command_for_setup(&setup);
+    cmd.args(["run", "recurring-payments", "--edit-body"]);
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("a subcommand is required"));
+
+    Ok(())
+}
+
+#[rstest]
 fn test_runtime_auth_templates(temp_dir: TempDir) -> Result<(), Box<dyn std::error::Error>> {
     let mut server = mockito::Server::new();
     let mock = server
