@@ -80,10 +80,16 @@ impl Command {
     }
 
     pub fn body_params(&self) -> Vec<String> {
-        match &self.body {
-            Some(input) => get_params_from_string(&input.to_string()),
-            None => Vec::new(),
-        }
+        let Some(body) = &self.body else {
+            return Vec::new();
+        };
+        let placeholder = Regex::new(r#"":([A-Za-z_]\w*)(?:\|\w+)?(?:=[^\"]*)?""#).unwrap();
+        placeholder
+            .captures_iter(&body.to_string())
+            .map(|caps| caps[1].to_string())
+            .collect::<HashSet<_>>()
+            .into_iter()
+            .collect()
     }
 
     pub fn params(&self) -> Vec<String> {
@@ -230,5 +236,10 @@ mod tests {
         assert_eq!(defaults.get("limit"), Some(&"10".to_string()));
         assert_eq!(defaults.get("name"), Some(&"Joe Consumer".to_string()));
         assert!(!cmd.body_params().contains(&"15".to_string()));
+        let literal_values = Command {
+            body: Some(json!({"enabled": true, "disabled": false, "url": "https://example.com"})),
+            ..cmd
+        };
+        assert!(literal_values.body_params().is_empty());
     }
 }

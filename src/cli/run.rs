@@ -371,6 +371,9 @@ pub async fn run(
 
     let current_env = match get_env() {
         Some(e) => e,
+        None if config.envs.len() == 1 && config.envs.contains_key("runtime") => {
+            "runtime".to_string()
+        }
         None => {
             return Err(Box::new(CliError {
                 message: "env not set".to_string(),

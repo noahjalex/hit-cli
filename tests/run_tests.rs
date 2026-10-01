@@ -6,6 +6,52 @@ use rstest::*;
 use tempfile::TempDir;
 
 #[rstest]
+fn test_runtime_env_uses_swenv_variables_without_hit_env_use(
+    temp_dir: TempDir,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut server = mockito::Server::new();
+    let mock = server.mock("POST", "/customer-request/v1/requests")
+        .match_body(mockito::Matcher::Json(serde_json::json!({
+            "idempotency_key": "unique-1",
+            "request": {"actions": [{"amount": 2500, "currency": "USD", "scope_id": "MMI_test", "type": "ONE_TIME_PAYMENT"}], "channel": "ONLINE"}
+        })))
+        .with_status(200).create();
+    let config_path = temp_dir.path().join(".hit/config.json");
+    std::fs::create_dir_all(config_path.parent().unwrap())?;
+    std::fs::write(config_path, serde_json::json!({
+        "envs": {"runtime": {}},
+        "commands": {"customer-request": {"create": {
+            "method": "POST", "url": "{{CASH_API_URL}}/customer-request/v1/requests",
+            "headers": {"Content-Type": "application/json"},
+            "body": {"idempotency_key": ":idempotency_key", "request": {
+                "actions": [{"amount": ":amount|number", "currency": ":currency=USD", "scope_id": ":scope_id", "type": "ONE_TIME_PAYMENT"}],
+                "channel": ":channel=ONLINE"
+            }}
+        }}}
+    }).to_string())?;
+    std::fs::write(
+        temp_dir.path().join("config.json"),
+        serde_json::json!({"last_seen_version": env!("CARGO_PKG_VERSION")}).to_string(),
+    )?;
+    let setup = SetupFixture { temp_dir };
+    let mut cmd = get_hit_command_for_setup(&setup);
+    cmd.env("CASH_API_URL", server.url()).args([
+        "run",
+        "customer-request",
+        "create",
+        "--idempotency-key",
+        "unique-1",
+        "--amount",
+        "2500",
+        "--scope-id",
+        "MMI_test",
+    ]);
+    cmd.assert().success();
+    mock.assert();
+    Ok(())
+}
+
+#[rstest]
 fn test_failure_when_env_not_set(
     hit_setup: SetupFixture,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -48,7 +94,7 @@ fn test_missing_nested_run_command_is_reported_without_panic(
     cmd.args(["run", "recurring-payments", "--edit-body"]);
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains("a subcommand is required"));
+        .stderr(predicate::str::contains("requires a subcommand"));
 
     Ok(())
 }
